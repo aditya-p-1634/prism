@@ -5,16 +5,42 @@ from fastapi import APIRouter, Depends, Query, HTTPException, status
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.entities import (
-    RoutePlan, RelocationAllocation, RelocationGroup, Habitation, Destination, User, AuditEvent
+    RoutePlan, RelocationAllocation, RelocationGroup, Habitation, Destination, User, AuditEvent, RoadSegment
 )
 from app.models.enums import RoleEnum, AllocationStatusEnum
-from app.schemas.routing import RoutePlanDTO, RelocationAllocationDTO, RelocationOverrideDTO
+from app.schemas.routing import RoutePlanDTO, RelocationAllocationDTO, RelocationOverrideDTO, RoadSegmentDTO
 from app.schemas.envelope import ResponseEnvelope
 from app.api.deps import require_role, get_current_user
 
 router = APIRouter(prefix="", tags=["Safe Routes & Relocation Optimization (E4)"])
 
+@router.get("/road-segments", response_model=ResponseEnvelope[List[RoadSegmentDTO]])
+def get_road_segments(db: Session = Depends(get_db)):
+    segments = db.query(RoadSegment).all()
+    dtos = [
+        RoadSegmentDTO(
+            id=s.id,
+            segment_code=s.segment_code,
+            u_node_id=s.u_node_id,
+            v_node_id=s.v_node_id,
+            road_class=s.road_class,
+            length_meters=s.length_meters,
+            max_speed_kmh=s.max_speed_kmh,
+            geom_geojson=json.loads(s.geom),
+            operational_status=s.operational_status,
+            hazard_risk_score=s.hazard_risk_score,
+            is_bridge=s.is_bridge
+        )
+        for s in segments
+    ]
+    return ResponseEnvelope[List[RoadSegmentDTO]](
+        request_id=str(uuid.uuid4()),
+        correlation_id=str(uuid.uuid4()),
+        data=dtos
+    )
+
 @router.get("/routes", response_model=ResponseEnvelope[List[RoutePlanDTO]])
+
 def get_routes(
     snapshot_id: str = Query("SNAP_BASE_001"),
     db: Session = Depends(get_db)
@@ -90,13 +116,17 @@ def override_allocation(
     current_user: User = Depends(require_role([RoleEnum.AUTHORITY, RoleEnum.ADMIN])),
     db: Session = Depends(get_db)
 ):
-    alloc = db.query(RelocationAllocation).filter(RelocationAllocation.id == payload.allocation_id).first()
+    alloc = db.query(RelocationAllocation).filter(
+        (RelocationAllocation.id == payload.allocation_id) | (RelocationAllocation.group_id == payload.allocation_id)
+    ).first()
     if not alloc:
-        raise HTTPException(status_code=404, detail="Allocation not found")
+        raise HTTPException(status_code=404, detail=f"Allocation '{payload.allocation_id}' not found")
 
-    new_dest = db.query(Destination).filter(Destination.id == payload.new_destination_id).first()
+    new_dest = db.query(Destination).filter(
+        (Destination.id == payload.new_destination_id) | (Destination.code == payload.new_destination_id)
+    ).first()
     if not new_dest:
-        raise HTTPException(status_code=404, detail="Destination not found")
+        raise HTTPException(status_code=404, detail=f"Destination '{payload.new_destination_id}' not found")
 
     before_state = {
         "destination_id": alloc.destination_id,

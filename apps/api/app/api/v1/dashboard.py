@@ -156,7 +156,7 @@ def get_dashboard_overview(
 
     allocs = db.query(RelocationAllocation).filter(RelocationAllocation.snapshot_id == snapshot_id).all()
     unmet_count = sum(1 for a in allocs if a.allocation_status == AllocationStatusEnum.UNMET)
-    allocated_count = sum(1 for a in allocs if a.allocation_status in (AllocationStatusEnum.RECOMMENDED, AllocationStatusEnum.OVERRIDDEN))
+    allocated_count = sum(1 for a in allocs if a.allocation_status in (AllocationStatusEnum.RECOMMENDED, AllocationStatusEnum.ACCEPTED, AllocationStatusEnum.OVERRIDDEN))
 
     kpis = {
         "study_area_name": study_area.name if study_area else "Vayu River Basin",

@@ -39,7 +39,12 @@ class RouteAndRelocationEngineE4:
         updated_segments = []
         for seg in segments:
             seg_geom = to_shapely(seg.geom)
-            is_submerged = intersects(seg_geom, current_hazard_geom)
+            if seg.is_bridge:
+                # Bridges cross waterways by definition. They are only closed if explicitly closed
+                # or if an explicit clearance threshold is breached (represented by operational_status=CLOSED).
+                is_submerged = (seg.operational_status == OperationalStatusEnum.CLOSED)
+            else:
+                is_submerged = intersects(seg_geom, current_hazard_geom)
 
             # Invariant: UNKNOWN or STALE or SUBMERGED cannot be safe
             if is_submerged:

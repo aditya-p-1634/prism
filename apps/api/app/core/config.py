@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 import os
 
-repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
 default_sqlite_path = os.path.join(repo_root, "prism.db").replace("\\", "/")
 
 class Settings(BaseSettings):
@@ -21,7 +21,12 @@ class Settings(BaseSettings):
     
     # Computational Coordinate Reference System (UTM Zone 43N by default)
     COMPUTATIONAL_CRS: str = "EPSG:32643"
-    STORAGE_CRS: str = "EPSG:4326"
+    @property
+    def resolved_database_url(self) -> str:
+        if self.DATABASE_URL.startswith("sqlite:///./"):
+            rel_file = self.DATABASE_URL.replace("sqlite:///./", "")
+            return f"sqlite:///{os.path.join(repo_root, rel_file).replace('\\\\', '/')}"
+        return self.DATABASE_URL
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(repo_root, ".env"),

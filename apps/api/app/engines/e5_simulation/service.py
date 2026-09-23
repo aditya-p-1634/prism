@@ -216,6 +216,14 @@ class SimulationEngineE5:
         for alloc in scen_allocations:
             self.db.add(alloc)
 
+        # Update CapacityState occupied and remaining capacity based on computed allocations
+        for d in destinations:
+            cap_st = scen_capacities.get(d.id)
+            if cap_st:
+                assigned_count = sum(a.assigned_capacity_count for a in scen_allocations if a.destination_id == d.id)
+                cap_st.occupied_capacity = assigned_count
+                cap_st.remaining_capacity = max(0, cap_st.effective_capacity - assigned_count)
+
         self.db.commit()
 
         # -------------------------------------------------------------
@@ -246,12 +254,29 @@ class SimulationEngineE5:
                 if sp.priority_score > bp.priority_score:
                     total_prio_increase += 1
 
+        base_groups = self.db.query(RelocationGroup).filter(RelocationGroup.snapshot_id == baseline_snapshot_id).all()
+        scen_groups = self.db.query(RelocationGroup).filter(RelocationGroup.snapshot_id == scenario_snapshot_id).all()
+        base_group_to_hh = {g.id: g.household_id for g in base_groups}
+        scen_group_to_hh = {g.id: g.household_id for g in scen_groups}
+
         base_allocs = self.db.query(RelocationAllocation).filter(RelocationAllocation.snapshot_id == baseline_snapshot_id).all()
         scen_allocs = self.db.query(RelocationAllocation).filter(RelocationAllocation.snapshot_id == scenario_snapshot_id).all()
 
-        base_alloc_map = {a.group_id: a for a in base_allocs}
+        base_hh_alloc = {}
+        for a in base_allocs:
+            hh_id = base_group_to_hh.get(a.group_id)
+            if hh_id:
+                base_hh_alloc[hh_id] = a
+
         reallocated_count = 0
         unmet_count = sum(1 for a in scen_allocs if a.allocation_status == AllocationStatusEnum.UNMET)
+
+        for sa in scen_allocs:
+            hh_id = scen_group_to_hh.get(sa.group_id)
+            ba = base_hh_alloc.get(hh_id)
+            if ba and ba.destination_id and sa.destination_id:
+                if ba.destination_id != sa.destination_id and sa.allocation_status != AllocationStatusEnum.UNMET:
+                    reallocated_count += 1
 
         # Capacity changes
         base_caps = self.db.query(CapacityState).filter(CapacityState.snapshot_id == baseline_snapshot_id).all()
@@ -271,7 +296,7 @@ class SimulationEngineE5:
             f"causing {upgraded_to_immediate} households to be upgraded to IMMEDIATE evacuation priority. "
             f"BRIDGE_01 was rendered impassable, forcing safe convoys onto the bypass corridor. "
             f"Destination D2 experienced a water purification capacity bottleneck, leading to "
-            f"rerouting and reallocation of vulnerable groups."
+            f"rerouting and reallocation of {reallocated_count} vulnerable groups ({unmet_count} unmet)."
         )
 
         return {
@@ -290,7 +315,7 @@ class SimulationEngineE5:
             },
             "capacity_changes": cap_diff,
             "route_invalidations": ["BRIDGE_01"],
-            "reallocated_groups_count": 8,
+            "reallocated_groups_count": reallocated_count,
             "unmet_demand_delta": unmet_count,
             "summary_explanation": summary
         }

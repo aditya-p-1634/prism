@@ -45,6 +45,8 @@ def run_scenario(
             baseline_snapshot_id=baseline_snapshot.id,
             overrides=payload.parameter_overrides
         )
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=f"Scenario not found: {str(ve)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Scenario execution failed: {str(e)}")
 

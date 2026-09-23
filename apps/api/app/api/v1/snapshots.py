@@ -27,3 +27,18 @@ def list_snapshots(db: Session = Depends(get_db)):
         correlation_id=str(uuid.uuid4()),
         data=data
     )
+
+@router.post("/reset", response_model=ResponseEnvelope[Dict[str, Any]])
+def reset_to_baseline():
+    """
+    Restore canonical baseline reality (SNAP_BASE_001).
+    Purges ephemeral test/scenario executions and reinitializes deterministic state.
+    """
+    from app.seed.seed_service import seed_demo_database
+    res = seed_demo_database()
+    return ResponseEnvelope[Dict[str, Any]](
+        request_id=str(uuid.uuid4()),
+        correlation_id=str(uuid.uuid4()),
+        data=res
+    )
+

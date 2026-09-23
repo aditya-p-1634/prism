@@ -55,3 +55,9 @@ class PriorityRecordDTO(BaseModel):
     priority_class: PriorityClassEnum
     reason_codes: List[str]
     component_scores: Dict[str, float]
+    member_count: int = 1
+    vulnerable_elderly: int = 0
+    vulnerable_children: int = 0
+    mobility_impaired: int = 0
+    assistance_required: bool = False
+    has_partial_data: bool = False

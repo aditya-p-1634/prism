@@ -13,6 +13,9 @@ from app.api.v1.routing import router as routing_router
 from app.api.v1.scenarios import router as scenarios_router
 from app.api.v1.dashboard import router as dashboard_router
 from app.api.v1.snapshots import router as snapshots_router
+from app.api.v1.audit import router as audit_router
+from app.api.v1.reports import router as reports_router
+from app.api.v1.health import router as health_router
 
 app = FastAPI(
     title="PRISM — Predictive Relocation & Infrastructure Safety Matrix",
@@ -53,6 +56,9 @@ app.include_router(routing_router, prefix=api_v1_prefix)
 app.include_router(scenarios_router, prefix=api_v1_prefix)
 app.include_router(dashboard_router, prefix=api_v1_prefix)
 app.include_router(snapshots_router, prefix=api_v1_prefix)
+app.include_router(audit_router, prefix=api_v1_prefix)
+app.include_router(reports_router, prefix=api_v1_prefix)
+app.include_router(health_router, prefix=api_v1_prefix)
 
 @app.get("/health", tags=["System"])
 @app.get("/api/v1/health", tags=["System"])

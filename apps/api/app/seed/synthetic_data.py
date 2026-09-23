@@ -17,24 +17,24 @@ def get_vayu_basin_fixtures() -> Dict[str, Any]:
         (77.10, 28.50)
     ])
 
-    # 2. Base Flood Polygons (Meandering River Inundation Corridor)
-    base_flood_poly = Polygon([
-        (77.14, 28.55),
-        (77.18, 28.59),
-        (77.21, 28.62),
-        (77.23, 28.67),
-        (77.21, 28.67),
-        (77.19, 28.63),
-        (77.16, 28.60),
-        (77.12, 28.56),
-        (77.14, 28.55)
+    # 2. Base Flood Polygons (Meandering River Channel Corridor)
+    river_line = LineString([
+        (77.135, 28.530),
+        (77.155, 28.565),
+        (77.168, 28.595),
+        (77.178, 28.618),
+        (77.180, 28.645),
+        (77.185, 28.675),
+        (77.190, 28.700)
     ])
+    # Baseline river channel: buffer 180m
+    base_flood_poly = river_line.buffer(0.0016)
 
     # 3. Habitations
     # HAB_01: Riverside Lowlands (Directly along riverbank, highly vulnerable)
-    hab1_poly = Polygon([(77.170, 28.590), (77.185, 28.590), (77.185, 28.600), (77.170, 28.600), (77.170, 28.590)])
-    # HAB_02: Terrace Settlement (Slightly elevated, exposed under monsoon surge)
-    hab2_poly = Polygon([(77.195, 28.610), (77.210, 28.610), (77.210, 28.620), (77.195, 28.620), (77.195, 28.610)])
+    hab1_poly = Polygon([(77.166, 28.590), (77.173, 28.590), (77.173, 28.600), (77.166, 28.600), (77.166, 28.590)])
+    # HAB_02: Terrace Settlement (Slightly elevated, dry at baseline, exposed under monsoon surge)
+    hab2_poly = Polygon([(77.177, 28.604), (77.182, 28.604), (77.182, 28.610), (77.177, 28.610), (77.177, 28.604)])
     # HAB_03: Plateau Village (High ground across the river, accessed by Bridge 01)
     hab3_poly = Polygon([(77.150, 28.640), (77.165, 28.640), (77.165, 28.650), (77.150, 28.650), (77.150, 28.640)])
     # HAB_04: Hillside Edge (Safe high elevation zone)
@@ -129,8 +129,8 @@ def get_vayu_basin_fixtures() -> Dict[str, Any]:
     # 5. Road Network Nodes & Segments
     # Connected graph connecting Habitations to Destinations across the river with BRIDGE_01
     nodes_data = [
-        {"code": "N_HAB1", "pt": Point(77.178, 28.595), "elev": 9.0},
-        {"code": "N_HAB2", "pt": Point(77.202, 28.615), "elev": 15.0},
+        {"code": "N_HAB1", "pt": Point(77.170, 28.595), "elev": 8.0},
+        {"code": "N_HAB2", "pt": Point(77.184, 28.606), "elev": 14.0},
         {"code": "N_HAB3", "pt": Point(77.158, 28.645), "elev": 23.0},
         {"code": "N_HAB4", "pt": Point(77.248, 28.565), "elev": 36.0},
 
@@ -138,9 +138,9 @@ def get_vayu_basin_fixtures() -> Dict[str, Any]:
         {"code": "N_DEST2", "pt": Point(77.225, 28.625), "elev": 18.0},
         {"code": "N_DEST3", "pt": Point(77.250, 28.580), "elev": 30.0},
 
-        {"code": "N_JUNC_SOUTH", "pt": Point(77.190, 28.580), "elev": 12.0},
-        {"code": "N_BRIDGE_SOUTH", "pt": Point(77.185, 28.610), "elev": 11.0},
-        {"code": "N_BRIDGE_NORTH", "pt": Point(77.175, 28.625), "elev": 16.0},
+        {"code": "N_JUNC_SOUTH", "pt": Point(77.195, 28.580), "elev": 12.0},
+        {"code": "N_BRIDGE_SOUTH", "pt": Point(77.182, 28.612), "elev": 11.0},
+        {"code": "N_BRIDGE_NORTH", "pt": Point(77.174, 28.625), "elev": 16.0},
         {"code": "N_JUNC_NORTH", "pt": Point(77.170, 28.640), "elev": 20.0},
 
         {"code": "N_BYPASS_EAST_1", "pt": Point(77.220, 28.580), "elev": 22.0},
@@ -152,10 +152,10 @@ def get_vayu_basin_fixtures() -> Dict[str, Any]:
     segments_data = [
         # HAB1 connects to Junction South & Bridge South
         ("SEG_H1_JUNC", "N_HAB1", "N_JUNC_SOUTH", 1800, 45, False),
-        ("SEG_H1_BRS", "N_HAB1", "N_BRIDGE_SOUTH", 1600, 40, False),
+        ("SEG_H1_BRS", "N_HAB1", "N_BRIDGE_SOUTH", 1400, 40, False),
 
         # HAB2 connects to Bridge South & Junction East
-        ("SEG_H2_BRS", "N_HAB2", "N_BRIDGE_SOUTH", 2100, 45, False),
+        ("SEG_H2_BRS", "N_HAB2", "N_BRIDGE_SOUTH", 800, 45, False),
         ("SEG_H2_BYP2", "N_HAB2", "N_BYPASS_EAST_2", 2400, 50, False),
         ("SEG_H2_DEST2", "N_HAB2", "N_DEST2", 1500, 40, False),
 
@@ -187,7 +187,7 @@ def get_vayu_basin_fixtures() -> Dict[str, Any]:
     return {
         "study_area": {
             "code": "STUDY_VAYU_01",
-            "name": "Vayu River Basin",
+            "name": "Vayu River Basin — Synthetic Demonstration Study Area",
             "boundary": to_geojson_str(study_area_poly)
         },
         "base_flood": to_geojson_str(base_flood_poly),

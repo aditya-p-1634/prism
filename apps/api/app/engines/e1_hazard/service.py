@@ -66,7 +66,7 @@ class HazardEngineE1:
 
         current_geom = base_flood_geom
         if not current_geom.is_valid:
-            current_geom = shapely.validation.make_valid(current_geom)
+            current_geom = shapely.make_valid(current_geom)
 
         # Predict future extent using planar metric expansion
         added_buffer_m = (expansion_factor - 1.0) * self.base_buffer_meters
