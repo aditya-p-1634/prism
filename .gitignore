@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.env
+
+# Database
+prism.db
+*.sqlite
+*.sqlite3
+
+# Node / Next.js
+apps/web/node_modules/
+apps/web/.next/
+apps/web/out/
+apps/web/build/
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
