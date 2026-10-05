@@ -89,7 +89,7 @@ export default function MapViewer({ layers, selectedEntity, onSelectEntity }: Ma
             }`}
           >
             <Navigation className="w-3 h-3 text-indigo-400" />
-            <span>Convoy Routes</span>
+            <span>Evacuation Routes</span>
           </button>
         </div>
       </div>
@@ -101,12 +101,16 @@ export default function MapViewer({ layers, selectedEntity, onSelectEntity }: Ma
           <span>VAYU BASIN OPERATIONAL MAP</span>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 rounded bg-red-600/60 border border-red-500"></span>
+          <span className="w-3 h-3 rounded bg-blue-600/40 border border-blue-400"></span>
+          <span className="text-slate-300">River Inundation Corridor</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <span className="w-3 h-3 rounded bg-red-600/30 border-2 border-dashed border-red-500"></span>
           <span className="text-slate-300">Active Red Zone (Immediate Hazard)</span>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 rounded bg-blue-600/40 border border-blue-400"></span>
-          <span className="text-slate-300">River Inundation Corridor</span>
+          <span className="w-3 h-3 rounded bg-amber-600/30 border border-amber-400"></span>
+          <span className="text-slate-300">Habitation (Settlement Footprint)</span>
         </div>
         <div className="flex items-center space-x-2">
           <span className="w-3 h-0.5 bg-emerald-500"></span>
@@ -139,14 +143,14 @@ export default function MapViewer({ layers, selectedEntity, onSelectEntity }: Ma
           <rect width="1000" height="800" fill="#070b12" />
           <rect width="1000" height="800" fill="url(#grid)" />
 
-          {/* 1. Flood Extents */}
+          {/* 1. Flood Extents (River Inundation Corridor - Clean Blue Water Layer) */}
           {showFlood && layers?.flood_polygons?.features?.map((f: any, idx: number) => {
             const coords = f.geometry.coordinates[0];
             return (
               <g key={`flood-${idx}`}>
                 <polygon
                   points={polyToSvgPoints(coords)}
-                  fill="rgba(37, 99, 235, 0.35)"
+                  fill="rgba(30, 64, 175, 0.35)"
                   stroke="#3b82f6"
                   strokeWidth="2"
                   className="transition-all duration-700"
@@ -155,17 +159,25 @@ export default function MapViewer({ layers, selectedEntity, onSelectEntity }: Ma
             );
           })}
 
-          {/* 2. Red Zones */}
+          {/* 2. Red Zones (E1 Active Hazard Zone - Crimson/Red Dashed Warning Perimeter) */}
           {showRedZones && layers?.red_zones?.features?.map((f: any, idx: number) => {
             const coords = f.geometry.coordinates[0];
             return (
               <g key={`rz-${idx}`}>
                 <polygon
                   points={polyToSvgPoints(coords)}
-                  fill="url(#redHatch)"
+                  fill="rgba(220, 38, 38, 0.22)"
                   stroke="#ef4444"
                   strokeWidth="2.5"
+                  strokeDasharray="8 4"
                   className="animate-pulse"
+                />
+                <polygon
+                  points={polyToSvgPoints(coords)}
+                  fill="url(#redHatch)"
+                  stroke="none"
+                  opacity="0.25"
+                  className="pointer-events-none"
                 />
               </g>
             );
@@ -219,7 +231,7 @@ export default function MapViewer({ layers, selectedEntity, onSelectEntity }: Ma
             );
           })}
 
-          {/* 5. Habitations */}
+          {/* 5. Habitations (Settlement Footprints - Preserved Orange/Amber Family) */}
           {showHabitations && layers?.habitations?.features?.map((h: any, idx: number) => {
             const coords = h.geometry.coordinates[0];
             const centroidX = coords.reduce((acc: number, c: number[]) => acc + toSvgX(c[0]), 0) / coords.length;
@@ -230,24 +242,25 @@ export default function MapViewer({ layers, selectedEntity, onSelectEntity }: Ma
             return (
               <g
                 key={`hab-${idx}`}
-                onClick={() => onSelectEntity({ type: "HABITATION", data: h.properties })}
+                onClick={() => onSelectEntity({ type: "HABITATION", id: h.properties.id, properties: h.properties, data: h.properties })}
                 className="cursor-pointer group"
               >
+                {/* Settlement Boundary - Stays Orange/Amber */}
                 <polygon
                   points={polyToSvgPoints(coords)}
-                  fill={isImmediate ? "rgba(239, 68, 68, 0.4)" : "rgba(245, 158, 11, 0.3)"}
-                  stroke={isImmediate ? "#ef4444" : "#f59e0b"}
-                  strokeWidth={isSelected ? "3" : "1.5"}
-                  className="transition-all group-hover:fill-opacity-70"
+                  fill={isSelected ? "rgba(245, 158, 11, 0.45)" : "rgba(245, 158, 11, 0.22)"}
+                  stroke={isSelected ? "#fbbf24" : "#f59e0b"}
+                  strokeWidth={isSelected ? "2.5" : "1.5"}
+                  className="transition-all group-hover:fill-opacity-50"
                 />
-                {/* Habitation Pin Marker */}
+                {/* Habitation Pin Marker (Orange with high-priority warning ring when in Red Zone) */}
                 <circle
                   cx={centroidX}
                   cy={centroidY}
                   r={isSelected ? "9" : "7"}
-                  fill={isImmediate ? "#ef4444" : "#f59e0b"}
-                  stroke="#ffffff"
-                  strokeWidth="2"
+                  fill="#f59e0b"
+                  stroke={isImmediate ? "#ef4444" : "#ffffff"}
+                  strokeWidth={isImmediate ? "2.5" : "2"}
                   className="shadow-md"
                 />
                 <text
@@ -264,12 +277,12 @@ export default function MapViewer({ layers, selectedEntity, onSelectEntity }: Ma
                 <text
                   x={centroidX + 12}
                   y={centroidY + 18}
-                  fill="#94a3b8"
+                  fill={isImmediate ? "#fca5a5" : "#94a3b8"}
                   fontSize="10"
                   fontFamily="monospace"
                   className="pointer-events-none"
                 >
-                  Pop: {h.properties.population} | Imm: {h.properties.immediate_priority_count}
+                  Pop: {h.properties.population} | {isImmediate ? "Prio: IMMEDIATE (In Red Zone)" : `Imm: ${h.properties.immediate_priority_count}`}
                 </text>
               </g>
             );
@@ -286,7 +299,7 @@ export default function MapViewer({ layers, selectedEntity, onSelectEntity }: Ma
             return (
               <g
                 key={`dest-${idx}`}
-                onClick={() => onSelectEntity({ type: "DESTINATION", data: d.properties })}
+                onClick={() => onSelectEntity({ type: "DESTINATION", id: d.properties.id, properties: d.properties, data: d.properties })}
                 className="cursor-pointer group"
               >
                 <circle

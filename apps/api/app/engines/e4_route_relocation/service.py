@@ -9,7 +9,7 @@ from app.models.entities import (
     RoadNode, RoadSegment, RoutePlan, RelocationGroup, RelocationAllocation,
     Habitation, Destination, PriorityRecord, CapacityState
 )
-from app.models.enums import OperationalStatusEnum, AllocationStatusEnum, PriorityClassEnum
+from app.models.enums import OperationalStatusEnum, AllocationStatusEnum, PriorityClassEnum, EvacuationStateEnum
 
 def clamp(val: float, min_val: float, max_val: float) -> float:
     return max(min_val, min(val, max_val))
@@ -213,6 +213,7 @@ class RouteAndRelocationEngineE4:
                     route_plan_id=assigned_route.id,
                     snapshot_id=snapshot_id,
                     allocation_status=AllocationStatusEnum.RECOMMENDED,
+                    evacuation_state=EvacuationStateEnum.PLANNED,
                     assigned_capacity_count=g.group_size,
                     reason_code=f"OPTIMAL_ASSIGNMENT_TO_{assigned_dest.code}"
                 ))
@@ -224,6 +225,7 @@ class RouteAndRelocationEngineE4:
                     route_plan_id=None,
                     snapshot_id=snapshot_id,
                     allocation_status=AllocationStatusEnum.UNMET,
+                    evacuation_state=EvacuationStateEnum.PLANNED,
                     assigned_capacity_count=0,
                     reason_code="NO_VIABLE_ROUTE_OR_EXHAUSTED_CAPACITY"
                 ))

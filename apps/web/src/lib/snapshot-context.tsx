@@ -1,11 +1,19 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { getSnapshots, runScenario, resetBaseline } from "./api";
+import { getSnapshots, runScenario, resetBaseline, getSystemTelemetry } from "./api";
 
 interface Toast {
   message: string;
   type: "info" | "success" | "warning" | "error";
+}
+
+interface SystemHealth {
+  apiOnline: boolean;
+  dbConnected: boolean;
+  status: "ONLINE" | "DEGRADED" | "OFFLINE" | "CHECKING";
+  fileSizeKb?: number;
+  queryLatencyMs?: number;
 }
 
 interface SnapshotContextType {
@@ -20,6 +28,8 @@ interface SnapshotContextType {
   scenarioRunning: boolean;
   toast: Toast | null;
   showToast: (message: string, type?: "info" | "success" | "warning" | "error") => void;
+  systemHealth: SystemHealth;
+  refreshHealth: () => Promise<void>;
 }
 
 const SnapshotContext = createContext<SnapshotContextType | undefined>(undefined);
@@ -29,6 +39,11 @@ export function SnapshotProvider({ children }: { children: ReactNode }) {
   const [snapshots, setSnapshots] = useState<any[]>([]);
   const [scenarioRunning, setScenarioRunning] = useState(false);
   const [toast, setToast] = useState<Toast | null>(null);
+  const [systemHealth, setSystemHealth] = useState<SystemHealth>({
+    apiOnline: false,
+    dbConnected: false,
+    status: "CHECKING"
+  });
 
   const showToast = (message: string, type: "info" | "success" | "warning" | "error" = "info") => {
     setToast({ message, type });
@@ -37,15 +52,42 @@ export function SnapshotProvider({ children }: { children: ReactNode }) {
     }, 4500);
   };
 
+  const refreshHealth = async () => {
+    try {
+      const tel = await getSystemTelemetry();
+      const dbOk = tel?.database?.connected ?? false;
+      setSystemHealth({
+        apiOnline: true,
+        dbConnected: dbOk,
+        status: dbOk ? "ONLINE" : "DEGRADED",
+        fileSizeKb: tel?.database?.file_size_kb,
+        queryLatencyMs: tel?.measured_telemetry?.query_latency_ms
+      });
+    } catch (err) {
+      setSystemHealth({
+        apiOnline: false,
+        dbConnected: false,
+        status: "OFFLINE"
+      });
+    }
+  };
+
   const refreshSnapshots = async () => {
     try {
       const res = await getSnapshots();
       const list = res.data || [];
       setSnapshots(list);
     } catch (err: any) {
-      console.error("Failed to load snapshots:", err);
+      // Handled via health check
     }
   };
+
+  useEffect(() => {
+    refreshHealth();
+    refreshSnapshots();
+    const interval = setInterval(refreshHealth, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     refreshSnapshots();
@@ -67,6 +109,7 @@ export function SnapshotProvider({ children }: { children: ReactNode }) {
       const res = await runScenario("MONSOON_SURGE_01", overrides || {});
       const delta = res.data;
       await refreshSnapshots();
+      await refreshHealth();
       if (delta.scenario_snapshot_id) {
         setSnapshotId(delta.scenario_snapshot_id);
       }
@@ -85,6 +128,7 @@ export function SnapshotProvider({ children }: { children: ReactNode }) {
       showToast("Restoring canonical baseline reality...", "info");
       await resetBaseline();
       await refreshSnapshots();
+      await refreshHealth();
       setSnapshotId("SNAP_BASE_001");
       showToast("Canonical baseline restored (SNAP_BASE_001).", "success");
     } catch (err: any) {
@@ -105,7 +149,9 @@ export function SnapshotProvider({ children }: { children: ReactNode }) {
         handleResetBaseline,
         scenarioRunning,
         toast,
-        showToast
+        showToast,
+        systemHealth,
+        refreshHealth
       }}
     >
       {children}

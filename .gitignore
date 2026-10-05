@@ -22,3 +22,12 @@ apps/web/build/
 Thumbs.db
 .vscode/
 .idea/
+
+# Generated Python packaging metadata
+*.egg-info/
+
+# Research datasets
+data/
+
+# Presentation
+PRISM_SIH_2026_Team_Master_Study_Presentation_Guide.docx

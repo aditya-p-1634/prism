@@ -1,7 +1,7 @@
 # PRISM — Predictive Relocation & Infrastructure Safety Matrix
 
 **Problem Statement**: SIH 26191 — *Intelligent Identification of Hazard-Based Red Zones, Carrying Capacity Assessment, and Immediate Relocation Needs for Vulnerable Habitations*  
-**Architecture**: Software-First Modular Monolith | Python/FastAPI Backend | Next.js/React Frontend | PostgreSQL/PostGIS / Embedded Spatial SQLite
+**Architecture**: Software-First Modular Monolith | Python/FastAPI Backend | Next.js/React Frontend | Current Prototype: SQLite + SQLAlchemy with Shapely | Production Migration Path: PostgreSQL + PostGIS
 
 ---
 
@@ -16,12 +16,12 @@ When emergency conditions deteriorate, consequences propagate deterministically 
 $$\Delta \text{Hazard} \implies \Delta \text{Red Zones} \implies \Delta \text{Exposure} \implies \Delta \text{Priority} \implies \Delta \text{Capacity} \implies \Delta \text{Route Validity} \implies \Delta \text{Relocation Reallocation}$$
 
 ### Engine Responsibilities
-- **Engine 1 (Multi-Hazard Intelligence)**: Inundation polygons, planar buffer spatial expansion, operational Red Zone classification, and confidence scoring.
-- **Engine 2 (People & Vulnerability Priority)**: Habitation exposure intersection, demographic vulnerability ($P$-score: $0.35E + 0.25V + 0.20U + 0.10A_{\text{risk}} + 0.10\text{Ast}$), and explainable reason codes.
-- **Engine 3 (Destination & Carrying Capacity)**: Hard safety filtering, multi-resource carrying capacity (shelter, water, food, healthcare, sanitation), dynamic bottleneck detection, and remaining capacity calculation.
-- **Engine 4 (Safe Route Intelligence & Optimization)**: Road network graph, flooded edge pruning, multi-criteria A* routing, and Google OR-Tools CP-SAT integer programming solver for group-to-site allocation.
-- **Engine 5 (Predictive Simulation & Adaptation)**: Scenario controller, dependency cascade resolution, and baseline-isolated causal delta reporting.
-- **Engine 6 (Data/GIS/System Backbone)**: Canonical repositories, dual-CRS transformations, immutable snapshots, event delivery, and tamper-evident audit logging.
+- **Engine 1 (Multi-Hazard Intelligence & Prediction)**: Inundation polygons, planar buffer spatial expansion, operational Red Zone classification, and confidence scoring.
+- **Engine 2 (Habitation/Household Vulnerability & Priority)**: Habitation exposure intersection, demographic vulnerability ($P$-score: $0.35E + 0.25V + 0.20U + 0.10A_{\text{risk}} + 0.10\text{Ast}$), and explainable reason codes.
+- **Engine 3 (Safe Destination & Dynamic Capacity)**: Hard safety filtering, multi-resource bottleneck capacity evaluation (minimum supportable population across critical resources), and remaining headroom calculation.
+- **Engine 4 (Safe Routing & Relocation Optimization)**: Road network graph, flooded edge pruning, NetworkX Dijkstra safe routing, and Google OR-Tools CP-SAT integer programming solver for group-to-site allocation.
+- **Engine 5 (Predictive Simulation & Adaptation / Scenario Delta)**: Scenario controller, dependency cascade resolution, and baseline-isolated causal delta reporting.
+- **Engine 6 (Data/GIS/System Integration Backbone)**: Canonical repositories, dual-CRS transformations, immutable snapshots, event delivery, and append-only decision audit logging. Infrastructure provider; does not make operational decisions.
 
 ---
 
@@ -88,9 +88,9 @@ python scripts/run_scenario.py MONSOON_SURGE_01
 3. **Priority Elevation**: Riverside Lowlands households are upgraded to `IMMEDIATE` evacuation priority ($P \ge 75$).
 4. **Infrastructure Failure**: `BRIDGE_01` collapses and is marked `CLOSED`.
 5. **Resource Bottleneck**: Destination 2 suffers a $-25\%$ drop in water purification capacity, reducing its effective capacity from 60 to 45 persons.
-6. **Adaptive Re-routing**: E4 invalidates bridge routes and re-routes convoys across the elevated bypass corridor.
-7. **CP-SAT Re-optimization**: Groups are reallocated to Destination 1 and Destination 3; remaining unaccommodated demand is explicitly output as `UNMET` demand rather than forcing unsafe assignments.
-8. **Authority Review**: Commander reviews the causal delta report and logs an audited override with mandatory justification.
+6. **Adaptive Re-routing**: E4 identifies viable bypass corridors across the elevated road network after bridge invalidation.
+7. **CP-SAT Re-optimization**: E4 reallocates groups across viable destinations (Destinations 1, 2, and 3); any unaccommodated demand is explicitly output as `UNMET` demand rather than forcing unsafe assignments.
+8. **Authority Review**: Authorized District Authority reviews the causal delta report and logs an audited override with mandatory operational justification.
 
 ---
 

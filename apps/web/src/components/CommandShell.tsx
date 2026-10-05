@@ -39,8 +39,8 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Hazard Intel (E1)", href: "/hazards", icon: AlertTriangle, tag: "E1" },
   { label: "Population & Vulnerability (E2)", href: "/population", icon: Users, tag: "E2" },
   { label: "Capacity & Bottlenecks (E3)", href: "/resources", icon: Building2, tag: "E3" },
-  { label: "Safe Routing (E4)", href: "/routing", icon: Navigation, tag: "E4" },
-  { label: "Causal Simulation (E5)", href: "/simulation", icon: GitCompare, tag: "E5" },
+  { label: "Safe Routing & Relocation (E4)", href: "/routing", icon: Navigation, tag: "E4" },
+  { label: "Causal Simulation & Delta (E5)", href: "/simulation", icon: GitCompare, tag: "E5" },
   { label: "Scenario Registry", href: "/scenarios", icon: Layers },
   { label: "Authority Overrides", href: "/overrides", icon: ShieldCheck },
   { label: "Operational Reports", href: "/reports", icon: FileText },
@@ -58,7 +58,8 @@ export default function CommandShell({ children }: { children: React.ReactNode }
     isBaseline,
     handleResetBaseline,
     scenarioRunning,
-    toast
+    toast,
+    systemHealth
   } = useSnapshot();
 
   const [snapDropdownOpen, setSnapDropdownOpen] = useState(false);
@@ -183,8 +184,24 @@ export default function CommandShell({ children }: { children: React.ReactNode }
 
           {/* Decision Support Mode Badge */}
           <div className="hidden lg:flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-[11px] font-mono text-slate-300">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>DECISION SUPPORT MODE</span>
+            <span className={`w-1.5 h-1.5 rounded-full ${
+              systemHealth.status === "ONLINE"
+                ? "bg-emerald-400 animate-pulse"
+                : systemHealth.status === "DEGRADED"
+                ? "bg-amber-400"
+                : systemHealth.status === "CHECKING"
+                ? "bg-blue-400"
+                : "bg-rose-400"
+            }`} />
+            <span>
+              {systemHealth.status === "ONLINE"
+                ? "DECISION SUPPORT MODE"
+                : systemHealth.status === "DEGRADED"
+                ? "DEGRADED TELEMETRY"
+                : systemHealth.status === "CHECKING"
+                ? "CONNECTING..."
+                : "SYSTEM OFFLINE"}
+            </span>
           </div>
 
           {/* Human-in-the-Loop Authority Profile */}
@@ -253,7 +270,26 @@ export default function CommandShell({ children }: { children: React.ReactNode }
           <div className="mt-auto p-3 border-t border-slate-800/80 bg-[#070b12]/60">
             <div className="text-[10px] font-mono text-slate-400 mb-2 flex items-center justify-between">
               <span>E1–E6 BACKBONE</span>
-              <span className="text-emerald-400 font-semibold">ONLINE</span>
+              <span className={`font-semibold flex items-center space-x-1.5 ${
+                systemHealth.status === "ONLINE"
+                  ? "text-emerald-400"
+                  : systemHealth.status === "DEGRADED"
+                  ? "text-amber-400"
+                  : systemHealth.status === "CHECKING"
+                  ? "text-blue-400"
+                  : "text-rose-400"
+              }`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${
+                  systemHealth.status === "ONLINE"
+                    ? "bg-emerald-400 animate-pulse"
+                    : systemHealth.status === "DEGRADED"
+                    ? "bg-amber-400"
+                    : systemHealth.status === "CHECKING"
+                    ? "bg-blue-400 animate-ping"
+                    : "bg-rose-400"
+                }`} />
+                <span>{systemHealth.status}</span>
+              </span>
             </div>
             <div className="grid grid-cols-6 gap-1 text-[9px] font-mono text-center">
               {["E1", "E2", "E3", "E4", "E5", "E6"].map((e) => (

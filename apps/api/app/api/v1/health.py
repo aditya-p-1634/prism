@@ -34,12 +34,13 @@ def get_system_telemetry(db: Session = Depends(get_db)):
         db_error = str(e)
 
     # 2. Database File Info
-    db_url = settings.DATABASE_URL
+    db_url = settings.resolved_database_url
     db_file_size_kb = 0
     if "sqlite:///" in db_url:
-        db_path = db_url.replace("sqlite:///", "")
+        db_path = os.path.normpath(db_url.replace("sqlite:///", ""))
         if os.path.exists(db_path):
             db_file_size_kb = round(os.path.getsize(db_path) / 1024.0, 1)
+
 
     # 3. Snapshot Status
     snapshots = db.query(StateSnapshot).order_by(StateSnapshot.created_at.desc()).all()

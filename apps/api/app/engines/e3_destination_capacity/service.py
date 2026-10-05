@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 import shapely
 from app.gis.spatial import to_shapely, intersects
 from app.models.entities import Destination, DestinationResource, CapacityState

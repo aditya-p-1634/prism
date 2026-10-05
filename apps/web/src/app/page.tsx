@@ -218,7 +218,7 @@ export default function CommandDashboardPage() {
           </div>
         </div>
 
-        {/* KPI 4: Assigned Convoys */}
+        {/* KPI 4: Assigned Relocations */}
         <div className="p-4 rounded-xl bg-[#0c121d] border border-slate-800 shadow-md flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
             <span>ASSIGNED RELOCATIONS</span>
@@ -323,12 +323,12 @@ export default function CommandDashboardPage() {
 
                 <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
                   <div className="font-semibold text-emerald-400 text-[11px] font-mono">
-                    3. ADAPTIVE RELOCATION ACTION
+                    3. ADAPTIVE RELOCATION ACTION (E4)
                   </div>
                   <p className="text-slate-300 mt-1">
-                    CP-SAT dynamically reallocated <span className="text-emerald-300 font-bold">73 people</span> away from DEST_01:
-                    46 to DEST_03 (Sports Complex), 27 to DEST_02 (School), with 20 remaining safe at DEST_01.{" "}
-                    <span className="text-emerald-400 font-semibold">0 unmet groups</span>.
+                    E4 CP-SAT solver reallocated <span className="text-emerald-300 font-bold">73 people</span> away from baseline DEST_01:
+                    46 to DEST_03 (Sports Complex), 27 to DEST_02 (School), and 20 remaining at DEST_01.
+                    All <span className="text-cyan-300 font-semibold">53 hazard-affected people</span> (16 HH) accommodated across viable shelters with <span className="text-emerald-400 font-semibold">0 unmet demand</span> (93 total modeled basin population).
                   </p>
                 </div>
               </div>

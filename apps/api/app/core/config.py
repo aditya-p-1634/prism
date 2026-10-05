@@ -25,8 +25,9 @@ class Settings(BaseSettings):
     def resolved_database_url(self) -> str:
         if self.DATABASE_URL.startswith("sqlite:///./"):
             rel_file = self.DATABASE_URL.replace("sqlite:///./", "")
-            return f"sqlite:///{os.path.join(repo_root, rel_file).replace('\\\\', '/')}"
+            return f"sqlite:///{os.path.join(repo_root, rel_file).replace('\\', '/')}"
         return self.DATABASE_URL
+
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(repo_root, ".env"),

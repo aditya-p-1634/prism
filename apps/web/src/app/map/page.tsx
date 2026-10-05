@@ -234,18 +234,25 @@ export default function GISWorkspacePage() {
                 <span className="text-[10px] font-mono text-cyan-400 uppercase font-semibold">
                   {selectedEntity.type || "ENTITY"}
                 </span>
-                <div className="text-sm font-bold text-white">
-                  {selectedEntity.properties?.name || selectedEntity.properties?.code || selectedEntity.id}
-                </div>
-                <div className="text-xs text-slate-400 font-mono">
-                  ID: {selectedEntity.properties?.id || selectedEntity.id}
-                </div>
+                {(() => {
+                  const props = selectedEntity.properties || selectedEntity.data || {};
+                  return (
+                    <>
+                      <div className="text-sm font-bold text-white">
+                        {props.name || props.code || selectedEntity.id}
+                      </div>
+                      <div className="text-xs text-slate-400 font-mono">
+                        ID: {props.id || selectedEntity.id}
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
 
               {/* Entity Property List */}
               <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2 text-xs font-mono">
-                {Object.entries(selectedEntity.properties || {})
-                  .filter(([k]) => !["id", "geom", "location_geojson"].includes(k))
+                {Object.entries(selectedEntity.properties || selectedEntity.data || {})
+                  .filter(([k]) => !["id", "geom", "location_geojson", "centroid_geom"].includes(k))
                   .map(([k, v]) => (
                     <div key={k} className="flex items-start justify-between border-b border-slate-900 pb-1">
                       <span className="text-slate-400 capitalize">{k.replace(/_/g, " ")}:</span>

@@ -50,10 +50,10 @@ export default function AuditPage() {
           </div>
           <div>
             <h1 className="text-sm font-bold text-white tracking-wide">
-              Tamper-Evident Governance & Audit Trail
+              Operational Governance & Decision Audit Trail
             </h1>
             <div className="text-xs text-slate-400 font-mono">
-              Immutable Traceability of Operational Changes | Total Events:{" "}
+              Append-Only Traceability of Authority Decisions & Scenarios | Total Events:{" "}
               <span className="text-indigo-400 font-semibold">{events.length}</span>
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function AuditPage() {
             </div>
           ) : (
             <div className="text-center py-12 text-slate-500 font-mono text-xs">
-              Select an audit event from the stream to view its cryptographic diff and operational lineage.
+              Select an audit event from the stream to view its state diff and operational lineage.
             </div>
           )}
         </div>

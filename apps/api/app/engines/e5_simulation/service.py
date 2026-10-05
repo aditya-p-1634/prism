@@ -48,7 +48,7 @@ class SimulationEngineE5:
             label=f"{scenario.name} Execution",
             snapshot_type="SCENARIO",
             scenario_id=scenario.id,
-            is_immutable=True
+            is_immutable=False
         )
 
         # Ingest baseline entities

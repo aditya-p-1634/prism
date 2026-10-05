@@ -136,3 +136,73 @@ class HazardEngineE1:
             "current_geom": current_geom,
             "predicted_geom": predicted_geom
         }
+
+    def evaluate_from_prediction(
+        self,
+        predicted_river_level: float,
+        study_area_id: str,
+        snapshot_id: str,
+        base_flood_geom: shapely.Geometry,
+        rainfall_multiplier_delta: float = 0.0,
+        horizon_hours: float = 6.0,
+        confidence: float = 0.85
+    ) -> Dict[str, Any]:
+        """
+        Consumes an A.6 validated predicted hazard state to evaluate projected
+        flood geometry and red-zone extents without modifying baseline scenario logic.
+        """
+        return self.evaluate_hazard_state(
+            study_area_id=study_area_id,
+            snapshot_id=snapshot_id,
+            base_flood_geom=base_flood_geom,
+            rainfall_multiplier_delta=rainfall_multiplier_delta,
+            river_level_current=predicted_river_level,
+            river_level_baseline=10.0,
+            horizon_hours=horizon_hours,
+            base_confidence=confidence
+        )
+
+    def evaluate_from_observation(
+        self,
+        observation: Any,
+        study_area_id: str,
+        snapshot_id: str,
+        base_flood_geom: shapely.Geometry,
+        rainfall_multiplier_delta: float = 0.0,
+        horizon_hours: float = 6.0
+    ) -> Dict[str, Any]:
+        """
+        Consumes an A.7 validated real-world telemetry observation to drive E1.
+
+        CRITICAL NOTICE (Section 12):
+        Prototype spatial transformation — not a validated hydrodynamic inundation model.
+        A single river gauge measurement does not produce an authoritative flood map.
+        This provides a controlled spatial projection for PRISM prototype relocation planning.
+        """
+        gauge_baseline = 2.0 if getattr(observation, "station_code", "") == "NANDAMBAKKAM_CHECKDAM" else 10.0
+
+        eval_res = self.evaluate_hazard_state(
+            study_area_id=study_area_id,
+            snapshot_id=snapshot_id,
+            base_flood_geom=base_flood_geom,
+            rainfall_multiplier_delta=rainfall_multiplier_delta,
+            river_level_current=observation.value,
+            river_level_baseline=gauge_baseline,
+            horizon_hours=horizon_hours,
+            base_confidence=1.0  # Real verified observation
+        )
+
+        # Explicitly tag observation-driven provenance on hazard prediction and evidence
+        eval_res["hazard_state"].state_type = StateTypeEnum.OBSERVED
+        eval_res["hazard_prediction"].method_identifier = "PROTOTYPE_OBSERVATION_SPATIAL_TRANSFORMATION_v1"
+
+        # Update evidence to point to real telemetry observation
+        evidence = eval_res["evidence"]
+        evidence.metric_name = "RIVER_WATER_LEVEL"
+        evidence.measured_value = observation.value
+        evidence.threshold_value = None  # Severity unclassified unless documented
+        evidence.source_reference = f"STATION:{observation.station_code}:OBS:{observation.id}"
+
+        return eval_res
+
+

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
-from app.models.enums import OperationalStatusEnum, AllocationStatusEnum, PriorityClassEnum
+from app.models.enums import OperationalStatusEnum, AllocationStatusEnum, PriorityClassEnum, EvacuationStateEnum
 
 class RoadSegmentDTO(BaseModel):
     id: str
@@ -49,6 +49,7 @@ class RelocationAllocationDTO(BaseModel):
     habitation_name: Optional[str] = None
     destination_name: Optional[str] = None
     allocation_status: AllocationStatusEnum
+    evacuation_state: EvacuationStateEnum = EvacuationStateEnum.PLANNED
     assigned_capacity_count: int
     reason_code: str
 
@@ -56,3 +57,17 @@ class RelocationOverrideDTO(BaseModel):
     allocation_id: str
     new_destination_id: str
     justification: str
+
+class EvacuationStateTransitionDTO(BaseModel):
+    to_state: EvacuationStateEnum
+    justification: str
+    expected_current_state: Optional[EvacuationStateEnum] = None
+
+class EvacuationStateResponseDTO(BaseModel):
+    allocation_id: str
+    snapshot_id: str
+    group_id: str
+    allocation_status: AllocationStatusEnum
+    evacuation_state: EvacuationStateEnum
+    allowed_transitions: List[EvacuationStateEnum]
+

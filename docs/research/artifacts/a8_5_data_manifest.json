@@ -1,0 +1,388 @@
+{
+  "manifest_version": "A.8.5.1",
+  "description": "PRISM A.8.5 Terrain & Historical Flood Validation Research Manifest",
+  "generated_by": "PRISM A.8.5 Provenance Engine",
+  "datasets": {
+    "fabdem": {
+      "filename": "N13E080_FABDEM_V1-2.tif",
+      "path": "D:\\Projects\\PRISM\\data\\research\\N13E080_FABDEM_V1-2.tif",
+      "status": "AVAILABLE",
+      "sha256": "720c8ce4b994126ef1f369fb602aa5760ca2ef7128f363b55d016681bed3c7f9",
+      "file_size_bytes": 6613279,
+      "crs": "EPSG:4326",
+      "dimensions": {
+        "width": 3600,
+        "height": 3600,
+        "bands": 1
+      },
+      "resolution": [
+        0.0002777777777777778,
+        0.0002777777777777773
+      ],
+      "dtype": "float32",
+      "nodata": -9999.0,
+      "bounding_box": {
+        "minx": 79.99986111111112,
+        "miny": 13.000138888888891,
+        "maxx": 80.99986111111112,
+        "maxy": 14.00013888888889
+      },
+      "source_provider": "University of Bristol / FATHOM (FABDEM v1-2)",
+      "acquisition_provenance": "FABDEM v1-2 (Forest and Buildings removed Copernicus DEM). Global bare-earth DEM correcting Copernicus GLO-30 DSM via machine learning.",
+      "geometry_type": "Raster / GeoTIFF",
+      "feature_count": 12960000,
+      "relevant_fields": [
+        "elevation (meters above WGS84/EGM96)"
+      ],
+      "temporal_event_context": "Static baseline terrain representation (derived from 2011-2015 satellite imagery).",
+      "known_limitations": "1. Approximately 30 m spatial resolution obscures narrow channels, roadside ditches, and micro-embankments. 2. Tile N13E080 covers 13.0\u00b0N to 14.0\u00b0N; southern Chennai (Velachery, Madipakkam, Tambaram, Pallikaranai) falls south of 13.0\u00b0N in tile N12E080 (not present in dataset). 3. Vertical accuracy is typically \u00b11-2 m, which can lead to significant error in low-gradient coastal floodplains."
+    },
+    "nrsc_kml": {
+      "filename": "7cb3cecf-a95a-4786-8032-9c7417655d24.kml",
+      "path": "D:\\Projects\\PRISM\\data\\research\\7cb3cecf-a95a-4786-8032-9c7417655d24.kml",
+      "status": "AVAILABLE",
+      "sha256": "fa6943b2916d625dbc4de3b43cbe4d768a956b2f584fa3c73244fae32cee7a2a",
+      "file_size_bytes": 5474779,
+      "crs": "EPSG:4326",
+      "feature_count": 4001,
+      "geometry_types": {
+        "MultiPolygon": 4001
+      },
+      "fields": [
+        "id",
+        "Name",
+        "description",
+        "timestamp",
+        "begin",
+        "end",
+        "altitudeMode",
+        "tessellate",
+        "extrude",
+        "visibility",
+        "drawOrder",
+        "icon",
+        "id2",
+        "area",
+        "perimeter",
+        "pixelvalue"
+      ],
+      "bounding_box": {
+        "minx": 79.3466337952075,
+        "miny": 12.5189872481577,
+        "maxx": 80.3191437258226,
+        "maxy": 13.3297221042727
+      },
+      "source_provider": "National Remote Sensing Centre (NRSC) / Indian Space Research Organisation (ISRO)",
+      "acquisition_provenance": "Vectorized flood inundation zone polygons derived from satellite radar/optical observations and hydrodynamic simulation of the Adyar and Cooum river basins for the Dec 2015 Chennai flood disaster.",
+      "relevant_fields": [
+        "id",
+        "area",
+        "perimeter",
+        "pixelvalue",
+        "geometry"
+      ],
+      "temporal_event_context": "Peak Chennai flood event, November 29 \u2013 December 07, 2015.",
+      "known_limitations": "1. Official NRSC reference report explicitly states that no downstream discharge data was available, so hydrodynamic simulation could not be calibrated against field discharge. 2. Public metadata does not document the semantic distinction between pixelvalue=1 and pixelvalue=13. 3. Polygons represent a composite satellite/model view, NOT verified ground truth."
+    },
+    "gcc_kml": {
+      "filename": "31523c86-0ad1-42f5-b4d1-297daa4bbcd6.kml",
+      "path": "D:\\Projects\\PRISM\\data\\research\\31523c86-0ad1-42f5-b4d1-297daa4bbcd6.kml",
+      "status": "AVAILABLE",
+      "sha256": "19d579591cd74785ba9a40b1e36464a89dfabf129057c87589784bc25a86d2d0",
+      "file_size_bytes": 288081,
+      "crs": "EPSG:4326",
+      "feature_count": 327,
+      "geometry_types": {
+        "Point": 327
+      },
+      "fields": [
+        "id",
+        "Name",
+        "description",
+        "timestamp",
+        "begin",
+        "end",
+        "altitudeMode",
+        "tessellate",
+        "extrude",
+        "visibility",
+        "drawOrder",
+        "icon",
+        "id2",
+        "location",
+        "inundation_level",
+        "vulnerability",
+        "inundation_ft",
+        "vhvul_ab5f",
+        "hvul_3to5f",
+        "mvul_2to3f",
+        "lvul_less2",
+        "zone",
+        "ward",
+        "sl__no_",
+        "latitude",
+        "longitude"
+      ],
+      "bounding_box": {
+        "minx": 80.147103458249,
+        "miny": 12.9065341808379,
+        "maxx": 80.3265634393952,
+        "maxy": 13.2262730340807
+      },
+      "source_provider": "Greater Chennai Corporation (GCC)",
+      "acquisition_provenance": "Municipal flood hotspot survey compiled by GCC disaster management teams during and immediately following the December 2015 Chennai floods.",
+      "relevant_fields": [
+        "location",
+        "inundation_level",
+        "vulnerability",
+        "inundation_ft",
+        "latitude",
+        "longitude",
+        "zone",
+        "ward"
+      ],
+      "temporal_event_context": "December 2015 Chennai flood event municipal relief records.",
+      "known_limitations": "1. Point observations typically represent road intersections or municipal landmarks, not entire inundated footprints. 2. Depth categories (<2ft, 2-3ft, 3-5ft, >5ft) are qualitative municipal triage bins, not survey-grade stage readings. 3. Reporting density is uneven across GCC administrative zones."
+    },
+    "kancheepuram_kml": {
+      "filename": "3746a11e-620f-40e4-94a1-21ea8fe2a35e.kml",
+      "path": "D:\\Projects\\PRISM\\data\\research\\3746a11e-620f-40e4-94a1-21ea8fe2a35e.kml",
+      "status": "AVAILABLE",
+      "sha256": "97b31cef79a339f778dd0eb5e84fb770ea5fbfce5483cc31be5034ebdb351359",
+      "file_size_bytes": 126033,
+      "crs": "EPSG:4326",
+      "feature_count": 139,
+      "geometry_types": {
+        "Point": 139
+      },
+      "fields": [
+        "id",
+        "Name",
+        "description",
+        "timestamp",
+        "begin",
+        "end",
+        "altitudeMode",
+        "tessellate",
+        "extrude",
+        "visibility",
+        "drawOrder",
+        "icon",
+        "id2",
+        "sl_no_",
+        "taluka",
+        "vulnerability",
+        "details",
+        "inundation",
+        "source",
+        "longitude",
+        "latitude",
+        "name_region",
+        "escape_route",
+        "distance"
+      ],
+      "bounding_box": {
+        "minx": 79.8186199999998,
+        "miny": 12.558107,
+        "maxx": 80.2504449999999,
+        "maxy": 13.0387259999999
+      },
+      "source_provider": "Tamil Nadu District Administration (Kancheepuram District)",
+      "acquisition_provenance": "District disaster management relief hotspot inventory with taluka and escape routes.",
+      "relevant_fields": [
+        "sl_no_",
+        "taluka",
+        "vulnerability",
+        "details",
+        "inundation",
+        "escape_route",
+        "distance"
+      ],
+      "temporal_event_context": "2015 Chennai & Peri-urban flood event.",
+      "known_limitations": "Qualitative vulnerability classifications; rural/peri-urban focus outside GCC boundary."
+    },
+    "tiruvallur_kml": {
+      "filename": "d8d3ac1d-b486-4446-bc76-3dff0af8cbdb.kml",
+      "path": "D:\\Projects\\PRISM\\data\\research\\d8d3ac1d-b486-4446-bc76-3dff0af8cbdb.kml",
+      "status": "AVAILABLE",
+      "sha256": "f89a2e53bfc43cdefe1f9a0d606e7fdd323669e973104fada61215f1bc10a3ec",
+      "file_size_bytes": 140964,
+      "crs": "EPSG:4326",
+      "feature_count": 200,
+      "geometry_types": {
+        "Point": 200
+      },
+      "fields": [
+        "id",
+        "Name",
+        "description",
+        "timestamp",
+        "begin",
+        "end",
+        "altitudeMode",
+        "tessellate",
+        "extrude",
+        "visibility",
+        "drawOrder",
+        "icon",
+        "id2",
+        "sl",
+        "name_municipality",
+        "details",
+        "vulnerability",
+        "name_region",
+        "latitude",
+        "longitude"
+      ],
+      "bounding_box": {
+        "minx": 78.558276999991,
+        "miny": 9.66780199999998,
+        "maxx": 80.32551,
+        "maxy": 13.529616
+      },
+      "source_provider": "Tamil Nadu District Administration (Tiruvallur District)",
+      "acquisition_provenance": "District disaster management flood hotspot inventory for northern peri-urban fringe.",
+      "relevant_fields": [
+        "sl",
+        "name_municipality",
+        "details",
+        "vulnerability",
+        "name_region"
+      ],
+      "temporal_event_context": "2015 Chennai & Peri-urban flood event.",
+      "known_limitations": "Qualitative classifications; spatial points represent settlements rather than surveyed inundation depths."
+    },
+    "stagnation_kml": {
+      "filename": "db3840ff-9f33-43a3-b826-2f9dae1bcb78.kml",
+      "path": "D:\\Projects\\PRISM\\data\\research\\db3840ff-9f33-43a3-b826-2f9dae1bcb78.kml",
+      "status": "AVAILABLE",
+      "sha256": "5b7d79bc3ba0b59ef5b14b79d8eba65caa905eaf0f5f468b33a6177ffb16704e",
+      "file_size_bytes": 513049,
+      "crs": "EPSG:4326",
+      "feature_count": 753,
+      "geometry_types": {
+        "Point": 753
+      },
+      "fields": [
+        "id",
+        "Name",
+        "description",
+        "timestamp",
+        "begin",
+        "end",
+        "altitudeMode",
+        "tessellate",
+        "extrude",
+        "visibility",
+        "drawOrder",
+        "icon",
+        "timestamp2",
+        "begin2",
+        "end2",
+        "altitudeMode2",
+        "tessellate2",
+        "extrude2",
+        "visibility2",
+        "drawOrder2",
+        "icon2",
+        "OBJECTID",
+        "OID_",
+        "ZONE",
+        "DIVISION",
+        "LAT",
+        "LONG_"
+      ],
+      "bounding_box": {
+        "minx": 80.1425033,
+        "miny": 12.8729893,
+        "maxx": 80.324751,
+        "maxy": 13.225626
+      },
+      "source_provider": "Greater Chennai Corporation / Smart City Initiative",
+      "acquisition_provenance": "Catalog of persistent urban water stagnation and drainage bottleneck locations.",
+      "relevant_fields": [
+        "ZONE",
+        "DIVISION",
+        "LAT",
+        "LONG_"
+      ],
+      "temporal_event_context": "Historical monsoon drainage congestion records.",
+      "known_limitations": "Captures local micro-drainage failures and ponding, which may be independent of riverine overflow."
+    },
+    "roads_kml": {
+      "filename": "46d6c279-ae09-43a8-8691-7a5386f69e3a.kml",
+      "path": "D:\\Projects\\PRISM\\data\\research\\46d6c279-ae09-43a8-8691-7a5386f69e3a.kml",
+      "status": "AVAILABLE",
+      "sha256": "eb396c38f243ae4f54fd8dde40c6c5daabface91fb3e17b0975aa3964c9f167f",
+      "file_size_bytes": 5502138,
+      "crs": "EPSG:4326",
+      "feature_count": 7894,
+      "geometry_types": {
+        "LineString": 7856,
+        "MultiLineString": 38
+      },
+      "fields": [
+        "id",
+        "Name",
+        "description",
+        "timestamp",
+        "begin",
+        "end",
+        "altitudeMode",
+        "tessellate",
+        "extrude",
+        "visibility",
+        "drawOrder",
+        "icon",
+        "class",
+        "oneway",
+        "osm_id",
+        "type",
+        "is_flooded",
+        "layer",
+        "area",
+        "length",
+        "l"
+      ],
+      "bounding_box": {
+        "minx": 79.606761,
+        "miny": 12.657064,
+        "maxx": 80.32955,
+        "maxy": 13.304562
+      },
+      "source_provider": "OpenStreetMap / Disaster GIS Volunteer Community (Chennai 2015)",
+      "acquisition_provenance": "Vector road network tagged during the 2015 emergency response with flood disruption status.",
+      "relevant_fields": [
+        "class",
+        "oneway",
+        "osm_id",
+        "type",
+        "is_flooded",
+        "area",
+        "length"
+      ],
+      "temporal_event_context": "Emergency response period, December 2015.",
+      "known_limitations": "1. Severe class imbalance (7884 flooded vs 10 non-flooded segments). 2. Lacks depth, velocity, or inundation duration information. 3. Crowdsourced volunteer compilation subject to uneven reporting."
+    },
+    "reference_pdf": {
+      "filename": "Adayar &Cooum Rivers.pdf",
+      "path": "D:\\Projects\\PRISM\\data\\research\\Adayar &Cooum Rivers.pdf",
+      "status": "AVAILABLE",
+      "sha256": "60f3d39454180a21731d72ecae64f1cc7be9dcec9cfab95aaffadd8f1ae4526b",
+      "file_size_bytes": 859050,
+      "crs": "N/A (Document)",
+      "geometry_type": "Technical Report / PDF",
+      "feature_count": 8,
+      "relevant_fields": [
+        "hydrological modeling",
+        "basin setup",
+        "peak discharge",
+        "velocity head"
+      ],
+      "source_provider": "National Remote Sensing Centre (NRSC) / Indian Space Research Organisation (ISRO)",
+      "acquisition_provenance": "Technical report: 'Hydrological Simulation Study of Flood Disaster in Adyar and Cooum Rivers, Tamilnadu', Version 1.2, dated 07 December 2015.",
+      "temporal_event_context": "Adyar and Cooum basin simulations for flood disaster November 21 - December 08, 2015.",
+      "known_limitations": "Document explicitly confirms no field rainfall or downstream discharge calibration data existed during the event, validating that model output is an uncalibrated simulation."
+    }
+  }
+}

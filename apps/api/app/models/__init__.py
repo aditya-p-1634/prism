@@ -1,6 +1,8 @@
 from app.models.enums import (
     DataQualityEnum, FreshnessEnum, OperationalStatusEnum, StateTypeEnum,
-    PriorityClassEnum, ResourceCategoryEnum, AllocationStatusEnum, RoleEnum, JobStatusEnum
+    PriorityClassEnum, ResourceCategoryEnum, AllocationStatusEnum, RoleEnum, JobStatusEnum,
+    EvacuationStateEnum, ResourceStatusEnum, SimulationStatusEnum, SimulationEventTypeEnum,
+    ObservationQualityEnum, HazardMeasurementTypeEnum
 )
 from app.models.entities import (
     User, StateSnapshot, Scenario, DataSource, Observation,
@@ -8,5 +10,8 @@ from app.models.entities import (
     Habitation, Household, ExposureAssessment, VulnerabilityProfile, PriorityRecord,
     Destination, DestinationResource, CapacityState,
     RoadNode, RoadSegment, RoutePlan, RelocationGroup, RelocationAllocation,
-    Job, Event, EventDelivery, AuditEvent
+    Job, Event, EventDelivery, AuditEvent,
+    SimulationRun, SimulationEvent, SimulationAllocationProgress, SimulationResourceState,
+    HazardPredictionRecord, HazardStation, HazardObservation
 )
+

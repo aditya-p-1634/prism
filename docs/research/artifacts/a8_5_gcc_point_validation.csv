@@ -1,0 +1,332 @@
+point_id,location,latitude,longitude,dem_elevation,elevation_valid,out_of_tile,raw_inundation_level,norm_category,vulnerability,inundation_ft,zone,ward,inside_NRSC_PIXELVALUE_1,inside_NRSC_PIXELVALUE_13,inside_NRSC_NONZERO_COMPOSITE
+0,Sathya Moorthy Nagar 24th Block,13.1162883946757,80.2672850633093,2.79,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,4,46,False,True,True
+1,KH Road,13.1180816275001,80.2762949270001,4.44,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,4,47,False,False,False
+2,Walltax Road,13.1010411424813,80.2748161933386,4.2,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,54,False,False,False
+3,"Sydnams Road,",13.088060114306,80.269784567655,5.33,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,58,False,False,False
+4,Avvai Shanmugam Salai,13.0479031183923,80.2650282550672,7.99,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,119,False,False,False
+5,Avvai Shanmugam Salai 1st Lane,13.0472136816274,80.2653478313395,7.49,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,9,119,False,False,False
+6,Lakshmipuram 2nd Street,13.0466436124156,80.263020070121,8.17,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,119,False,False,False
+7,Mohamadin Salai,13.1103484727694,80.2311073741259,9.65,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,68,False,False,False
+8,Angalamman Koil Street,13.0957894967015,80.2624655846901,4.59,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,76,False,False,False
+9,Sec Colony 1st to 9th Street,13.0920325140001,80.2451127115001,8.94,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,74,False,False,False
+10,Vallavan Street,13.0942232531572,80.2517956422802,6.41,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,75,False,False,False
+11,Cth Road near Petrol Bunk,13.0991886382351,80.1725000544291,14.37,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,7,86,False,False,False
+12,Gopal Reddy Colony,13.1099246297426,80.230544801,9.66,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,67,False,False,False
+13,Pallavan Street,13.1112845531935,80.2312120732536,9.38,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,68,False,False,False
+14,Decaster Road,13.1024630133788,80.261692481063,3.83,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,72,False,True,True
+15,Doss Nagar Pallam,13.1088055717248,80.264365258647,3.41,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,72,False,True,True
+16,Straganas Road,13.0973818471483,80.2583894673282,5.76,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,76,False,False,False
+17,"Demellous Road 
+(Near Haj Committee)",13.0936374765628,80.2685336812426,4.28,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,77,False,False,False
+18,"Srinivasapuram, B.K.N Colony",13.1531221961585,80.2942619055734,4.8,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,1,12,False,False,False
+19,"Nandhi odai , Sadayankuppam battai",13.1598582542422,80.2969438028548,5.23,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,1,10,False,False,False
+20,Kalaignar nagar,13.1741151919426,80.296760932017,2.13,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,1,6,False,False,False
+21,"AD Colony, Ernaavoor",13.189966509876,80.3033148658147,1.18,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,1,4,False,False,False
+22,"SVM Nagar, Ulaganathapuram",13.2262730340807,80.3265634393952,2.71,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,1,1,False,False,False
+23,"Kargil nagar, Rajaji nagar",13.1729242118345,80.291359860923,1.55,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,1,7,False,False,False
+24,"Kargil nagar, Rajaji nagar",13.1494989690475,80.2701579797587,2.35,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,1,7,False,False,False
+25,Walltax Road,13.1018283943839,80.2743894560229,3.49,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,53,False,False,False
+26,Walltax Road,13.0974663005142,80.2752611587385,4.78,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,54,False,True,True
+27,"EVK Sampath Salai,",13.0805388392729,80.2626783459664,4.22,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,58,False,False,False
+28,"VOC Salai,",13.0820721849513,80.2762531731689,3.63,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,59,False,False,False
+29,Ghandhi Irwan Bridge Road,13.0767104247891,80.2655516549322,3.45,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,61,False,False,False
+30,"Egmore High Road,",13.0748530951715,80.2548784463204,8.41,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,61,False,True,True
+31,"Singanna Chetty Street,",13.0777506524376,80.2718935654891,4.11,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,62,False,False,False
+32,"Arunachalam Road,",13.0749163120154,80.2718950013169,4.58,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,62,False,False,False
+33,"Vijayaragavalu Roundana, 
+",13.1117357029547,80.2775133443495,4.36,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,5,53,False,False,False
+34,"Chella pillayar Koil Street,",13.0586920626371,80.2683376500277,7.32,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,63,False,False,False
+35,"G.P. Road,",13.0621846193116,80.266455722515,6.61,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,5,63,False,False,False
+36,Alapakkam main road,13.0561422005926,80.1663782598076,12.55,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,147,False,False,False
+37,Mullai street,13.0401171110541,80.1547845025052,16.84,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,11,150,False,False,False
+38,Arcot road,13.036473400342,80.1577665935331,16.36,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,150,False,False,False
+39,Royala nagar,13.0290597365937,80.1862640099561,12.17,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,11,155,False,False,False
+40,Bharathi salai,13.0324749673452,80.1765186559351,14.38,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,154,False,False,False
+41,Balavinayagar street,13.052216459,80.185182177,13.15,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,148,False,True,True
+42,Sri Lakshmi nagar,13.0500365221216,80.1749051500914,12.35,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,149,False,False,False
+43,Ganesh avenue  1st to 10th street,13.0267020205,80.1640835145,13.91,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,153,False,False,False
+44,Thirumagalam  road,13.0871885483667,80.1970146564914,12.33,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,7,90,False,False,False
+45,Rangarajapuram,13.0470468985,80.2248378730001,11.65,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,10,134,False,True,True
+46,Ammaiyammal Street,13.0987091225257,80.2582651834363,5.39,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,73,False,False,False
+47,New Ferrance Road,13.0973922269448,80.2577169573007,5.87,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,73,False,False,False
+48,Kellys Road,13.0844080755648,80.2458828324935,9.4,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,8,103,False,False,False
+49,Gnanamoorthy Nagar &  EB Colony,13.1200954747001,80.1677416170927,12.67,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,7,82,False,False,False
+50,Gnanamoorthy Nagar &  EB Colony,13.118315868109,80.163747121342,13.98,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,7,82,False,False,False
+51,Bhell Nagar,13.0243313071228,80.147103458249,15.03,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,156,False,False,False
+52,"Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",13.0111415397822,80.179505740326,9.77,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,157,False,False,False
+53,"Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",13.0132849939949,80.1662753560007,12.84,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,157,False,False,False
+54,"Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",13.0144205163397,80.164292894272,11.76,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,157,False,False,False
+55,"Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",13.0229004962914,80.1853977592234,10.31,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,157,False,False,False
+56,"Thillai Ganga Nagar 25 th Street,  27th Street, 28th Street, Thillai Ganga Nagar 2nd MainRoad, and 4th Main Road",12.9878514750001,80.1949819243273,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,162,False,False,False
+57,"Thillai Ganga Nagar 25 th Street,  27th Street, 28th Street, Thillai Ganga Nagar 2nd MainRoad, and 4th Main Road",12.9872501664999,80.1952537108478,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,162,False,False,False
+58,Income Tax  colony Area Back  flow  of sewage water,12.9817756836427,80.2036244007844,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,165,False,False,False
+59,"Bhuvaneswari Nagar,",12.9792503827449,80.2055909457593,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,165,False,False,False
+60,"Bharathidasan Nagar,",12.9776800185005,80.2026440109363,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,165,False,False,False
+61,Nanganallur 44th street,12.9819609993972,80.1878903800464,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,167,False,False,False
+62,Sairam avenue,13.0366083476922,80.1708904820879,14.1,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,152,False,False,False
+63,Pallavan Nagar,13.068827829654,80.1818167266456,11.97,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,11,145,False,False,False
+64,Pallavan nagar,13.0609472304787,80.1681302117127,13.58,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,11,147,False,False,False
+65,Krishna nagar,13.0509848826258,80.169471246188,12.92,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,147,False,False,False
+66,Amman nagar,13.0255152158574,80.1895546502648,7.84,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,11,155,False,False,False
+67,Bakthi vedhandha avenue,13.0305052998903,80.1869883880133,12.88,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,11,155,False,True,True
+68,Anbu nagar,13.0540851496301,80.1797484581046,11.39,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,148,False,False,False
+69,CDN nagar,13.0623040416239,80.1787827871428,11.25,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,11,148,False,False,False
+70,Radha avenue,13.0499418249976,80.178682904227,13.04,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,149,False,False,False
+71,Vembuli amman koil street,13.0762327622027,80.1660879205709,13.75,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,11,143,False,False,False
+72,"MMDA Colony 4th , 5th & 6th block",13.0613473171529,80.1764182436724,12.15,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,11,144,False,False,False
+73,KS Nagar (Thirumalai Nagar),13.1658683276726,80.195299778362,15.63,True,False,"Medium Vulnerability
+2 to 3 Feet",2–3 ft,Medium Vulnerability,2 to 3 ft,3,22,False,False,False
+74,Othai vadai Street,13.1542916186762,80.2089550044818,10.91,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,3,23,True,False,True
+75,Ambattur Redhills road (Highway),13.1430885137755,80.1866676573176,11.84,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,3,24,False,False,False
+76,Collector Nagar,13.1486333113912,80.2007223423168,8.49,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,3,25,False,False,False
+77,"Aringhar Anna Nagar,",13.1557119894993,80.2023594447571,17.85,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,3,25,False,False,False
+78,Ambedhkar Nagar,13.13550063836,80.2334954896088,5.87,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,3,31,False,False,False
+79,Sarathy Nagar,13.1328308335401,80.2028271654116,9.14,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,3,32,False,False,False
+80,Nagi (R ) Thottam,13.0183353000001,80.2112031,5.06,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,170,False,False,False
+81,"Chitra nagar, Kotturpuram",13.0240426000001,80.2399349,5.48,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,172,False,False,False
+82,MRC Nagar,13.0189207000001,80.2705550000001,4.81,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,173,False,True,True
+83,Mayflower garden,13.0218371000001,80.2605772000001,6.89,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,173,False,False,False
+84,Nehru nagar - Veerapandiya Kattabomman street,12.9932884000001,80.2166855,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,174,False,True,True
+85,Kasthuribai nagar,13.0055195,80.2525091000001,8.63,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,175,False,False,False
+86,Indra nagar,12.9958183000001,80.2527237,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,175,False,False,False
+87,L.B road,12.998965,80.2560925000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,175,False,False,False
+88,Anna avenue,13.0047146000001,80.2558887000001,8.06,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,175,False,False,False
+89,Mahalakshmi nagar III cross street,12.9839423,80.2063751,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,False,False
+90,TNHB Colony III main road,12.9919294000001,80.2119541000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+91,A.G.S Colony,12.9776904000001,80.2114606,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,178,False,True,True
+92,Vijayanagar area,12.9755367000001,80.2208805000001,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,178,False,False,False
+93,Gandhi road,12.9862422,80.2262878,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,False,False
+94,Seetharam nagar,12.9812659,80.2271032,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+95,Velachery Taramani road (100' road),12.9819769,80.2180051000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,180,False,True,True
+96,Valmigi street,12.9881868,80.2599549000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,181,False,True,True
+97,Journalist colony,12.9743657000001,80.2603626,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,182,False,False,False
+98,Ganapathy colony,12.9767808000001,80.2545798,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,182,False,True,True
+99,Ram Nagar (North),12.9689757230001,80.213134202,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,169,False,False,False
+100,"MGR Salai, MRTS (Near ICDS)",12.9761159760001,80.244657213,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,184,False,False,False
+101,LIC Nagar,12.9535858,80.2021516,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,188,False,False,False
+102,Rajesh Nagar,12.943577129,80.206614042,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,188,False,False,False
+103,MCN Nagar,12.9452200000001,80.23526,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,15,193,False,False,False
+104,Ellaiamman koil street,12.948359,80.250133,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,15,192,False,False,False
+105,"Construction of SWD of size 600x750m along Saraswathi Nagar South, Neelankarai",12.948982,80.250253,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,15,192,False,False,False
+106,"OMR - Mettukuppam
+(VPG Avenue Junction)",12.9407310000001,80.236313,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,15,194,False,False,False
+107,Lalbahadhur Sasthiri Street,12.9066129210001,80.2306405370001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,15,197,False,False,False
+108,John Mohammad Street,13.0635586333844,80.2707635205919,8.41,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,114,False,False,False
+109,Nandhanam extension 4th Street,13.0275065745428,80.241555156881,7.65,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,False,False
+110,K.B.Dasan Road,13.0353256057989,80.2501233808691,9.53,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,False,False
+111,P.S.Siva Swamy Street,13.0453556408648,80.2631351694873,6.8,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,119,False,False,False
+112,Bharathishwarer colony 3rd street,13.0584831739422,80.2212064682699,11.39,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,112,False,True,True
+113,Railway border road,13.0641005571272,80.2324108261175,10.32,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,112,False,False,False
+114,Lock Nagar,13.0657011379867,80.2812257539986,5.5,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,114,False,True,True
+115,North Usman Road,13.0447607620094,80.2325844668394,10.63,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,10,136,False,True,True
+116,Maakkis Garden,13.0615123779225,80.2555503216807,5.35,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,9,111,False,False,False
+117,Teachers Colonly,13.1167773224035,80.2091212376614,10.72,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,65,False,False,False
+118,"Seethammal colony 3rd Street,",13.0346074098045,80.2531003941631,10.31,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,True,True
+119,Sundram Power Lane,13.1111550338901,80.2635250340246,3.9,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,4,45,False,False,False
+120,"Seethammal colony  4th street,",13.0348267463556,80.2523013808084,9.72,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,True,True
+121,Tankbund Road,13.0321001123585,80.2398740247865,8.98,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,9,122,False,True,True
+122,Nandhanam extension 6th Street,13.0290306660151,80.2423843175361,9.36,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,False,False
+123,Nandhanam extension 2nd Street,13.0292799117561,80.2415355388284,9.55,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,False,False
+124,Nandhanam extension 1st Street,13.0293358504728,80.2419996852043,9.37,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,False,False
+125,Nandhanam extension 3rd Street,13.0281081884432,80.2408635704386,7.07,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,True,True
+126,Nandhanam extension 8th Street,13.0286738532867,80.2430384292937,9.2,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,False,False
+127,Nandhanam extension 7th Street,13.0286363619626,80.2432933242921,8.95,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,False,False
+128,Nandhanam extension 9th Street,13.0291090450924,80.2433731531356,8.7,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,True,True
+129,Cresent Road,13.0269836935892,80.2475242328912,10.76,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,True,True
+130,R.A.Puram 3rd cross street,13.0267927255828,80.2569145366531,8.53,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,123,False,False,False
+131,R.A.Puram 1st main road,13.0280005756981,80.2564318876283,8.53,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,123,False,True,True
+132,Kamarajapuram Main Road,13.0546964452168,80.2376795862158,10.04,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,110,False,False,False
+133,Habibullah Road,13.0493756877225,80.242985283004,9.99,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,113,False,False,False
+134,Vembuliamman Koil street,13.0431766718406,80.1896859927334,13.49,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,10,128,False,True,True
+135,Thiru-Vi-Ka 3rd street,13.0435746641013,80.2663751875734,6.7,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,121,False,True,True
+136,Eldams Road,13.0387030373769,80.252049187744,9.94,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,123,False,False,False
+137,Kasthuri Estate 2nd street,13.0445905357321,80.2553065401398,9.51,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,118,False,False,False
+138,Seethammal 1st Main Road,13.0359408395649,80.253568183401,10.23,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,True,True
+139,Karaneswarar Pagoda Street,13.0391305142588,80.27608238073,4.72,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,125,False,False,False
+140,Mayor Sundra (rao) road,13.0494332474198,80.2487197154372,9.5,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,118,False,True,True
+141,Conron Smith Road,13.0520149874821,80.2576823919903,8.13,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,111,False,False,False
+142,School Road,13.0568485316379,80.2401172145156,10.13,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,110,False,False,False
+143,Sivan koil street,13.055371517157,80.2209137743239,11.81,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,112,False,False,False
+144,Vanniyar 2nd  Street,13.059516595827,80.2251520968182,11.31,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,109,False,False,False
+145,Sydoji Street,13.0597590393495,80.2765932994085,8.22,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,114,False,False,False
+146,Dr. Natesan Road,13.0497631488834,80.2743447676572,7.14,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,120,False,False,False
+147,Dr. Besant Road,13.0521235625307,80.275667881877,7.38,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,116,False,True,True
+148,Dr. Besant Road,13.0531732018796,80.2715417236522,8.81,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,115,False,True,True
+149,Dismantling and Reconstruction of existing SWD along Villivakkam Sidco Nagar 2nd main road I main road to Burial Ground Compound Wall,13.106111119106,80.1992448883697,11.49,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,8,94,False,True,True
+150,Thideer  Nagar,13.0632803688288,80.2548625299605,4.56,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,9,111,False,False,False
+151,"2nd Avenue, Anna Nagar (Roundana)",13.0845946035799,80.2211434611213,10.96,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,8,101,False,False,False
+152,Trustpuram 1st cross street,13.0541175713035,80.224121559433,11.93,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,112,False,False,False
+153,Thirumalai pillai Street,13.0489005855227,80.240191181575,10.48,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,117,False,True,True
+154,C.N.K. Road,13.0636727093975,80.2768980959566,8.57,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,114,False,False,False
+155,V.V.Koil Street,13.0914718457341,80.2647902800777,6.61,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,78,False,False,False
+156,Gill Nagar 1nd street,13.0655631587541,80.2239644125537,10.91,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,109,False,False,False
+157,Sowrastra nagar 5th street,13.0632899099557,80.231478775305,10.67,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,112,False,True,True
+158,Andiyappan Street,13.1158145253677,80.2375675084003,8.89,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,68,False,True,True
+159,Mannarswamy Street,13.1011542907193,80.2614839380633,4.62,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,73,False,True,True
+160,Lal Singh Street,13.0998938105318,80.2647632252519,4.5,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,73,False,True,True
+161,Dismantling and reconstruction of RCC TVS Canal along Annai Sathya Nagar from Wheels India Culvert to Padi Bridge Culvert,13.1036624601015,80.1962548437479,10.14,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,8,94,False,True,True
+162,"Dismantling and Reconstruction of existing SWD along Kumarasamy Nagar  ,Agathiyar canal",13.102023548152,80.199021915605,11.07,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,8,95,False,True,True
+163,B.V Colony 19 and 20th Street,13.1147287831734,80.2586998002718,4.44,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,4,45,False,False,False
+164,Annai Sathya Nagar,13.1152415896036,80.2599142820432,4.25,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,4,45,False,False,False
+165,Bharathi Main Road,13.1107232999223,80.248111383164,7.83,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,70,False,False,False
+166,Jawahar Nagar,13.11418699763,80.2294502735737,11.07,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,66,False,True,True
+167,Carnesh Nagar,13.1260770636875,80.2788990144037,3.38,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,4,41,False,False,False
+168,MN Nagar,13.1250294936694,80.219435508798,8.91,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,64,False,True,True
+169,Gandhi Street,13.1202478494207,80.2090234306835,11.41,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,64,False,False,False
+170,Dismantling and Reconstruction of RCC Box type storm water drain of size 1200x1200mm along Kamarajar salai from Elaya street to AE koil st,13.1365932092019,80.28991898109,5.88,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,4,40,False,True,True
+171,Shanthi Street,13.1254440845862,80.230418042364,7.83,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,66,False,False,False
+172,Kamaraj Street,13.1216846173518,80.2319229184608,8.72,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,66,False,False,False
+173,Maduraiswamy Madam,13.1180054276311,80.2383935156281,7.88,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,68,False,False,False
+174,Poombugar Nagar 2nd Main Road,13.1204316486567,80.214892053255,9.51,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,64,False,True,True
+175,Poombugar Nagar 11th Cross Street,13.1205862499399,80.2160704190535,9.12,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,64,False,True,True
+176,Poombugar Nagar 1st Main Road,13.1201127673288,80.2121033685482,10.36,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,64,False,True,True
+177,Dr. Ambedkar College Road,13.1050767223064,80.2604362114772,3.35,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,72,False,True,True
+178,Ragavan Street,13.1250374909617,80.2303586505798,8.15,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,66,False,False,False
+179,Gandhimathi Street,13.1254885247419,80.2314188399508,8.14,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,66,False,False,False
+180,Rangasiyee Street,13.1088121382395,80.2355702666054,9.01,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,67,False,True,True
+181,Anjugam Nagar 4th Street,13.1222032931375,80.2217834050223,9.38,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,64,False,True,True
+182,Teachers Colonly,13.1297891181193,80.2183901897542,8.55,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,65,False,False,False
+183,Hussain Colony 4th Street,13.1254157812684,80.2022199243654,9.75,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,65,False,True,True
+184,Kaliamman Koil Street (infront of police station),13.0631850598621,80.1975376001028,10.33,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,10,127,False,False,False
+185,Dr. Radha Krishnan Salai (infornt of Reliance Building),13.0442740832774,80.2688391556216,6.59,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,121,False,False,False
+186,Royapettah High Road,13.038234906864,80.2676437580071,6.39,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,119,False,True,True
+187,G.N.C.Road,13.0485086262691,80.245842854571,8.43,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,9,117,False,False,False
+188,Kodambakkam High road,13.052942829804,80.2454726460324,9.78,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,113,False,False,False
+189,Whites Road,13.057335305202,80.2609406585174,8.78,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,111,False,True,True
+190,Kasthuri Estate 1st street,13.0423242242245,80.2552902206962,9.6,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,118,False,True,True
+191,Nandhanam extension 5th street,13.0278074959051,80.242509381052,7.86,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,False,False
+192,Nandhanam extension 10th Street,13.0287636366057,80.2438310843892,8.43,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,122,False,True,True
+193,North Usman Road,13.0506662568154,80.2337715657565,11.03,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,117,False,False,False
+194,Rajamannar Salai,13.0428817233912,80.2041406712132,11.75,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,10,131,False,False,False
+195,Kutcherry Road,13.0360012139856,80.2692478979514,8.12,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,124,False,False,False
+196,Santhome Hign Road,13.0260771442647,80.2752023355019,4.22,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,126,False,True,True
+197,New Kubera Nagar 5th & 7th Street,12.9607347285001,80.194094212,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,187,False,False,False
+198,Karthikeyapuram,12.9599362568798,80.1948959638866,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,187,False,False,False
+199,Rajaji Nagar,12.9599415845,80.2050093845,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,188,False,False,False
+200,Ram Nagar area,12.971813180895,80.2161085583533,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,178,False,False,False
+201,Dhandeeswaram nagar,12.9816617541788,80.2243461929586,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,False,False
+202,Bhuvaneshwari nagar I & III cross street & III main road,12.9699220821439,80.2218611714329,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,False,False
+203,V.G.P Selva nagar  Extn I to V streets,12.9719948947151,80.2239710878816,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+204,Seshadripuram I main road,12.9799409968559,80.2302707826799,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+205,"Sastri nagar II, IX & XV cross street",12.9999673426114,80.2575772148925,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,176,False,False,False
+206,A.G.S Colony III main road,12.9784499758648,80.2093730603424,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+207,"Sastri nagar II, IX & XV cross street",12.9972751450347,80.2603431215598,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,176,False,False,False
+208,Nehru nagar - Periyar street,12.9931253702752,80.2167689201732,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,174,False,True,True
+209,Construction of RCC Box type storm water drain along EB colony 2nd street from EB colony main road to Radha Nagar extension main road,12.9851583937743,80.2134475464776,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,177,False,False,False
+210,Construction of storm water drain along Lakshmi nagar 2nd street from Lakshmi Nagar main road to  Rajiv Gandhi nagar main road,12.9823403444461,80.2171612235204,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,177,False,True,True
+211,"Astalakshmi nagar II, III, IV & V streets",12.9855134259026,80.2151172582998,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,False,False
+212,"Astalakshmi nagar II, III, IV & V streets",12.9859034123926,80.2146129112375,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+213,Avvai nagar,12.9804453408548,80.2588957257604,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,182,False,False,False
+214,Wipro Salai,12.9065341808379,80.2254035966374,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,15,197,False,False,False
+215,Dr.Radhakrishnan nagar,12.9934935851982,80.2584170556839,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,181,False,True,True
+216,"Tansi nagar II, III, V, VII & X streets",12.9774887832005,80.2249016148388,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+217,Udayam nagar & extn,12.9788872981509,80.2324344830574,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+218,Veenus colony II street,12.9738518902312,80.2277189751021,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,False,False
+219,Annai sathya nagar,13.0363478392443,80.1865583717144,13.94,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,151,False,False,False
+220,Gajalakshmi nagar,13.0689642854469,80.1663306130019,11.19,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,11,143,False,False,False
+221,VGN nagar phase III,13.0708595196158,80.1635362469633,12.39,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,143,False,False,False
+222,Metro nagar,13.0449672720351,80.1626900363647,14.66,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,11,146,True,False,True
+223,Sakthi nagar,13.0710121390452,80.1670324211569,12.36,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,11,143,False,False,False
+224,"MMDA Colony 4th , 5th & 6th block",13.0636760496372,80.1755077083127,13.05,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,11,144,False,False,False
+225,Officers colony,13.0361383683184,80.1582462333791,16.26,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,11,151,False,False,False
+226,Annai Sathya Nagar,13.0931123035411,80.1843374935674,13.52,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,7,86,True,False,True
+227,Punitha Anthoniyar Street,13.1608448950423,80.2060199373327,11.43,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,3,23,True,False,True
+228,Mahalakshmi Nagar,13.1694811668582,80.2035109976134,6.6,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,3,22,True,False,True
+229,GNT Road (Near Roundana),13.1353127060756,80.2327248577139,5.91,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,3,25,False,False,False
+230,Manali New Town 60 Feet Road,13.2094010478996,80.2756225614672,4.06,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,2,15,False,False,False
+231,TH Road jn.of MRF Road,13.1777394496991,80.3103559510646,5.47,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,1,5,False,False,False
+232,SVM Nagar I main road,13.2203516526953,80.3244504536644,2.47,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,1,1,False,False,False
+233,Kathivakkam high road,13.2094750632438,80.3147740284106,3.22,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,1,4,False,False,False
+234,Kamaraj salai,13.1873981499003,80.3077062470699,4.5,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,1,1,False,False,False
+235,SVM Nagar II main road,13.2232311568594,80.3248660677043,3.46,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,1,1,False,False,False
+236,T.H. Road (MRF road junction),13.1785500194391,80.3071632711468,4.75,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,1,5,False,False,False
+237,T.H. Road near Liftgate,13.159027115811,80.302157531852,7.97,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,1,5,False,False,False
+238,"Manali Express road, (Mullai nagar, Jothi nagar, TKS Nagar)",13.1820862968362,80.2998063190897,1.51,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,1,6,False,False,False
+239,Rajiv Gandhi Nagar from TPP Salai to Andarkuppam Main Road,13.1934030016639,80.2696696079474,2.3,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,2,16,False,False,False
+240,From Kanniammanpet pond to Kadappakkam Lake,13.197875912595,80.2529608877424,3.63,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,2,16,False,False,False
+241,NAS Garden & TVS Nagar,13.1209962122826,80.1913628008196,10.06,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,7,83,False,False,False
+242,Vandiamman Koil st,13.0761203030433,80.1876023526793,11.98,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,7,93,False,False,False
+243,Construction of RCC Open Box type Retaining Wall and Bed including chain link fencing to Kodungaiyur canal North wing from Ch.0.0 to Ch.850m,13.1365531991952,80.2553879781834,4.2,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,4,34,False,False,False
+244,Construction of RCC Open Box type Retaining Wall and Bed including chain link fencing to Kodungaiyur canal North wing from Ch.850 to Ch.1150m,13.1332732578923,80.2631340297412,2.53,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,4,34,False,False,False
+245,Construction of RCC Open Box type Retaining Wall and Bed including chain link fencing to Kodungaiyur canal North wing from Ch.1675 to Ch.2191m,13.1308324017305,80.2729352165245,2.3,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,4,34,False,True,True
+246,Dismantling and Reconstruction of RCC Box type storm water drain of size 1200x1200mm along T.H Road from North Terminal road to AE koil st,13.1384673277369,80.2946475731544,7.49,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,4,39,False,True,True
+247,Providing Re-sectioning concrete lining and laying service road in link canal from Ch.2500 to 2940 in Captain Cotton Canal,13.1264007375079,80.2599850151173,3.46,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,4,41,False,False,False
+248,Providing Re-sectioning concrete lining and laying service road in link canal from Ch.2940 to 3360 in Captain Cotton Canal,13.1255729394595,80.2529039601173,4.9,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,4,41,False,True,True
+249,Samuthirya Colony 1st Street,13.1230183607964,80.2222383127098,8.96,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,64,False,True,True
+250,Konnur High Road,13.0972941615972,80.2424072913355,7.68,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,71,False,False,False
+251,Dismantling and Re-Construction of SWD of size 900x900mm along Anna Nagar 18th main road (South) Ch.500m (Reach I) from 100 feet road to Ch.500m,13.0948308279793,80.2007171907028,11.63,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,8,95,False,False,False
+252,Dismantling and Re-Construction of SWD of size 900x900mm along Anna Nagar 18th main road (South) from Ch.500m (Reach 2) to Otteri Nullah canal,13.0947649498042,80.2026210671741,11.76,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,8,95,False,True,True
+253,Dismantling and Re-Construction of SWD of size 900x900mm along Anna Nagar 18th main road (North) Ch.425m from Vasantham Colony to 2nd street (Reach II),13.0946872760385,80.205359665084,11.36,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,8,95,False,False,False
+254,Dismantling and Reconstruction of SWD of size 900x900mm along Anna Nagar 18th main road (North) from 100' road to Ch.425m (Reach I),13.0946360772694,80.2073806428466,10.7,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,8,95,False,True,True
+255,G.N.Chetty  Road,13.0503148284995,80.2484982014515,9.63,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,113,False,False,False
+256,Improvements of storm water drain and construction of 3 road crossing culverts Habibullah Road,13.0500428460528,80.2383894669489,11.17,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,113,False,False,False
+257,North usman street,13.0532811175151,80.2344889528919,10.69,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,113,False,False,False
+258,Sarathapuram Street,13.0321335522518,80.2636136718525,7.38,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,113,False,False,False
+259,Improvements of storm water drain at North Usman Road,13.0512463350481,80.2339585805982,11.0,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,9,113,False,True,True
+260,South boug road,13.0346672899552,80.2420860831955,8.71,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,9,117,False,False,False
+261,100 feet road (junction of Kaliamman Koil Street),13.0721882918519,80.202108059594,9.64,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,10,127,False,False,False
+262,Construction of Storm water drain of size 900x900mm RCC Box type drain along Kaliamman koil street at Koyambedu from Metro Water Office in Dn.111 to 100 ft road in Dn.127,13.0666311654188,80.199099917725,9.36,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,10,0,False,False,False
+263,Kaliamman Koil Street(from CMWSSB STP to Sai nagar annex ),13.0594352302225,80.1953895346036,12.63,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,10,127,False,False,False
+264,100 feet Road (junction of periyar pathai),13.0503387110137,80.2141032723539,12.06,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,10,130,False,False,False
+265,Ganesapuram Main  Road,13.109887052247,80.2607351698797,3.76,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,4,45,False,False,False
+266,Dhanammal Nagar,13.1291270917659,80.219056492558,8.34,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,6,64,False,False,False
+267,"MMDA Colony 4th , 5th & 6th block",13.0630815737678,80.1764905125287,12.08,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,11,144,False,False,False
+268,"Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",13.0188314181566,80.1768512926149,11.58,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,157,False,False,False
+269,"Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",13.0189979804271,80.1816958752228,9.61,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,157,False,False,False
+270,"Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",13.021008624977,80.1822669458642,9.5,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,157,False,False,False
+271,"Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",13.0069388720495,80.1644328856255,10.89,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,157,True,False,True
+272,"Thillai Ganga Nagar 25 th Street,  27th Street, 28th Street, Thillai Ganga Nagar 2nd MainRoad, and 4th Main Road",12.9889759087466,80.192664661558,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,162,True,False,True
+273,"Thillai Ganga Nagar 25 th Street,  27th Street, 28th Street, Thillai Ganga Nagar 2nd MainRoad, and 4th Main Road",12.9916036403116,80.1944339679076,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,162,False,False,False
+274,"Thillai Ganga Nagar 25 th Street,  27th Street, 28th Street, Thillai Ganga Nagar 2nd MainRoad, and 4th Main Road",12.9907377305828,80.1918115377897,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,12,162,False,False,False
+275,"Sastri nagar II, IX & XV cross street",12.9998155544288,80.2569865097343,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,176,False,False,False
+276,"Astalakshmi nagar II, III, IV & V streets",12.9939511579635,80.2693758288391,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+277,"Astalakshmi nagar II, III, IV & V streets",12.9933835145426,80.2698560318111,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,False,False
+278,Nethaji colony I to IV cross streets,12.9825740687091,80.2107490667184,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+279,Nethaji colony I to IV cross streets,12.9826594918295,80.2113628074455,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+280,Nethaji colony I to IV cross streets,12.9827471107387,80.2118854767004,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+281,Nethaji colony I to IV cross streets,12.9825927667264,80.2121976717621,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+282,Andal nagar extn I to III streets,12.9795932370038,80.2113849232109,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,True,True,True
+283,Andal nagar extn I to III streets,12.9800151834657,80.2116284956263,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,True,True,True
+284,Andal nagar extn I to III streets,12.9803002586549,80.2112129294501,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,True,True,True
+285,V.G.P Selva nagar  I cross street & I main road,12.9720791128307,80.2198149862411,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,False,False
+286,V.G.P Selva nagar  I cross street & I main road,12.9712545148988,80.2215987056334,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+287,Sastri street (Part),12.9760563887355,80.2278302455463,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+288,Vallalar street - Annai Indra nagar,12.9766929734428,80.2262898531484,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+289,Sivasakthi  street - Annai Indra nagar,12.9761207453881,80.2274796772192,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+290,A.G.S Colony VI street,12.9783533494631,80.2102978773894,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,True,True,True
+291,Mahalakshmi nagar III cross street,12.9829975258502,80.2069600527818,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,False,False
+292,Mosque street,13.0004659181931,80.2096540606674,10.05,True,False,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,174,False,True,True
+293,Ambedkar nagar II main road,12.9910313098412,80.2083030069338,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+294,Ambedkar nagar I cross street,12.9920542816723,80.2095901897728,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+295,Neruppumedu,13.0180786327318,80.2189415943178,6.18,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,170,False,False,False
+296,Venkateswara nagar III main road,12.9795674377268,80.2167177731038,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+297,Vinayagapuram,13.020153355478,80.2133309496151,5.86,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,170,False,False,False
+298,C.S.I.R road,12.9863075667413,80.2467393552384,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,180,False,True,True
+299,Nehru nagar -  Anbil Dharmalingam street,12.9933385819253,80.2164505473592,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,174,False,True,True
+300,Kamarajar street - Nehru nagar,12.9946118523895,80.2126657042389,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,True,True,True
+301,Kasthuri avenue,13.0182028734741,80.2711214418071,4.47,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,173,False,False,False
+302,Vasantha avenue,13.018750671655,80.2713917528555,5.17,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,173,False,False,False
+303,Srinivasa avenue,13.0220070977117,80.2612110361528,7.44,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,173,False,False,False
+304,R.A Puram IV cross street,13.0231223056731,80.2604542404856,6.81,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,173,False,False,False
+305,Valleswaranthottam,13.0235067661204,80.2601752354216,7.99,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,173,False,False,False
+306,Chetti thottam,13.0180704625763,80.2177377431667,3.05,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,170,False,False,False
+307,Anusuyamandapam,13.0163120298697,80.2251868534779,7.41,True,False,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,170,False,True,True
+308,Velachery main road,13.0002055838718,80.2199290252127,11.25,True,False,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,174,False,False,False
+309,Sarathy nagar,12.9753611419158,80.2220603053275,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+310,ASK Nagar,12.9926609137497,80.207729304247,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,True,True,True
+311,Brindavan nagar II street,12.9829152706641,80.2096845344201,,False,True,High Vulnerability 3 to 5 Feet,3–5 ft,High Vulnerability,3 to 5 ft,13,177,False,True,True
+312,Ex Service man colony,12.9928653622571,80.2089722223386,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+313,Kamatchiamman street - Annai Indra nagar,12.9757310352756,80.2274658298561,,False,True,Very High Vulnerability Above 5 Feet,>5 ft,Very High Vulnerability,>5ft,13,179,False,True,True
+314,"Construction of SWD of size 600x750mm along Kumaraguru Avenue , Neelankarai",12.9507312,80.2539200000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,15,192,False,False,False
+315,"Construction of SWD of size 1200x1200mm along Pandian Salai, Neelankarai",12.9496595,80.2517152000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,15,192,False,False,False
+316,"Construction of storm water drain along Ist Avenue Main Road, Vettuvankeni",12.936401,80.2515006,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,15,196,False,False,False
+317,"Construction of SWD of size 900x900mm along Karpaga Vinayagar Koil Street, Vettuvankeni",12.946324,80.2370167000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,15,193,False,False,False
+318,TNHB Colony - EWS lanes,12.9922718,80.2132175,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,13,177,False,True,True
+319,Puzhuthivakkam Bust Stand,12.9740782000001,80.2027944000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,169,False,False,False
+320,"ECR, Near BATA Showroom",12.9740573,80.2585039000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,183,False,False,False
+321,Madipakkam Bus Stand,12.9630532,80.1984465,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,188,False,False,False
+322,"OMR, Jn. of Thirumalai Nagar",12.9593546,80.2445215000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,186,False,False,False
+323,"ECR, Govindan Nagar",12.9586096000001,80.2518225,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,185,False,False,False
+324,"OMR, MGR Salai Jn.",12.9640465000001,80.2468657,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,184,False,False,False
+325,"ECR, Palgalai Nagar",12.963874,80.2615428000001,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,185,False,False,False
+326,ECR Opp. Fish market,12.9694858000001,80.2574846,,False,True,Low Vulnerability less than 2 feet,<2 ft,Low Vulnerability,<2ft,14,183,False,False,False

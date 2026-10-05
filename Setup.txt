@@ -1,0 +1,9 @@
+to start:
+From:
+D:\Projects\PRISM
+
+just run:
+.\start.ps1
+
+Stop
+.\stop.ps1

@@ -195,7 +195,7 @@ export default function OverridesPage() {
                 rows={3}
                 value={justification}
                 onChange={(e) => setJustification(e.target.value)}
-                placeholder="e.g., Tactical field convoy re-routing due to local bridge blockage; authorized under District Disaster Directive D-26191."
+                placeholder="e.g., Household requires specialized medical transit to primary healthcare center; authorized under District Disaster Directive D-26191."
                 className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 font-sans text-xs"
               />
             </div>

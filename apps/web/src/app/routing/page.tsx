@@ -143,7 +143,7 @@ export default function RoutingPage() {
           </div>
         </div>
 
-        {/* Calculated Convoy Route Plans (7 Cols) */}
+        {/* Calculated Evacuation Route Plans (7 Cols) */}
         <div className="lg:col-span-7 rounded-2xl border border-slate-800 bg-[#0c121d] p-4 shadow-xl space-y-3">
           <div className="flex items-center justify-between border-b border-slate-800 pb-2">
             <div className="flex items-center space-x-2">

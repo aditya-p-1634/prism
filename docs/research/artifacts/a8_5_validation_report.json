@@ -1,0 +1,1219 @@
+{
+  "validation_status": "CONDITIONAL_TERRAIN_EXPERIMENT",
+  "decision": {
+    "validation_status": "CONDITIONAL_TERRAIN_EXPERIMENT",
+    "decision_timestamp": "2026-10-03T19:30:00Z",
+    "evidence_checklist": {
+      "dataset_availability": {
+        "passed": true,
+        "detail": "All 8 research datasets located, hashed (SHA-256), and validated."
+      },
+      "spatial_qa": {
+        "passed": true,
+        "detail": "All vector layers adhere to EPSG:4326 source CRS and fall within Chennai geographical coordinates."
+      },
+      "nrsc_semantics_resolved": {
+        "passed": false,
+        "detail": "Mask 13 shows substantially greater spatial consistency with the available urban GCC flood-hotspot and water-stagnation observations than Mask 1. The semantic meaning of source pixelvalue 1 versus 13 remains unresolved because the public source metadata does not define these classes."
+      },
+      "gauge_datum_verified": {
+        "passed": false,
+        "detail": "Nandambakkam CheckDam stage reading of 3.25 m cannot be converted to absolute Water Surface Elevation (WSE) because the station gauge-zero elevation relative to WGS84/EGM96 vertical datum is unverified. Direct subtraction from FABDEM is scientifically prohibited."
+      },
+      "independent_point_evidence": {
+        "passed": true,
+        "detail": "327 GCC hotspot points provide independent municipal point evidence; Composite NRSC mask encompasses 105 points (32.1% consistency rate)."
+      },
+      "terrain_suitability": {
+        "passed": true,
+        "detail": "FABDEM 30 m elevation successfully sampled for 233 points. 94 points in southern Chennai fall south of latitude 13.00014\u00b0N outside tile N13E080. 30 m resolution lacks street-level micro-drainage barriers, confirming that elevation alone cannot predict flooding."
+      },
+      "prediction_mask_present": {
+        "passed": false,
+        "detail": "No PRISM predicted inundation mask currently exists. NRSC polygons are historical reference layers, not model predictions. Reporting Intersection-over-Union (IoU) at this phase would constitute pseudo-accuracy."
+      }
+    },
+    "scientific_rationale": "The historical evidence base is sufficient for terrain characterization and spatial consistency testing, but strictly INSUFFICIENT for operational flood forecasting or calibrated depth prediction. Validation status is CONDITIONAL upon preserving separate NRSC class masks, maintaining unverified gauge datum disclaimers, and avoiding global elevation bathtub models.",
+    "prohibited_actions": [
+      "DO NOT report IoU as a model accuracy metric without a PRISM prediction mask.",
+      "DO NOT convert Nandambakkam 3.25 m gauge stage to WSE without verified gauge zero.",
+      "DO NOT subtract telemetry stage from FABDEM elevations.",
+      "DO NOT create a single elevation threshold bathtub flood model.",
+      "DO NOT claim NRSC polygons or GCC hotspots constitute absolute ground truth.",
+      "DO NOT modify production E1-E6 decision logic based on experimental research outputs."
+    ],
+    "prerequisites_for_a8_6_experiment": [
+      "1. Acquire surveyed gauge-zero elevation for Adyar River Nandambakkam CheckDam.",
+      "2. Acquire southern FABDEM tile N12E080 to cover the remaining 94 GCC hotspot points.",
+      "3. Obtain official NRSC metadata clarifying pixelvalue 1 versus 13 semantics.",
+      "4. Incorporate hydrodynamic river network connectivity rather than flat-plane elevation slicing."
+    ]
+  },
+  "manifest_summary": {
+    "manifest_version": "A.8.5.1",
+    "description": "PRISM A.8.5 Terrain & Historical Flood Validation Research Manifest",
+    "generated_by": "PRISM A.8.5 Provenance Engine",
+    "datasets": {
+      "fabdem": {
+        "filename": "N13E080_FABDEM_V1-2.tif",
+        "path": "D:\\Projects\\PRISM\\data\\research\\N13E080_FABDEM_V1-2.tif",
+        "status": "AVAILABLE",
+        "sha256": "720c8ce4b994126ef1f369fb602aa5760ca2ef7128f363b55d016681bed3c7f9",
+        "file_size_bytes": 6613279,
+        "crs": "EPSG:4326",
+        "dimensions": {
+          "width": 3600,
+          "height": 3600,
+          "bands": 1
+        },
+        "resolution": [
+          0.0002777777777777778,
+          0.0002777777777777773
+        ],
+        "dtype": "float32",
+        "nodata": -9999.0,
+        "bounding_box": {
+          "minx": 79.99986111111112,
+          "miny": 13.000138888888891,
+          "maxx": 80.99986111111112,
+          "maxy": 14.00013888888889
+        },
+        "source_provider": "University of Bristol / FATHOM (FABDEM v1-2)",
+        "acquisition_provenance": "FABDEM v1-2 (Forest and Buildings removed Copernicus DEM). Global bare-earth DEM correcting Copernicus GLO-30 DSM via machine learning.",
+        "geometry_type": "Raster / GeoTIFF",
+        "feature_count": 12960000,
+        "relevant_fields": [
+          "elevation (meters above WGS84/EGM96)"
+        ],
+        "temporal_event_context": "Static baseline terrain representation (derived from 2011-2015 satellite imagery).",
+        "known_limitations": "1. Approximately 30 m spatial resolution obscures narrow channels, roadside ditches, and micro-embankments. 2. Tile N13E080 covers 13.0\u00b0N to 14.0\u00b0N; southern Chennai (Velachery, Madipakkam, Tambaram, Pallikaranai) falls south of 13.0\u00b0N in tile N12E080 (not present in dataset). 3. Vertical accuracy is typically \u00b11-2 m, which can lead to significant error in low-gradient coastal floodplains."
+      },
+      "nrsc_kml": {
+        "filename": "7cb3cecf-a95a-4786-8032-9c7417655d24.kml",
+        "path": "D:\\Projects\\PRISM\\data\\research\\7cb3cecf-a95a-4786-8032-9c7417655d24.kml",
+        "status": "AVAILABLE",
+        "sha256": "fa6943b2916d625dbc4de3b43cbe4d768a956b2f584fa3c73244fae32cee7a2a",
+        "file_size_bytes": 5474779,
+        "crs": "EPSG:4326",
+        "feature_count": 4001,
+        "geometry_types": {
+          "MultiPolygon": 4001
+        },
+        "fields": [
+          "id",
+          "Name",
+          "description",
+          "timestamp",
+          "begin",
+          "end",
+          "altitudeMode",
+          "tessellate",
+          "extrude",
+          "visibility",
+          "drawOrder",
+          "icon",
+          "id2",
+          "area",
+          "perimeter",
+          "pixelvalue"
+        ],
+        "bounding_box": {
+          "minx": 79.3466337952075,
+          "miny": 12.5189872481577,
+          "maxx": 80.3191437258226,
+          "maxy": 13.3297221042727
+        },
+        "source_provider": "National Remote Sensing Centre (NRSC) / Indian Space Research Organisation (ISRO)",
+        "acquisition_provenance": "Vectorized flood inundation zone polygons derived from satellite radar/optical observations and hydrodynamic simulation of the Adyar and Cooum river basins for the Dec 2015 Chennai flood disaster.",
+        "relevant_fields": [
+          "id",
+          "area",
+          "perimeter",
+          "pixelvalue",
+          "geometry"
+        ],
+        "temporal_event_context": "Peak Chennai flood event, November 29 \u2013 December 07, 2015.",
+        "known_limitations": "1. Official NRSC reference report explicitly states that no downstream discharge data was available, so hydrodynamic simulation could not be calibrated against field discharge. 2. Public metadata does not document the semantic distinction between pixelvalue=1 and pixelvalue=13. 3. Polygons represent a composite satellite/model view, NOT verified ground truth."
+      },
+      "gcc_kml": {
+        "filename": "31523c86-0ad1-42f5-b4d1-297daa4bbcd6.kml",
+        "path": "D:\\Projects\\PRISM\\data\\research\\31523c86-0ad1-42f5-b4d1-297daa4bbcd6.kml",
+        "status": "AVAILABLE",
+        "sha256": "19d579591cd74785ba9a40b1e36464a89dfabf129057c87589784bc25a86d2d0",
+        "file_size_bytes": 288081,
+        "crs": "EPSG:4326",
+        "feature_count": 327,
+        "geometry_types": {
+          "Point": 327
+        },
+        "fields": [
+          "id",
+          "Name",
+          "description",
+          "timestamp",
+          "begin",
+          "end",
+          "altitudeMode",
+          "tessellate",
+          "extrude",
+          "visibility",
+          "drawOrder",
+          "icon",
+          "id2",
+          "location",
+          "inundation_level",
+          "vulnerability",
+          "inundation_ft",
+          "vhvul_ab5f",
+          "hvul_3to5f",
+          "mvul_2to3f",
+          "lvul_less2",
+          "zone",
+          "ward",
+          "sl__no_",
+          "latitude",
+          "longitude"
+        ],
+        "bounding_box": {
+          "minx": 80.147103458249,
+          "miny": 12.9065341808379,
+          "maxx": 80.3265634393952,
+          "maxy": 13.2262730340807
+        },
+        "source_provider": "Greater Chennai Corporation (GCC)",
+        "acquisition_provenance": "Municipal flood hotspot survey compiled by GCC disaster management teams during and immediately following the December 2015 Chennai floods.",
+        "relevant_fields": [
+          "location",
+          "inundation_level",
+          "vulnerability",
+          "inundation_ft",
+          "latitude",
+          "longitude",
+          "zone",
+          "ward"
+        ],
+        "temporal_event_context": "December 2015 Chennai flood event municipal relief records.",
+        "known_limitations": "1. Point observations typically represent road intersections or municipal landmarks, not entire inundated footprints. 2. Depth categories (<2ft, 2-3ft, 3-5ft, >5ft) are qualitative municipal triage bins, not survey-grade stage readings. 3. Reporting density is uneven across GCC administrative zones."
+      },
+      "kancheepuram_kml": {
+        "filename": "3746a11e-620f-40e4-94a1-21ea8fe2a35e.kml",
+        "path": "D:\\Projects\\PRISM\\data\\research\\3746a11e-620f-40e4-94a1-21ea8fe2a35e.kml",
+        "status": "AVAILABLE",
+        "sha256": "97b31cef79a339f778dd0eb5e84fb770ea5fbfce5483cc31be5034ebdb351359",
+        "file_size_bytes": 126033,
+        "crs": "EPSG:4326",
+        "feature_count": 139,
+        "geometry_types": {
+          "Point": 139
+        },
+        "fields": [
+          "id",
+          "Name",
+          "description",
+          "timestamp",
+          "begin",
+          "end",
+          "altitudeMode",
+          "tessellate",
+          "extrude",
+          "visibility",
+          "drawOrder",
+          "icon",
+          "id2",
+          "sl_no_",
+          "taluka",
+          "vulnerability",
+          "details",
+          "inundation",
+          "source",
+          "longitude",
+          "latitude",
+          "name_region",
+          "escape_route",
+          "distance"
+        ],
+        "bounding_box": {
+          "minx": 79.8186199999998,
+          "miny": 12.558107,
+          "maxx": 80.2504449999999,
+          "maxy": 13.0387259999999
+        },
+        "source_provider": "Tamil Nadu District Administration (Kancheepuram District)",
+        "acquisition_provenance": "District disaster management relief hotspot inventory with taluka and escape routes.",
+        "relevant_fields": [
+          "sl_no_",
+          "taluka",
+          "vulnerability",
+          "details",
+          "inundation",
+          "escape_route",
+          "distance"
+        ],
+        "temporal_event_context": "2015 Chennai & Peri-urban flood event.",
+        "known_limitations": "Qualitative vulnerability classifications; rural/peri-urban focus outside GCC boundary."
+      },
+      "tiruvallur_kml": {
+        "filename": "d8d3ac1d-b486-4446-bc76-3dff0af8cbdb.kml",
+        "path": "D:\\Projects\\PRISM\\data\\research\\d8d3ac1d-b486-4446-bc76-3dff0af8cbdb.kml",
+        "status": "AVAILABLE",
+        "sha256": "f89a2e53bfc43cdefe1f9a0d606e7fdd323669e973104fada61215f1bc10a3ec",
+        "file_size_bytes": 140964,
+        "crs": "EPSG:4326",
+        "feature_count": 200,
+        "geometry_types": {
+          "Point": 200
+        },
+        "fields": [
+          "id",
+          "Name",
+          "description",
+          "timestamp",
+          "begin",
+          "end",
+          "altitudeMode",
+          "tessellate",
+          "extrude",
+          "visibility",
+          "drawOrder",
+          "icon",
+          "id2",
+          "sl",
+          "name_municipality",
+          "details",
+          "vulnerability",
+          "name_region",
+          "latitude",
+          "longitude"
+        ],
+        "bounding_box": {
+          "minx": 78.558276999991,
+          "miny": 9.66780199999998,
+          "maxx": 80.32551,
+          "maxy": 13.529616
+        },
+        "source_provider": "Tamil Nadu District Administration (Tiruvallur District)",
+        "acquisition_provenance": "District disaster management flood hotspot inventory for northern peri-urban fringe.",
+        "relevant_fields": [
+          "sl",
+          "name_municipality",
+          "details",
+          "vulnerability",
+          "name_region"
+        ],
+        "temporal_event_context": "2015 Chennai & Peri-urban flood event.",
+        "known_limitations": "Qualitative classifications; spatial points represent settlements rather than surveyed inundation depths."
+      },
+      "stagnation_kml": {
+        "filename": "db3840ff-9f33-43a3-b826-2f9dae1bcb78.kml",
+        "path": "D:\\Projects\\PRISM\\data\\research\\db3840ff-9f33-43a3-b826-2f9dae1bcb78.kml",
+        "status": "AVAILABLE",
+        "sha256": "5b7d79bc3ba0b59ef5b14b79d8eba65caa905eaf0f5f468b33a6177ffb16704e",
+        "file_size_bytes": 513049,
+        "crs": "EPSG:4326",
+        "feature_count": 753,
+        "geometry_types": {
+          "Point": 753
+        },
+        "fields": [
+          "id",
+          "Name",
+          "description",
+          "timestamp",
+          "begin",
+          "end",
+          "altitudeMode",
+          "tessellate",
+          "extrude",
+          "visibility",
+          "drawOrder",
+          "icon",
+          "timestamp2",
+          "begin2",
+          "end2",
+          "altitudeMode2",
+          "tessellate2",
+          "extrude2",
+          "visibility2",
+          "drawOrder2",
+          "icon2",
+          "OBJECTID",
+          "OID_",
+          "ZONE",
+          "DIVISION",
+          "LAT",
+          "LONG_"
+        ],
+        "bounding_box": {
+          "minx": 80.1425033,
+          "miny": 12.8729893,
+          "maxx": 80.324751,
+          "maxy": 13.225626
+        },
+        "source_provider": "Greater Chennai Corporation / Smart City Initiative",
+        "acquisition_provenance": "Catalog of persistent urban water stagnation and drainage bottleneck locations.",
+        "relevant_fields": [
+          "ZONE",
+          "DIVISION",
+          "LAT",
+          "LONG_"
+        ],
+        "temporal_event_context": "Historical monsoon drainage congestion records.",
+        "known_limitations": "Captures local micro-drainage failures and ponding, which may be independent of riverine overflow."
+      },
+      "roads_kml": {
+        "filename": "46d6c279-ae09-43a8-8691-7a5386f69e3a.kml",
+        "path": "D:\\Projects\\PRISM\\data\\research\\46d6c279-ae09-43a8-8691-7a5386f69e3a.kml",
+        "status": "AVAILABLE",
+        "sha256": "eb396c38f243ae4f54fd8dde40c6c5daabface91fb3e17b0975aa3964c9f167f",
+        "file_size_bytes": 5502138,
+        "crs": "EPSG:4326",
+        "feature_count": 7894,
+        "geometry_types": {
+          "LineString": 7856,
+          "MultiLineString": 38
+        },
+        "fields": [
+          "id",
+          "Name",
+          "description",
+          "timestamp",
+          "begin",
+          "end",
+          "altitudeMode",
+          "tessellate",
+          "extrude",
+          "visibility",
+          "drawOrder",
+          "icon",
+          "class",
+          "oneway",
+          "osm_id",
+          "type",
+          "is_flooded",
+          "layer",
+          "area",
+          "length",
+          "l"
+        ],
+        "bounding_box": {
+          "minx": 79.606761,
+          "miny": 12.657064,
+          "maxx": 80.32955,
+          "maxy": 13.304562
+        },
+        "source_provider": "OpenStreetMap / Disaster GIS Volunteer Community (Chennai 2015)",
+        "acquisition_provenance": "Vector road network tagged during the 2015 emergency response with flood disruption status.",
+        "relevant_fields": [
+          "class",
+          "oneway",
+          "osm_id",
+          "type",
+          "is_flooded",
+          "area",
+          "length"
+        ],
+        "temporal_event_context": "Emergency response period, December 2015.",
+        "known_limitations": "1. Severe class imbalance (7884 flooded vs 10 non-flooded segments). 2. Lacks depth, velocity, or inundation duration information. 3. Crowdsourced volunteer compilation subject to uneven reporting."
+      },
+      "reference_pdf": {
+        "filename": "Adayar &Cooum Rivers.pdf",
+        "path": "D:\\Projects\\PRISM\\data\\research\\Adayar &Cooum Rivers.pdf",
+        "status": "AVAILABLE",
+        "sha256": "60f3d39454180a21731d72ecae64f1cc7be9dcec9cfab95aaffadd8f1ae4526b",
+        "file_size_bytes": 859050,
+        "crs": "N/A (Document)",
+        "geometry_type": "Technical Report / PDF",
+        "feature_count": 8,
+        "relevant_fields": [
+          "hydrological modeling",
+          "basin setup",
+          "peak discharge",
+          "velocity head"
+        ],
+        "source_provider": "National Remote Sensing Centre (NRSC) / Indian Space Research Organisation (ISRO)",
+        "acquisition_provenance": "Technical report: 'Hydrological Simulation Study of Flood Disaster in Adyar and Cooum Rivers, Tamilnadu', Version 1.2, dated 07 December 2015.",
+        "temporal_event_context": "Adyar and Cooum basin simulations for flood disaster November 21 - December 08, 2015.",
+        "known_limitations": "Document explicitly confirms no field rainfall or downstream discharge calibration data existed during the event, validating that model output is an uncalibrated simulation."
+      }
+    }
+  },
+  "spatial_qa": {
+    "nrsc_raw": {
+      "dataset_name": "NRSC_2015_INUNDATION",
+      "total_count": 4001,
+      "has_crs": true,
+      "crs": "EPSG:4326",
+      "crs_compatible": true,
+      "valid_count": 4001,
+      "invalid_count": 0,
+      "empty_count": 0,
+      "null_count": 0,
+      "bounds": {
+        "minx": 79.3466337952075,
+        "miny": 12.5189872481577,
+        "maxx": 80.3191437258226,
+        "maxy": 13.3297221042727
+      },
+      "coordinates_sane": true,
+      "duplicate_count": 0,
+      "repaired_count": 0,
+      "repair_method": null,
+      "metric_crs": "EPSG:32644",
+      "metric_crs_justification": "EPSG:32644 (WGS 84 / UTM zone 44N) was chosen because Chennai (approx 80.2\u00b0E, 13.0\u00b0N) lies centrally within UTM Zone 44N (78\u00b0E - 84\u00b0E). It preserves conformal angles and provides accurate metric distances (meters) and areas (square meters) with minimal distortion (<0.1%)."
+    },
+    "NRSC_PIXELVALUE_1": {
+      "dataset_name": "NRSC_PIXELVALUE_1",
+      "total_count": 3392,
+      "has_crs": true,
+      "crs": "EPSG:4326",
+      "crs_compatible": true,
+      "valid_count": 3392,
+      "invalid_count": 0,
+      "empty_count": 0,
+      "null_count": 0,
+      "bounds": {
+        "minx": 79.3466337952075,
+        "miny": 12.5189872481577,
+        "maxx": 80.3191437258226,
+        "maxy": 13.3297221042727
+      },
+      "coordinates_sane": true,
+      "duplicate_count": 0,
+      "repaired_count": 0,
+      "repair_method": null,
+      "metric_crs": "EPSG:32644",
+      "metric_crs_justification": "EPSG:32644 (WGS 84 / UTM zone 44N) was chosen because Chennai (approx 80.2\u00b0E, 13.0\u00b0N) lies centrally within UTM Zone 44N (78\u00b0E - 84\u00b0E). It preserves conformal angles and provides accurate metric distances (meters) and areas (square meters) with minimal distortion (<0.1%)."
+    },
+    "NRSC_PIXELVALUE_13": {
+      "dataset_name": "NRSC_PIXELVALUE_13",
+      "total_count": 607,
+      "has_crs": true,
+      "crs": "EPSG:4326",
+      "crs_compatible": true,
+      "valid_count": 607,
+      "invalid_count": 0,
+      "empty_count": 0,
+      "null_count": 0,
+      "bounds": {
+        "minx": 80.1838241804388,
+        "miny": 12.9674038273763,
+        "maxx": 80.3049194793974,
+        "maxy": 13.1513494979158
+      },
+      "coordinates_sane": true,
+      "duplicate_count": 0,
+      "repaired_count": 0,
+      "repair_method": null,
+      "metric_crs": "EPSG:32644",
+      "metric_crs_justification": "EPSG:32644 (WGS 84 / UTM zone 44N) was chosen because Chennai (approx 80.2\u00b0E, 13.0\u00b0N) lies centrally within UTM Zone 44N (78\u00b0E - 84\u00b0E). It preserves conformal angles and provides accurate metric distances (meters) and areas (square meters) with minimal distortion (<0.1%)."
+    },
+    "NRSC_NONZERO_COMPOSITE": {
+      "dataset_name": "NRSC_NONZERO_COMPOSITE",
+      "total_count": 3999,
+      "has_crs": true,
+      "crs": "EPSG:4326",
+      "crs_compatible": true,
+      "valid_count": 3999,
+      "invalid_count": 0,
+      "empty_count": 0,
+      "null_count": 0,
+      "bounds": {
+        "minx": 79.3466337952075,
+        "miny": 12.5189872481577,
+        "maxx": 80.3191437258226,
+        "maxy": 13.3297221042727
+      },
+      "coordinates_sane": true,
+      "duplicate_count": 0,
+      "repaired_count": 0,
+      "repair_method": null,
+      "metric_crs": "EPSG:32644",
+      "metric_crs_justification": "EPSG:32644 (WGS 84 / UTM zone 44N) was chosen because Chennai (approx 80.2\u00b0E, 13.0\u00b0N) lies centrally within UTM Zone 44N (78\u00b0E - 84\u00b0E). It preserves conformal angles and provides accurate metric distances (meters) and areas (square meters) with minimal distortion (<0.1%)."
+    },
+    "gcc_hotspots": {
+      "dataset_name": "gcc_hotspots",
+      "total_count": 327,
+      "has_crs": true,
+      "crs": "EPSG:4326",
+      "crs_compatible": true,
+      "valid_count": 327,
+      "invalid_count": 0,
+      "empty_count": 0,
+      "null_count": 0,
+      "bounds": {
+        "minx": 80.147103458249,
+        "miny": 12.9065341808379,
+        "maxx": 80.3265634393952,
+        "maxy": 13.2262730340807
+      },
+      "coordinates_sane": true,
+      "duplicate_count": 0,
+      "repaired_count": 0,
+      "repair_method": null,
+      "metric_crs": "EPSG:32644",
+      "metric_crs_justification": "EPSG:32644 (WGS 84 / UTM zone 44N) was chosen because Chennai (approx 80.2\u00b0E, 13.0\u00b0N) lies centrally within UTM Zone 44N (78\u00b0E - 84\u00b0E). It preserves conformal angles and provides accurate metric distances (meters) and areas (square meters) with minimal distortion (<0.1%)."
+    },
+    "kancheepuram_hotspots": {
+      "dataset_name": "kancheepuram_hotspots",
+      "total_count": 139,
+      "has_crs": true,
+      "crs": "EPSG:4326",
+      "crs_compatible": true,
+      "valid_count": 139,
+      "invalid_count": 0,
+      "empty_count": 0,
+      "null_count": 0,
+      "bounds": {
+        "minx": 79.8186199999998,
+        "miny": 12.558107,
+        "maxx": 80.2504449999999,
+        "maxy": 13.0387259999999
+      },
+      "coordinates_sane": true,
+      "duplicate_count": 0,
+      "repaired_count": 0,
+      "repair_method": null,
+      "metric_crs": "EPSG:32644",
+      "metric_crs_justification": "EPSG:32644 (WGS 84 / UTM zone 44N) was chosen because Chennai (approx 80.2\u00b0E, 13.0\u00b0N) lies centrally within UTM Zone 44N (78\u00b0E - 84\u00b0E). It preserves conformal angles and provides accurate metric distances (meters) and areas (square meters) with minimal distortion (<0.1%)."
+    },
+    "tiruvallur_hotspots": {
+      "dataset_name": "tiruvallur_hotspots",
+      "total_count": 200,
+      "has_crs": true,
+      "crs": "EPSG:4326",
+      "crs_compatible": true,
+      "valid_count": 200,
+      "invalid_count": 0,
+      "empty_count": 0,
+      "null_count": 0,
+      "bounds": {
+        "minx": 78.558276999991,
+        "miny": 9.66780199999998,
+        "maxx": 80.32551,
+        "maxy": 13.529616
+      },
+      "coordinates_sane": true,
+      "duplicate_count": 39,
+      "repaired_count": 0,
+      "repair_method": null,
+      "metric_crs": "EPSG:32644",
+      "metric_crs_justification": "EPSG:32644 (WGS 84 / UTM zone 44N) was chosen because Chennai (approx 80.2\u00b0E, 13.0\u00b0N) lies centrally within UTM Zone 44N (78\u00b0E - 84\u00b0E). It preserves conformal angles and provides accurate metric distances (meters) and areas (square meters) with minimal distortion (<0.1%)."
+    },
+    "chennai_stagnation": {
+      "dataset_name": "chennai_stagnation",
+      "total_count": 753,
+      "has_crs": true,
+      "crs": "EPSG:4326",
+      "crs_compatible": true,
+      "valid_count": 753,
+      "invalid_count": 0,
+      "empty_count": 0,
+      "null_count": 0,
+      "bounds": {
+        "minx": 80.1425033,
+        "miny": 12.8729893,
+        "maxx": 80.324751,
+        "maxy": 13.225626
+      },
+      "coordinates_sane": true,
+      "duplicate_count": 0,
+      "repaired_count": 0,
+      "repair_method": null,
+      "metric_crs": "EPSG:32644",
+      "metric_crs_justification": "EPSG:32644 (WGS 84 / UTM zone 44N) was chosen because Chennai (approx 80.2\u00b0E, 13.0\u00b0N) lies centrally within UTM Zone 44N (78\u00b0E - 84\u00b0E). It preserves conformal angles and provides accurate metric distances (meters) and areas (square meters) with minimal distortion (<0.1%)."
+    },
+    "road_network": {
+      "dataset_name": "road_network",
+      "total_count": 7894,
+      "has_crs": true,
+      "crs": "EPSG:4326",
+      "crs_compatible": true,
+      "valid_count": 7894,
+      "invalid_count": 0,
+      "empty_count": 0,
+      "null_count": 0,
+      "bounds": {
+        "minx": 79.606761,
+        "miny": 12.657064,
+        "maxx": 80.32955,
+        "maxy": 13.304562
+      },
+      "coordinates_sane": true,
+      "duplicate_count": 0,
+      "repaired_count": 0,
+      "repair_method": null,
+      "metric_crs": "EPSG:32644",
+      "metric_crs_justification": "EPSG:32644 (WGS 84 / UTM zone 44N) was chosen because Chennai (approx 80.2\u00b0E, 13.0\u00b0N) lies centrally within UTM Zone 44N (78\u00b0E - 84\u00b0E). It preserves conformal angles and provides accurate metric distances (meters) and areas (square meters) with minimal distortion (<0.1%)."
+    }
+  },
+  "nrsc_analysis": {
+    "raw_pixelvalue_counts": {
+      "1": 3392,
+      "13": 607,
+      "0": 2
+    },
+    "masks": {
+      "NRSC_PIXELVALUE_1": {
+        "mask_name": "NRSC_PIXELVALUE_1",
+        "mask_type": "NRSC source-derived inundation mask",
+        "raw_source_class": "pixelvalue == 1",
+        "feature_count": 3392,
+        "valid_geometry_count": 3392,
+        "invalid_geometry_count": 0,
+        "area_sq_m": 248157507.56,
+        "area_sq_km": 248.1575,
+        "bounding_box": {
+          "minx": 79.3466337952075,
+          "miny": 12.5189872481577,
+          "maxx": 80.3191437258226,
+          "maxy": 13.3297221042727
+        },
+        "fabdem_overlap": {
+          "features_overlapping": 1495,
+          "clipped_area_sq_km": 91.1998
+        },
+        "chennai_study_overlap": {
+          "features_overlapping": 882,
+          "clipped_area_sq_km": 40.2104
+        }
+      },
+      "NRSC_PIXELVALUE_13": {
+        "mask_name": "NRSC_PIXELVALUE_13",
+        "mask_type": "NRSC source-derived inundation mask",
+        "raw_source_class": "pixelvalue == 13",
+        "feature_count": 607,
+        "valid_geometry_count": 607,
+        "invalid_geometry_count": 0,
+        "area_sq_m": 68375944.86,
+        "area_sq_km": 68.3759,
+        "bounding_box": {
+          "minx": 80.1838241804388,
+          "miny": 12.9674038273763,
+          "maxx": 80.3049194793974,
+          "maxy": 13.1513494979158
+        },
+        "fabdem_overlap": {
+          "features_overlapping": 534,
+          "clipped_area_sq_km": 61.1698
+        },
+        "chennai_study_overlap": {
+          "features_overlapping": 607,
+          "clipped_area_sq_km": 68.3759
+        }
+      },
+      "NRSC_NONZERO_COMPOSITE": {
+        "mask_name": "NRSC_NONZERO_COMPOSITE",
+        "mask_type": "NRSC source-derived inundation mask",
+        "raw_source_class": "pixelvalue in {1, 13}",
+        "feature_count": 3999,
+        "valid_geometry_count": 3999,
+        "invalid_geometry_count": 0,
+        "area_sq_m": 316533452.42,
+        "area_sq_km": 316.5335,
+        "bounding_box": {
+          "minx": 79.3466337952075,
+          "miny": 12.5189872481577,
+          "maxx": 80.3191437258226,
+          "maxy": 13.3297221042727
+        },
+        "fabdem_overlap": {
+          "features_overlapping": 2029,
+          "clipped_area_sq_km": 152.3696
+        },
+        "chennai_study_overlap": {
+          "features_overlapping": 1489,
+          "clipped_area_sq_km": 108.5863
+        }
+      }
+    },
+    "scientific_note": "NRSC masks are source-derived reference layers reflecting satellite observations and hydrodynamic simulations of the Dec 2015 event. Mask 13 shows substantially greater spatial consistency with the available urban GCC flood-hotspot and water-stagnation observations than Mask 1. The semantic meaning of source pixelvalue 1 versus 13 remains unresolved because the public source metadata does not define these classes."
+  },
+  "gcc_validation_summary": {
+    "analysis_type": "Spatial consistency analysis",
+    "evidence_type": "Observed point evidence",
+    "total_gcc_points": 327,
+    "overall_mask_performance": {
+      "NRSC_PIXELVALUE_1": {
+        "total_points": 327,
+        "inside_count": 13,
+        "outside_count": 314,
+        "hit_rate": 0.0398,
+        "hit_rate_pct": 3.98
+      },
+      "NRSC_PIXELVALUE_13": {
+        "total_points": 327,
+        "inside_count": 98,
+        "outside_count": 229,
+        "hit_rate": 0.2997,
+        "hit_rate_pct": 29.97
+      },
+      "NRSC_NONZERO_COMPOSITE": {
+        "total_points": 327,
+        "inside_count": 105,
+        "outside_count": 222,
+        "hit_rate": 0.3211,
+        "hit_rate_pct": 32.11
+      }
+    },
+    "stratified_by_category": {
+      "NRSC_PIXELVALUE_1": [
+        {
+          "category": "<2 ft",
+          "total": 202,
+          "inside": 10,
+          "outside": 192,
+          "hit_rate": 0.0495,
+          "hit_rate_pct": 4.95
+        },
+        {
+          "category": "2\u20133 ft",
+          "total": 1,
+          "inside": 0,
+          "outside": 1,
+          "hit_rate": 0.0,
+          "hit_rate_pct": 0.0
+        },
+        {
+          "category": "3\u20135 ft",
+          "total": 86,
+          "inside": 3,
+          "outside": 83,
+          "hit_rate": 0.0349,
+          "hit_rate_pct": 3.49
+        },
+        {
+          "category": ">5 ft",
+          "total": 38,
+          "inside": 0,
+          "outside": 38,
+          "hit_rate": 0.0,
+          "hit_rate_pct": 0.0
+        }
+      ],
+      "NRSC_PIXELVALUE_13": [
+        {
+          "category": "<2 ft",
+          "total": 202,
+          "inside": 61,
+          "outside": 141,
+          "hit_rate": 0.302,
+          "hit_rate_pct": 30.2
+        },
+        {
+          "category": "2\u20133 ft",
+          "total": 1,
+          "inside": 0,
+          "outside": 1,
+          "hit_rate": 0.0,
+          "hit_rate_pct": 0.0
+        },
+        {
+          "category": "3\u20135 ft",
+          "total": 86,
+          "inside": 21,
+          "outside": 65,
+          "hit_rate": 0.2442,
+          "hit_rate_pct": 24.42
+        },
+        {
+          "category": ">5 ft",
+          "total": 38,
+          "inside": 16,
+          "outside": 22,
+          "hit_rate": 0.4211,
+          "hit_rate_pct": 42.11
+        }
+      ],
+      "NRSC_NONZERO_COMPOSITE": [
+        {
+          "category": "<2 ft",
+          "total": 202,
+          "inside": 65,
+          "outside": 137,
+          "hit_rate": 0.3218,
+          "hit_rate_pct": 32.18
+        },
+        {
+          "category": "2\u20133 ft",
+          "total": 1,
+          "inside": 0,
+          "outside": 1,
+          "hit_rate": 0.0,
+          "hit_rate_pct": 0.0
+        },
+        {
+          "category": "3\u20135 ft",
+          "total": 86,
+          "inside": 24,
+          "outside": 62,
+          "hit_rate": 0.2791,
+          "hit_rate_pct": 27.91
+        },
+        {
+          "category": ">5 ft",
+          "total": 38,
+          "inside": 16,
+          "outside": 22,
+          "hit_rate": 0.4211,
+          "hit_rate_pct": 42.11
+        }
+      ]
+    },
+    "scientific_interpretation": "This spatial consistency test measures agreement between municipal point incident reports and remote-sensing derived inundation polygons. It is NOT a ground-truth accuracy benchmark, because GCC points represent localized reporting centroids while NRSC polygons capture contiguous inundated footprints."
+  },
+  "terrain_summary": {
+    "analysis_type": "Terrain characterization",
+    "total_points": 327,
+    "sampled_valid_count": 233,
+    "out_of_tile_count": 94,
+    "overall_terrain_stats": {
+      "count": 233,
+      "min": 1.18,
+      "max": 17.85,
+      "mean": 8.54,
+      "median": 8.81,
+      "std": 3.41,
+      "p05": 3.15,
+      "p25": 5.76,
+      "p75": 11.03,
+      "p95": 13.92,
+      "total_points": 327,
+      "out_of_tile_count": 94
+    },
+    "stratified_by_category": {
+      "<2 ft": {
+        "count": 140,
+        "min": 2.3,
+        "max": 16.84,
+        "mean": 8.51,
+        "median": 8.9,
+        "std": 3.14,
+        "p05": 3.45,
+        "p25": 5.84,
+        "p75": 10.76,
+        "p95": 13.52,
+        "total_points_in_category": 202,
+        "out_of_tile_count": 62
+      },
+      "2\u20133 ft": {
+        "count": 1,
+        "min": 15.63,
+        "max": 15.63,
+        "mean": 15.63,
+        "median": 15.63,
+        "std": 0.0,
+        "p05": 15.63,
+        "p25": 15.63,
+        "p75": 15.63,
+        "p95": 15.63,
+        "total_points_in_category": 1,
+        "out_of_tile_count": 0
+      },
+      "3\u20135 ft": {
+        "count": 73,
+        "min": 1.18,
+        "max": 16.36,
+        "mean": 8.65,
+        "median": 9.2,
+        "std": 3.74,
+        "p05": 2.33,
+        "p25": 5.87,
+        "p75": 11.49,
+        "p95": 14.0,
+        "total_points_in_category": 86,
+        "out_of_tile_count": 13
+      },
+      ">5 ft": {
+        "count": 19,
+        "min": 2.13,
+        "max": 17.85,
+        "mean": 7.92,
+        "median": 7.49,
+        "std": 3.67,
+        "p05": 2.96,
+        "p25": 5.42,
+        "p75": 9.56,
+        "p95": 13.38,
+        "total_points_in_category": 38,
+        "out_of_tile_count": 19
+      }
+    },
+    "scientific_disclaimer": "Descriptive statistics only. No flood threshold or bathtub elevation boundary is inferred. Points south of latitude 13.00014\u00b0N fall outside FABDEM tile N13E080 and are accounted for transparently."
+  },
+  "nrsc_terrain_distributions": {
+    "study_envelope": {
+      "minx": 79.99986111111112,
+      "miny": 13.000138888888891,
+      "maxx": 80.32,
+      "maxy": 13.33
+    },
+    "mask_terrain_distributions": {
+      "NRSC_PIXELVALUE_1": {
+        "inside_mask": {
+          "valid_samples": 98753,
+          "min": -12.0,
+          "max": 42.13,
+          "mean": 16.66,
+          "median": 15.88,
+          "p05": 2.63,
+          "p95": 32.86
+        },
+        "outside_mask_study_area": {
+          "valid_samples": 1269858,
+          "min": -12.0,
+          "max": 65.43,
+          "mean": 15.73,
+          "median": 14.22,
+          "p05": 0.0,
+          "p95": 32.75
+        }
+      },
+      "NRSC_PIXELVALUE_13": {
+        "inside_mask": {
+          "valid_samples": 66205,
+          "min": -0.01,
+          "max": 17.95,
+          "mean": 8.38,
+          "median": 8.79,
+          "p05": 2.9,
+          "p95": 12.49
+        },
+        "outside_mask_study_area": {
+          "valid_samples": 1302406,
+          "min": -12.0,
+          "max": 65.43,
+          "mean": 16.17,
+          "median": 15.0,
+          "p05": 0.0,
+          "p95": 32.95
+        }
+      },
+      "NRSC_NONZERO_COMPOSITE": {
+        "inside_mask": {
+          "valid_samples": 164380,
+          "min": -12.0,
+          "max": 42.13,
+          "mean": 13.35,
+          "median": 10.08,
+          "p05": 2.73,
+          "p95": 31.5
+        },
+        "outside_mask_study_area": {
+          "valid_samples": 1204231,
+          "min": -12.0,
+          "max": 65.43,
+          "mean": 16.13,
+          "median": 15.0,
+          "p05": 0.0,
+          "p95": 32.96
+        }
+      }
+    },
+    "scientific_interpretation": "The observed elevation distributions demonstrate substantial overlap between historical inundation and surrounding terrain; therefore a single global DEM elevation threshold is not considered scientifically defensible for this study area."
+  },
+  "nandambakkam_analysis": {
+    "station_code": "NANDAMBAKKAM_CHECKDAM",
+    "river": "Adyar",
+    "coordinates": {
+      "latitude": 13.01611111,
+      "longitude": 80.18277778,
+      "crs": "EPSG:4326"
+    },
+    "fabdem_elevation_m": 5.1,
+    "nrsc_mask_proximity": {
+      "NRSC_PIXELVALUE_1": {
+        "point_inside_mask": false,
+        "nearest_distance_meters": 14.26
+      },
+      "NRSC_PIXELVALUE_13": {
+        "point_inside_mask": false,
+        "nearest_distance_meters": 1320.85
+      },
+      "NRSC_NONZERO_COMPOSITE": {
+        "point_inside_mask": false,
+        "nearest_distance_meters": 14.26
+      }
+    },
+    "gcc_hotspots_ring_counts": {
+      "within_250m": 0,
+      "within_500m": 1,
+      "within_1000m": 5,
+      "within_2000m": 10
+    },
+    "nearby_gcc_observations_2000m": [
+      {
+        "distance_meters": 340.2,
+        "location": "Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",
+        "inundation_level": "Low Vulnerability less than 2 feet",
+        "inundation_ft": "<2ft",
+        "vulnerability": "Low Vulnerability",
+        "latitude": 13.019,
+        "longitude": 80.1817
+      },
+      {
+        "distance_meters": 544.5,
+        "location": "Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",
+        "inundation_level": "Low Vulnerability less than 2 feet",
+        "inundation_ft": "<2ft",
+        "vulnerability": "Low Vulnerability",
+        "latitude": 13.021,
+        "longitude": 80.1823
+      },
+      {
+        "distance_meters": 654.2,
+        "location": "Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",
+        "inundation_level": "Low Vulnerability less than 2 feet",
+        "inundation_ft": "<2ft",
+        "vulnerability": "Low Vulnerability",
+        "latitude": 13.0111,
+        "longitude": 80.1795
+      },
+      {
+        "distance_meters": 709.6,
+        "location": "Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",
+        "inundation_level": "Low Vulnerability less than 2 feet",
+        "inundation_ft": "<2ft",
+        "vulnerability": "Low Vulnerability",
+        "latitude": 13.0188,
+        "longitude": 80.1768
+      },
+      {
+        "distance_meters": 802.8,
+        "location": "Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",
+        "inundation_level": "Low Vulnerability less than 2 feet",
+        "inundation_ft": "<2ft",
+        "vulnerability": "Low Vulnerability",
+        "latitude": 13.0229,
+        "longitude": 80.1854
+      },
+      {
+        "distance_meters": 1273.5,
+        "location": "Amman nagar",
+        "inundation_level": "Very High Vulnerability Above 5 Feet",
+        "inundation_ft": ">5ft",
+        "vulnerability": "Very High Vulnerability",
+        "latitude": 13.0255,
+        "longitude": 80.1896
+      },
+      {
+        "distance_meters": 1481.1,
+        "location": "Royala nagar",
+        "inundation_level": "Very High Vulnerability Above 5 Feet",
+        "inundation_ft": ">5ft",
+        "vulnerability": "Very High Vulnerability",
+        "latitude": 13.0291,
+        "longitude": 80.1863
+      },
+      {
+        "distance_meters": 1656.1,
+        "location": "Bakthi vedhandha avenue",
+        "inundation_level": "Very High Vulnerability Above 5 Feet",
+        "inundation_ft": ">5ft",
+        "vulnerability": "Very High Vulnerability",
+        "latitude": 13.0305,
+        "longitude": 80.187
+      },
+      {
+        "distance_meters": 1816.7,
+        "location": "Kaviya Garden, CRR Puram Phase III, Purachi Thalivi Nagar, Bhell Nagar, Dharmarajapuram, Sathiya Nagar, Astalakshmi Avenue and Sedhu Lakshmi Avenue, River view colony",
+        "inundation_level": "Low Vulnerability less than 2 feet",
+        "inundation_ft": "<2ft",
+        "vulnerability": "Low Vulnerability",
+        "latitude": 13.0133,
+        "longitude": 80.1663
+      },
+      {
+        "distance_meters": 1932.9,
+        "location": "Bharathi salai",
+        "inundation_level": "High Vulnerability 3 to 5 Feet",
+        "inundation_ft": "3 to 5 ft",
+        "vulnerability": "High Vulnerability",
+        "latitude": 13.0325,
+        "longitude": 80.1765
+      }
+    ],
+    "scientific_boundaries": [
+      "1. FABDEM elevation at the station coordinate (~5.10 m) represents ground/canopy-corrected surface elevation, NOT river bed or gauge zero.",
+      "2. Nearest NRSC Mask A (pixelvalue=1) boundary is 14.26 m from the station coordinates, confirming close proximity to the Adyar main channel.",
+      "3. Gauge stage of 3.25 m observed in telemetry must NOT be added to or subtracted from DEM elevation because gauge-zero vertical datum is unverified.",
+      "4. Gauge flooding cannot be inferred merely from proximity to remote-sensing polygons or municipal street ponding reports."
+    ]
+  },
+  "road_cross_check": {
+    "analysis_type": "Spatial consistency analysis",
+    "dataset_role": "Historical reference layer",
+    "total_roads": 7894,
+    "class_breakdown": {
+      "is_flooded_1": 7884,
+      "is_flooded_0": 10
+    },
+    "mask_comparisons": {
+      "NRSC_PIXELVALUE_1": {
+        "total_road_features": 7894,
+        "flooded_road_features": 7884,
+        "non_flooded_road_features": 10,
+        "flooded_roads_intersecting_mask": 983,
+        "flooded_roads_outside_mask": 6901,
+        "non_flooded_roads_intersecting_mask": 1,
+        "non_flooded_roads_outside_mask": 9,
+        "flooded_intersection_rate": 0.1247,
+        "non_flooded_intersection_rate": 0.1,
+        "overall_intersection_rate": 0.1247
+      },
+      "NRSC_PIXELVALUE_13": {
+        "total_road_features": 7894,
+        "flooded_road_features": 7884,
+        "non_flooded_road_features": 10,
+        "flooded_roads_intersecting_mask": 2962,
+        "flooded_roads_outside_mask": 4922,
+        "non_flooded_roads_intersecting_mask": 5,
+        "non_flooded_roads_outside_mask": 5,
+        "flooded_intersection_rate": 0.3757,
+        "non_flooded_intersection_rate": 0.5,
+        "overall_intersection_rate": 0.3759
+      },
+      "NRSC_NONZERO_COMPOSITE": {
+        "total_road_features": 7894,
+        "flooded_road_features": 7884,
+        "non_flooded_road_features": 10,
+        "flooded_roads_intersecting_mask": 3827,
+        "flooded_roads_outside_mask": 4057,
+        "non_flooded_roads_intersecting_mask": 6,
+        "non_flooded_roads_outside_mask": 4,
+        "flooded_intersection_rate": 0.4854,
+        "non_flooded_intersection_rate": 0.6,
+        "overall_intersection_rate": 0.4856
+      }
+    },
+    "scientific_interpretation": "Cross-dataset consistency check only. The road dataset exhibits extreme class imbalance (7,884 flooded vs 10 non-flooded), reflecting emergency tagging biased towards disrupted links. It cannot serve as an independent negative control or balanced ground truth."
+  },
+  "stagnation_cross_check": {
+    "analysis_type": "Spatial consistency analysis",
+    "evidence_type": "Observed point evidence",
+    "total_stagnation_points": 753,
+    "mask_comparisons": {
+      "NRSC_PIXELVALUE_1": {
+        "total_stagnation_points": 753,
+        "inside_count": 21,
+        "outside_count": 732,
+        "hit_rate": 0.0279,
+        "hit_rate_pct": 2.79
+      },
+      "NRSC_PIXELVALUE_13": {
+        "total_stagnation_points": 753,
+        "inside_count": 202,
+        "outside_count": 551,
+        "hit_rate": 0.2683,
+        "hit_rate_pct": 26.83
+      },
+      "NRSC_NONZERO_COMPOSITE": {
+        "total_stagnation_points": 753,
+        "inside_count": 222,
+        "outside_count": 531,
+        "hit_rate": 0.2948,
+        "hit_rate_pct": 29.48
+      }
+    },
+    "scientific_interpretation": "Consistency analysis only. Water stagnation points capture localized micro-drainage failures and roadside depression ponding. Mask 13 shows substantially greater spatial consistency with the available urban GCC flood-hotspot and water-stagnation observations than Mask 1. The semantic meaning of source pixelvalue 1 versus 13 remains unresolved because the public source metadata does not define these classes."
+  }
+}

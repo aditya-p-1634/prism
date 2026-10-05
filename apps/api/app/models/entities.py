@@ -7,7 +7,9 @@ from sqlalchemy.orm import relationship
 from app.db.session import Base
 from app.models.enums import (
     DataQualityEnum, FreshnessEnum, OperationalStatusEnum, StateTypeEnum,
-    PriorityClassEnum, ResourceCategoryEnum, AllocationStatusEnum, RoleEnum, JobStatusEnum
+    PriorityClassEnum, ResourceCategoryEnum, AllocationStatusEnum, RoleEnum, JobStatusEnum,
+    EvacuationStateEnum, ResourceStatusEnum, SimulationStatusEnum, SimulationEventTypeEnum,
+    ObservationQualityEnum, HazardMeasurementTypeEnum
 )
 
 def generate_uuid() -> str:
@@ -340,6 +342,7 @@ class RelocationAllocation(Base):
     route_plan_id = Column(String(36), ForeignKey("route_plans.id", ondelete="RESTRICT"), nullable=True)
     snapshot_id = Column(String(36), ForeignKey("state_snapshots.id", ondelete="RESTRICT"), nullable=False)
     allocation_status = Column(SAEnum(AllocationStatusEnum), default=AllocationStatusEnum.RECOMMENDED, nullable=False)
+    evacuation_state = Column(SAEnum(EvacuationStateEnum), default=EvacuationStateEnum.PLANNED, nullable=False)
     assigned_capacity_count = Column(Integer, default=0, nullable=False)
     reason_code = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=utc_now, nullable=False)
@@ -390,3 +393,170 @@ class AuditEvent(Base):
     after_state = Column(JSON, default=dict, nullable=True)
     justification = Column(Text, nullable=False)
     created_at = Column(DateTime, default=utc_now, nullable=False)
+
+# -------------------------------------------------------------
+# 7. Temporal Simulation Clock & Dynamic Execution (E5 - A.3)
+# -------------------------------------------------------------
+
+class SimulationRun(Base):
+    __tablename__ = "simulation_runs"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    scenario_id = Column(String(36), ForeignKey("scenarios.id", ondelete="CASCADE"), nullable=True)
+    scenario_snapshot_id = Column(String(36), ForeignKey("state_snapshots.id", ondelete="CASCADE"), nullable=False)
+    status = Column(SAEnum(SimulationStatusEnum), default=SimulationStatusEnum.CREATED, nullable=False)
+    timestep_minutes = Column(Float, default=5.0, nullable=False)
+    duration_minutes = Column(Float, default=60.0, nullable=False)
+    current_simulation_time = Column(Float, default=0.0, nullable=False)
+    ticks_completed = Column(Integer, default=0, nullable=False)
+    total_ticks = Column(Integer, default=12, nullable=False)
+    parameters = Column(JSON, default=dict, nullable=False)
+    summary_metrics = Column(JSON, default=dict, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
+
+    events = relationship("SimulationEvent", back_populates="simulation_run", cascade="all, delete-orphan")
+    progress_records = relationship("SimulationAllocationProgress", back_populates="simulation_run", cascade="all, delete-orphan")
+    resource_states = relationship("SimulationResourceState", back_populates="simulation_run", cascade="all, delete-orphan")
+
+class SimulationEvent(Base):
+    __tablename__ = "simulation_events"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    simulation_run_id = Column(String(36), ForeignKey("simulation_runs.id", ondelete="CASCADE"), nullable=False)
+    simulation_time_min = Column(Float, nullable=False)
+    tick_index = Column(Integer, nullable=False)
+    event_type = Column(SAEnum(SimulationEventTypeEnum), nullable=False)
+    entity_type = Column(String(100), nullable=True)
+    entity_id = Column(String(36), nullable=True)
+    details = Column(JSON, default=dict, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+
+    simulation_run = relationship("SimulationRun", back_populates="events")
+
+class SimulationAllocationProgress(Base):
+    __tablename__ = "simulation_allocation_progress"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    simulation_run_id = Column(String(36), ForeignKey("simulation_runs.id", ondelete="CASCADE"), nullable=False)
+    allocation_id = Column(String(36), ForeignKey("relocation_allocations.id", ondelete="CASCADE"), nullable=False)
+    route_plan_id = Column(String(36), ForeignKey("route_plans.id", ondelete="SET NULL"), nullable=True)
+    original_route_plan_id = Column(String(36), nullable=True)
+    elapsed_time_min = Column(Float, default=0.0, nullable=False)
+    total_travel_time_min = Column(Float, default=0.0, nullable=False)
+    progress_ratio = Column(Float, default=0.0, nullable=False) # 0.0 to 1.0
+    is_blocked = Column(Boolean, default=False, nullable=False)
+    reroute_count = Column(Integer, default=0, nullable=False)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
+
+    simulation_run = relationship("SimulationRun", back_populates="progress_records")
+
+class SimulationResourceState(Base):
+    __tablename__ = "simulation_resource_states"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    simulation_run_id = Column(String(36), ForeignKey("simulation_runs.id", ondelete="CASCADE"), nullable=False)
+    destination_id = Column(String(36), ForeignKey("destinations.id", ondelete="CASCADE"), nullable=False)
+    resource_category = Column(String(50), nullable=False) # POPULATION_SPACE, WATER, MEDICAL_CAPACITY
+    resource_type = Column(SAEnum(ResourceCategoryEnum), nullable=False)
+    total_quantity = Column(Float, nullable=False)
+    consumed_quantity = Column(Float, default=0.0, nullable=False)
+    remaining_quantity = Column(Float, nullable=False)
+    unit = Column(String(50), nullable=False)
+    supportable_population = Column(Integer, nullable=False)
+    status = Column(SAEnum(ResourceStatusEnum), default=ResourceStatusEnum.NORMAL, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
+
+    simulation_run = relationship("SimulationRun", back_populates="resource_states")
+    destination = relationship("Destination")
+
+# -------------------------------------------------------------
+# 8. Hybrid Hazard Prediction Layer (A.6)
+# -------------------------------------------------------------
+
+class HazardPredictionRecord(Base):
+    __tablename__ = "hazard_prediction_records"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    simulation_run_id = Column(String(36), ForeignKey("simulation_runs.id", ondelete="SET NULL"), nullable=True)
+    snapshot_id = Column(String(36), ForeignKey("state_snapshots.id", ondelete="SET NULL"), nullable=True)
+    hazard_type = Column(String(50), default="RIVER_FLOOD", nullable=False)
+    target_metric = Column(String(50), default="RIVER_STAGE_M", nullable=False)
+    source_time_min = Column(Float, nullable=False)
+    target_time_min = Column(Float, nullable=False)
+    horizon_minutes = Column(Float, nullable=False)
+    predicted_value = Column(Float, nullable=False)
+    raw_model_value = Column(Float, nullable=False)
+    lower_bound = Column(Float, nullable=False)
+    upper_bound = Column(Float, nullable=False)
+    uncertainty_metric = Column(Float, nullable=False)
+    confidence = Column(Float, nullable=True)
+    model_name = Column(String(100), nullable=False)
+    model_version = Column(String(50), default="1.0.0", nullable=False)
+    method = Column(String(100), default="AUTOREGRESSIVE_RIDGE", nullable=False)
+    validation_status = Column(String(50), default="VALID", nullable=False) # VALID, CORRECTED, REJECTED, DEGRADED
+    validation_reason = Column(Text, nullable=True)
+    lifecycle_state = Column(String(50), default="VALIDATED", nullable=True) # PREDICTED, VALIDATED, DEGRADED, OUT_OF_DOMAIN, REJECTED, EVALUATED_BY_E1
+    feature_provenance = Column(JSON, default=dict, nullable=False)
+    domain_alerts = Column(JSON, default=list, nullable=False)
+    actual_value = Column(Float, nullable=True)
+    evaluation_error = Column(Float, nullable=True)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+
+# -------------------------------------------------------------
+# 9. Real-World Hazard Data & Telemetry Observations (A.7)
+# -------------------------------------------------------------
+
+class HazardStation(Base):
+    __tablename__ = "hazard_stations"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    station_code = Column(String(100), unique=True, nullable=False, index=True)
+    station_name = Column(String(255), nullable=False)
+    river = Column(String(100), nullable=False)
+    district = Column(String(100), nullable=False)
+    state = Column(String(100), default="Tamil Nadu", nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    hazard_type = Column(SAEnum(HazardMeasurementTypeEnum), default=HazardMeasurementTypeEnum.RIVER_WATER_LEVEL, nullable=False)
+    unit = Column(String(50), default="metres", nullable=False)
+    source = Column(String(255), default="Tamil Nadu River Water Level Telemetry Hourly", nullable=False)
+    source_dataset = Column(String(255), default="tn_water_resources_telemetry_hourly", nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
+    warning_threshold_m = Column(Float, nullable=True)  # Authoritative threshold if known, else None
+    danger_threshold_m = Column(Float, nullable=True)   # Authoritative threshold if known, else None
+    metadata_json = Column(JSON, default=dict, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
+
+    observations = relationship("HazardObservation", back_populates="station", cascade="all, delete-orphan")
+
+
+class HazardObservation(Base):
+    __tablename__ = "hazard_observations"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    station_id = Column(String(36), ForeignKey("hazard_stations.id", ondelete="RESTRICT"), nullable=False, index=True)
+    station_code = Column(String(100), nullable=False, index=True)
+    station_name = Column(String(255), nullable=False)
+    river = Column(String(100), nullable=False)
+    district = Column(String(100), nullable=False)
+    hazard_type = Column(SAEnum(HazardMeasurementTypeEnum), default=HazardMeasurementTypeEnum.RIVER_WATER_LEVEL, nullable=False)
+    source = Column(String(255), nullable=False)
+    source_dataset = Column(String(255), nullable=False)
+    observed_at = Column(DateTime, nullable=False, index=True)
+    ingested_at = Column(DateTime, default=utc_now, nullable=False)
+    value = Column(Float, nullable=False)
+    unit = Column(String(50), default="metres", nullable=False)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    quality_status = Column(SAEnum(ObservationQualityEnum), default=ObservationQualityEnum.VALID, nullable=False, index=True)
+    quality_flags = Column(JSON, default=list, nullable=False)
+    freshness = Column(SAEnum(FreshnessEnum), default=FreshnessEnum.FRESH, nullable=False)
+    raw_reference = Column(JSON, default=dict, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+
+    station = relationship("HazardStation", back_populates="observations")
+
+
