@@ -37,6 +37,7 @@ from app.engines.e1_hazard.prediction.validation import (
 )
 from app.engines.e1_hazard.prediction.uncertainty import UncertaintyEstimator
 from app.engines.e1_hazard.service import HazardEngineE1
+from app.engines.e6_integration.integrity import SnapshotIntegrity
 from app.gis.spatial import to_shapely
 
 
@@ -435,6 +436,13 @@ class HazardPredictionPipeline:
         Rejected, degraded, or out-of-domain predictions are strictly prohibited from driving
         downstream evacuation calculations unless explicit allow_unsafe_audit=True is passed for auditing.
         """
+        SnapshotIntegrity.require_mutable_snapshot(db, snapshot_id)
+        if prediction.snapshot_id and prediction.snapshot_id != snapshot_id:
+            raise PredictionSafetyException(
+                f"E1_SNAPSHOT_GATE_REJECTED: Prediction '{prediction.id}' belongs to snapshot "
+                f"'{prediction.snapshot_id}', not target snapshot '{snapshot_id}'."
+            )
+
         lifecycle = getattr(prediction, "lifecycle_state", prediction.validation_status)
 
         if prediction.validation_status in ["REJECTED", "DEGRADED"] or lifecycle in ["REJECTED", "OUT_OF_DOMAIN"]:

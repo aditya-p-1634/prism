@@ -15,9 +15,11 @@ from app.models.entities import (
     RelocationGroup,
     RoutePlan,
     StateSnapshot,
+    HazardPredictionRecord,
 )
 from app.models.enums import OperationalStatusEnum, ResourceCategoryEnum
 from app.gis.spatial import to_geojson_str
+from app.engines.e1_hazard.prediction.pipeline import HazardPredictionPipeline
 
 
 def test_e3_returns_detached_operational_view_without_mutating_canonical_destination():
@@ -111,5 +113,30 @@ def test_observation_e1_cannot_write_to_immutable_baseline():
                 snapshot_id="SNAP_BASE_001",
                 db=db,
             )
+    finally:
+        db.close()
+
+
+def test_prediction_e1_cannot_write_to_immutable_baseline():
+    db = SessionLocal()
+    try:
+        prediction = HazardPredictionRecord(
+            id="prediction-integrity-test",
+            snapshot_id="SCENARIO_A",
+            predicted_value=10.0,
+            raw_model_value=10.0,
+            lower_bound=9.0,
+            upper_bound=11.0,
+            uncertainty_metric=0.1,
+            source_time_min=0.0,
+            target_time_min=10.0,
+            horizon_minutes=10.0,
+            model_name="TEST",
+            validation_status="VALID",
+            feature_provenance={},
+            domain_alerts=[],
+        )
+        with pytest.raises(SnapshotIntegrityError, match="SNAPSHOT_IMMUTABLE"):
+            HazardPredictionPipeline.feed_prediction_to_e1(prediction, db, "SNAP_BASE_001")
     finally:
         db.close()
