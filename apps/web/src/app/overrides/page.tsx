@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 export default function OverridesPage() {
-  const { snapshotId, showToast } = useSnapshot();
+  const { snapshotId, showToast, isBaseline } = useSnapshot();
   const [allocations, setAllocations] = useState<any[]>([]);
   const [destinations, setDestinations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,6 +59,10 @@ export default function OverridesPage() {
 
   const handleSubmitOverride = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isBaseline) {
+      showToast("Canonical baseline is immutable. Select a scenario snapshot before overriding.", "warning");
+      return;
+    }
     if (!justification.trim()) {
       showToast("Mandatory justification required for human authority override.", "warning");
       return;
@@ -203,12 +207,12 @@ export default function OverridesPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={submitting}
+              disabled={isBaseline || submitting}
               className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2 transition-all disabled:opacity-50"
             >
               <Send className="w-3.5 h-3.5" />
               <span>
-                {submitting ? "PERSISTING OVERRIDE & AUDIT RECORD..." : "COMMIT OFFICIAL AUTHORITY OVERRIDE"}
+                {isBaseline ? "BASELINE IMMUTABLE" : submitting ? "PERSISTING OVERRIDE & AUDIT RECORD..." : "COMMIT OFFICIAL AUTHORITY OVERRIDE"}
               </span>
             </button>
           </form>

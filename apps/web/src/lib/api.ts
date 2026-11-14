@@ -131,6 +131,10 @@ export async function getSystemTelemetry() {
   return fetchAPI(`/health/telemetry`);
 }
 
+export async function getReadiness() {
+  return fetchAPI(`/health/readiness`);
+}
+
 // 11. Simulation Observability & Control (Phase A.5)
 export async function getSimulationRun(runId: string) {
   return fetchAPI(`/simulation-runs/${runId}`);

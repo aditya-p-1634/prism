@@ -304,6 +304,11 @@ export default function CommandShell({ children }: { children: React.ReactNode }
             <div className="mt-2 text-[10px] text-slate-400 font-mono truncate">
               CRS: EPSG:4326 | SQLite DB
             </div>
+            <div className={`mt-1 text-[10px] font-mono ${
+              systemHealth.readiness === "READY" ? "text-emerald-400" : "text-amber-400"
+            }`}>
+              READINESS: {systemHealth.readiness || "UNKNOWN"}
+            </div>
           </div>
         </aside>
 

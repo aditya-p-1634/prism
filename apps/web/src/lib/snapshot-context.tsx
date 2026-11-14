@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { getSnapshots, runScenario, resetBaseline, getSystemTelemetry } from "./api";
+import { getSnapshots, runScenario, resetBaseline, getSystemTelemetry, getReadiness } from "./api";
 
 interface Toast {
   message: string;
@@ -14,6 +14,7 @@ interface SystemHealth {
   status: "ONLINE" | "DEGRADED" | "OFFLINE" | "CHECKING";
   fileSizeKb?: number;
   queryLatencyMs?: number;
+  readiness?: "READY" | "NOT_READY" | "UNKNOWN";
 }
 
 interface SnapshotContextType {
@@ -54,14 +55,18 @@ export function SnapshotProvider({ children }: { children: ReactNode }) {
 
   const refreshHealth = async () => {
     try {
-      const tel = await getSystemTelemetry();
+      const [tel, readiness] = await Promise.all([
+        getSystemTelemetry(),
+        getReadiness().catch(() => ({ status: "NOT_READY" }))
+      ]);
       const dbOk = tel?.database?.connected ?? false;
       setSystemHealth({
         apiOnline: true,
         dbConnected: dbOk,
         status: dbOk ? "ONLINE" : "DEGRADED",
         fileSizeKb: tel?.database?.file_size_kb,
-        queryLatencyMs: tel?.measured_telemetry?.query_latency_ms
+        queryLatencyMs: tel?.measured_telemetry?.query_latency_ms,
+        readiness: readiness?.status || "UNKNOWN"
       });
     } catch (err) {
       setSystemHealth({
@@ -97,10 +102,10 @@ export function SnapshotProvider({ children }: { children: ReactNode }) {
     id: snapshotId,
     label: snapshotId === "SNAP_BASE_001" ? "Canonical Baseline Reality (Pre-Monsoon Flood)" : "Active Scenario Execution",
     snapshot_type: snapshotId === "SNAP_BASE_001" ? "BASELINE" : "SCENARIO",
-    is_immutable: true
+    is_immutable: false
   };
 
-  const isBaseline = snapshotId === "SNAP_BASE_001";
+  const isBaseline = activeSnapshot.snapshot_type === "BASELINE" || snapshotId === "SNAP_BASE_001";
 
   const runMonsoonScenario = async (overrides?: Record<string, any>) => {
     try {
