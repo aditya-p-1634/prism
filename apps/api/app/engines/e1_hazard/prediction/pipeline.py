@@ -38,6 +38,7 @@ from app.engines.e1_hazard.prediction.validation import (
 from app.engines.e1_hazard.prediction.uncertainty import UncertaintyEstimator
 from app.engines.e1_hazard.service import HazardEngineE1
 from app.engines.e6_integration.integrity import SnapshotIntegrity
+from app.engines.e6_integration.service import IntegrationBackboneE6
 from app.gis.spatial import to_shapely
 
 
@@ -484,5 +485,29 @@ class HazardPredictionPipeline:
         # Update evidence reference with explicit prediction attribution
         if "evidence" in result and result["evidence"]:
             result["evidence"].source_reference = f"A6_PREDICTION:{prediction.model_name}:{prediction.id[:8]}"
+            result["evidence"].provenance_type = "PREDICTION"
+            result["evidence"].source_entity_id = prediction.id
+
+        IntegrationBackboneE6(db).record_audit_event(
+            action_type="E1_EVALUATE_FROM_PREDICTION",
+            entity_type="HazardPredictionRecord",
+            entity_id=prediction.id,
+            before_state={
+                "snapshot_id": prediction.snapshot_id,
+                "validation_status": prediction.validation_status,
+                "model_name": prediction.model_name,
+                "model_version": prediction.model_version,
+            },
+            after_state={
+                "snapshot_id": snapshot_id,
+                "hazard_state_id": result["hazard_state"].id,
+                "hazard_prediction_id": result["hazard_prediction"].id,
+                "red_zone_id": result["red_zone"].id,
+                "evidence_source_entity_id": result["evidence"].source_entity_id,
+            },
+            justification=(
+                f"Validated prediction {prediction.id} evaluated by E1 into snapshot {snapshot_id}."
+            ),
+        )
 
         return result

@@ -7,6 +7,7 @@ from app.engines.e4_route_relocation.service import RouteAndRelocationEngineE4
 from app.engines.e5_simulation.service import SimulationEngineE5
 from app.engines.e6_integration.integrity import SnapshotIntegrityError
 from app.engines.e1_hazard.observation.service import HazardObservationService
+from app.engines.e1_hazard.service import HazardEngineE1
 from app.models.entities import (
     CapacityState,
     Destination,
@@ -140,3 +141,15 @@ def test_prediction_e1_cannot_write_to_immutable_baseline():
             HazardPredictionPipeline.feed_prediction_to_e1(prediction, db, "SNAP_BASE_001")
     finally:
         db.close()
+
+
+def test_hazard_evidence_has_explicit_machine_readable_provenance():
+    result = HazardEngineE1().evaluate_hazard_state(
+        study_area_id="STUDY_TEST",
+        snapshot_id="SCENARIO_TEST",
+        base_flood_geom=Point(0, 0).buffer(1),
+    )
+    evidence = result["evidence"]
+    assert evidence.provenance_type == "SCENARIO_INPUT"
+    assert evidence.source_entity_id is None
+    assert evidence.source_reference == "CWC_GAUGE_01"

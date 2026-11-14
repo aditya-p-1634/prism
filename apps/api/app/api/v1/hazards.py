@@ -51,7 +51,9 @@ def get_red_zones(
                 metric_name=ev.metric_name,
                 measured_value=ev.measured_value,
                 threshold_value=ev.threshold_value,
-                source_reference=ev.source_reference
+                source_reference=ev.source_reference,
+                provenance_type=ev.provenance_type,
+                source_entity_id=ev.source_entity_id
             )
             for ev in rz.evidences
         ]

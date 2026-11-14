@@ -149,8 +149,10 @@ class HazardEvidence(Base):
     red_zone_id = Column(String(36), ForeignKey("red_zones.id", ondelete="CASCADE"), nullable=False)
     metric_name = Column(String(100), nullable=False)
     measured_value = Column(Float, nullable=False)
-    threshold_value = Column(Float, nullable=False)
+    threshold_value = Column(Float, nullable=True)
     source_reference = Column(String(255), nullable=True)
+    provenance_type = Column(String(50), default="SCENARIO_INPUT", nullable=False)
+    source_entity_id = Column(String(36), nullable=True)
 
     red_zone = relationship("RedZone", back_populates="evidences")
 

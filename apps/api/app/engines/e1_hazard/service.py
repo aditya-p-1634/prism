@@ -125,7 +125,9 @@ class HazardEngineE1:
             metric_name="RIVER_STAGE_M",
             measured_value=river_level_current,
             threshold_value=river_level_baseline + 0.30,
-            source_reference="CWC_GAUGE_01"
+            source_reference="CWC_GAUGE_01",
+            provenance_type="SCENARIO_INPUT",
+            source_entity_id=None
         )
 
         return {
@@ -202,6 +204,8 @@ class HazardEngineE1:
         evidence.measured_value = observation.value
         evidence.threshold_value = None  # Severity unclassified unless documented
         evidence.source_reference = f"STATION:{observation.station_code}:OBS:{observation.id}"
+        evidence.provenance_type = "OBSERVATION"
+        evidence.source_entity_id = observation.id
 
         return eval_res
 

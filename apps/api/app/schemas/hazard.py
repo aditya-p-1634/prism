@@ -6,8 +6,10 @@ class HazardEvidenceDTO(BaseModel):
     id: str
     metric_name: str
     measured_value: float
-    threshold_value: float
+    threshold_value: Optional[float] = None
     source_reference: Optional[str] = None
+    provenance_type: str = "SCENARIO_INPUT"
+    source_entity_id: Optional[str] = None
 
 class RedZoneDTO(BaseModel):
     id: str
