@@ -1,3 +1,4 @@
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 import os
@@ -18,6 +19,7 @@ class Settings(BaseSettings):
     SNAPSHOT_POLICY: str = "strict"
     LOG_LEVEL: str = "INFO"
     WORKER_CONCURRENCY: int = 1
+    CORS_ORIGINS: str = "http://localhost:3000"
     
     # Computational Coordinate Reference System (UTM Zone 43N by default)
     COMPUTATIONAL_CRS: str = "EPSG:32643"
@@ -27,6 +29,22 @@ class Settings(BaseSettings):
             rel_file = self.DATABASE_URL.replace("sqlite:///./", "")
             return f"sqlite:///{os.path.join(repo_root, rel_file).replace('\\', '/')}"
         return self.DATABASE_URL
+
+    @property
+    def cors_origins(self) -> list[str]:
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+
+    @model_validator(mode="after")
+    def validate_runtime_security(self):
+        production = self.PRISM_ENV.lower() in {"prod", "production", "staging"}
+        if production and (
+            self.JWT_SECRET == "dev_secret_for_sih_prototype_only_change_in_production"
+            or len(self.JWT_SECRET) < 32
+        ):
+            raise ValueError("JWT_SECRET must be a unique value of at least 32 characters outside demo/test environments")
+        if "*" in self.cors_origins and production:
+            raise ValueError("Wildcard CORS_ORIGINS is prohibited outside demo/test environments")
+        return self
 
 
     model_config = SettingsConfigDict(

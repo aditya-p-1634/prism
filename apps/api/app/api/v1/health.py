@@ -2,7 +2,7 @@ import time
 import os
 import sqlite3
 from typing import Dict, Any
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.api.deps import get_db
@@ -10,6 +10,31 @@ from app.core.config import settings
 from app.models.entities import StateSnapshot, StudyArea, Habitation, Destination, RoadSegment
 
 router = APIRouter(prefix="/health", tags=["System Telemetry"])
+
+
+@router.get("/readiness")
+def readiness_check(db: Session = Depends(get_db)):
+    """Kubernetes-style readiness check for database and baseline invariants."""
+    checks: Dict[str, Any] = {}
+    try:
+        db.execute(text("SELECT 1")).fetchone()
+        checks["database"] = {"ok": True}
+    except Exception as exc:
+        checks["database"] = {"ok": False, "error": str(exc)}
+
+    baseline = db.query(StateSnapshot).filter(StateSnapshot.id == "SNAP_BASE_001").first()
+    checks["baseline_snapshot"] = {
+        "ok": bool(baseline and baseline.is_immutable and baseline.snapshot_type == "BASELINE"),
+        "exists": baseline is not None,
+        "immutable": bool(baseline and baseline.is_immutable),
+        "snapshot_type": baseline.snapshot_type if baseline else None,
+    }
+
+    ready = all(check.get("ok") for check in checks.values())
+    payload = {"status": "READY" if ready else "NOT_READY", "checks": checks}
+    if not ready:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=payload)
+    return payload
 
 @router.get("/telemetry")
 def get_system_telemetry(db: Session = Depends(get_db)):
