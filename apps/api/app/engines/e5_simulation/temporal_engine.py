@@ -35,6 +35,7 @@ from app.engines.e1_hazard.service import HazardEngineE1
 from app.engines.e4_route_relocation.service import RouteAndRelocationEngineE4
 from app.engines.e5_simulation.service import SimulationEngineE5
 from app.engines.e5_simulation.state_machine import EvacuationStateMachine
+from app.engines.e5_simulation.validation import ScenarioParameterError, ScenarioParameterValidator
 from app.gis.spatial import to_shapely, to_geojson_str, intersects
 
 
@@ -130,6 +131,11 @@ class TemporalSimulationEngine:
             effective_params = scen.parameters.copy() if scen.parameters else {}
             effective_params.update(overrides)
 
+            try:
+                ScenarioParameterValidator.validate(effective_params)
+            except ScenarioParameterError as exc:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
+
             # Execute baseline-to-scenario causal generation in E5
             scen_result = self.e5.execute_scenario(
                 scenario_code=scenario_code,
@@ -137,6 +143,12 @@ class TemporalSimulationEngine:
                 overrides=effective_params
             )
             scen_snap_id = scen_result["scenario_snapshot_id"]
+
+        if scenario_snapshot_id:
+            try:
+                ScenarioParameterValidator.validate(effective_params)
+            except ScenarioParameterError as exc:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
 
         # 2. Persist SimulationRun
         run = SimulationRun(

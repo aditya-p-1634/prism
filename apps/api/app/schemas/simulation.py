@@ -6,13 +6,13 @@ from app.models.enums import SimulationStatusEnum, SimulationEventTypeEnum, Reso
 class SimulationRunCreateDTO(BaseModel):
     scenario_code: str = "MONSOON_SURGE_01"
     scenario_snapshot_id: Optional[str] = None
-    timestep_minutes: float = Field(default=5.0, description="Simulation timestep in model minutes")
-    duration_minutes: float = Field(default=60.0, description="Total simulation duration in model minutes")
+    timestep_minutes: float = Field(default=5.0, gt=0.0, le=1440.0, description="Simulation timestep in model minutes")
+    duration_minutes: float = Field(default=60.0, ge=0.0, le=10080.0, description="Total simulation duration in model minutes")
     auto_admit_shelter: bool = Field(default=True, description="Automatically transition ARRIVED groups to SHELTERED")
     parameter_overrides: Dict[str, Any] = Field(default_factory=dict, description="Scenario overrides (e.g. rainfall_multiplier_delta, water_consumption_per_person_per_min)")
 
 class SimulationRunExecuteDTO(BaseModel):
-    max_steps: Optional[int] = Field(default=None, description="Optional maximum number of steps to advance")
+    max_steps: Optional[int] = Field(default=None, ge=0, le=200, description="Optional maximum number of steps to advance")
 
 class SimulationEventDTO(BaseModel):
     id: str

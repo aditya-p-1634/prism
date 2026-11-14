@@ -13,6 +13,7 @@ from app.engines.e3_destination_capacity.service import DestinationCapacityEngin
 from app.engines.e4_route_relocation.service import RouteAndRelocationEngineE4
 from app.engines.e6_integration.service import IntegrationBackboneE6
 from app.engines.e6_integration.integrity import SnapshotIntegrity
+from app.engines.e5_simulation.validation import ScenarioParameterValidator
 from app.gis.spatial import to_shapely
 
 class SimulationEngineE5:
@@ -57,6 +58,7 @@ class SimulationEngineE5:
         params = scenario.parameters.copy()
         if overrides:
             params.update(overrides)
+        ScenarioParameterValidator.validate(params)
 
         # 1. Create isolated scenario snapshot in E6
         scenario_snapshot = self.e6.create_snapshot(

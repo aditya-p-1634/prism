@@ -7,6 +7,7 @@ from app.models.entities import Scenario, StateSnapshot
 from app.schemas.scenario import ScenarioDTO, ScenarioRunRequestDTO, DeltaReportDTO
 from app.schemas.envelope import ResponseEnvelope
 from app.engines.e5_simulation.service import SimulationEngineE5
+from app.engines.e5_simulation.validation import ScenarioParameterError
 
 router = APIRouter(prefix="/scenarios", tags=["Predictive Simulation & Adaptation (E5)"])
 
@@ -45,6 +46,8 @@ def run_scenario(
             baseline_snapshot_id=baseline_snapshot.id,
             overrides=payload.parameter_overrides
         )
+    except ScenarioParameterError as ve:
+        raise HTTPException(status_code=400, detail=f"Invalid scenario parameters: {str(ve)}")
     except ValueError as ve:
         raise HTTPException(status_code=404, detail=f"Scenario not found: {str(ve)}")
     except Exception as e:
