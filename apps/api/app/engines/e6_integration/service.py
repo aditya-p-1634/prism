@@ -18,7 +18,8 @@ class IntegrationBackboneE6:
         snapshot_type: str = "BASELINE",
         scenario_id: Optional[str] = None,
         is_immutable: bool = False,
-        parent_snapshot_id: Optional[str] = None
+        parent_snapshot_id: Optional[str] = None,
+        commit: bool = True
     ) -> StateSnapshot:
         if parent_snapshot_id:
             SnapshotIntegrity.require_snapshot(self.db, parent_snapshot_id)
@@ -30,7 +31,10 @@ class IntegrationBackboneE6:
             is_immutable=is_immutable
         )
         self.db.add(snapshot)
-        self.db.commit()
+        if commit:
+            self.db.commit()
+        else:
+            self.db.flush()
         self.db.refresh(snapshot)
         return snapshot
 

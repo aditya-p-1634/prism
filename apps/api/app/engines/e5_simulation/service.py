@@ -32,6 +32,19 @@ class SimulationEngineE5:
         baseline_snapshot_id: str,
         overrides: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
+        """Run one scenario atomically; failed runs leave no partial branch."""
+        try:
+            return self._execute_scenario(scenario_code, baseline_snapshot_id, overrides)
+        except Exception:
+            self.db.rollback()
+            raise
+
+    def _execute_scenario(
+        self,
+        scenario_code: str,
+        baseline_snapshot_id: str,
+        overrides: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """
         Execute adaptive recomputation of the entire causal chain under a what-if scenario.
         Preserves baseline immutability by executing into a new isolated scenario snapshot.
@@ -51,7 +64,8 @@ class SimulationEngineE5:
             snapshot_type="SCENARIO",
             scenario_id=scenario.id,
             is_immutable=False,
-            parent_snapshot_id=baseline_snapshot_id
+            parent_snapshot_id=baseline_snapshot_id,
+            commit=False
         )
 
         # Ingest baseline entities

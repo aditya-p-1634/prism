@@ -88,3 +88,14 @@ def test_optimizer_rejects_cross_snapshot_inputs():
             )
     finally:
         db.close()
+
+
+def test_failed_scenario_rolls_back_partial_snapshot():
+    db = SessionLocal()
+    try:
+        before = db.query(StateSnapshot).count()
+        with pytest.raises(Exception):
+            SimulationEngineE5(db).execute_scenario("MONSOON_SURGE_01", "MISSING_BASELINE")
+        assert db.query(StateSnapshot).count() == before
+    finally:
+        db.close()
