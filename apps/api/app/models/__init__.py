@@ -11,6 +11,7 @@ from app.models.entities import (
     Destination, DestinationSnapshotState, DestinationResource, CapacityState,
     RoadNode, RoadSegment, RoutePlan, RelocationGroup, RelocationAllocation,
     Job, Event, EventDelivery, AuditEvent,
+    FieldObservation,
     SimulationRun, SimulationEvent, SimulationAllocationProgress, SimulationResourceState,
     HazardPredictionRecord, HazardStation, HazardObservation
 )

@@ -421,6 +421,27 @@ class AuditEvent(Base):
     justification = Column(Text, nullable=False)
     created_at = Column(DateTime, default=utc_now, nullable=False)
 
+class FieldObservation(Base):
+    """Human or field-reported state evidence kept separate from plans."""
+    __tablename__ = "field_observations"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    snapshot_id = Column(String(36), ForeignKey("state_snapshots.id", ondelete="RESTRICT"), nullable=False, index=True)
+    observation_type = Column(String(50), nullable=False)
+    target_type = Column(String(50), nullable=False)
+    target_id = Column(String(36), nullable=False, index=True)
+    observed_state = Column(String(100), nullable=False)
+    observed_value = Column(Float, nullable=True)
+    unit = Column(String(50), nullable=True)
+    observed_at = Column(DateTime, nullable=False)
+    source_reference = Column(String(255), nullable=False)
+    confidence = Column(Float, nullable=False)
+    quality_status = Column(String(50), default="PENDING_REVIEW", nullable=False)
+    reconciliation_status = Column(String(50), default="NOT_RECONCILED", nullable=False)
+    reconciliation_result = Column(JSON, default=dict, nullable=False)
+    created_by = Column(String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+
 # -------------------------------------------------------------
 # 7. Temporal Simulation Clock & Dynamic Execution (E5 - A.3)
 # -------------------------------------------------------------
