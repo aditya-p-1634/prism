@@ -1,0 +1,87 @@
+{
+  "duplicate_station_timestamp_rows": 0,
+  "input_timezone_assumption": "Asia/Kolkata",
+  "limitations": [
+    "The source timestamps do not include timezone metadata; the declared timezone assumption must be verified against the publisher.",
+    "Rainfall is not present in this source and is intentionally not fabricated or imputed.",
+    "River level is not discharge and no authoritative flood threshold is inferred."
+  ],
+  "manifest_version": "phase15-v1",
+  "operational_claim_allowed": false,
+  "rainfall_join_status": "NOT_JOINED",
+  "rejections": {},
+  "rows_emitted": 27634,
+  "source_files": [
+    {
+      "path": "data\\telemetry\\rwl_tel_hr_tamil_nadu_sw_gw_27_2021_2025.csv",
+      "sha256": "be3eb76ff9110d2fc14bf1c3f1d7136aa52247f9417dcd91ea515d72597f4631"
+    },
+    {
+      "path": "data\\telemetry\\rwl_tel_hr_tamil_nadu_sw_gw_27_2026_2030.csv",
+      "sha256": "164204d781f7a2673c24f95ea61907cfa1010b8bbbdd8ab4a24aa5167bed50d0"
+    }
+  ],
+  "station_filter": "NANDAMBAKKAM_CHECKDAM",
+  "station_summary": {
+    "NANDAMBAKKAM_CHECKDAM": {
+      "gap_examples": [
+        {
+          "from": "2021-12-15T13:30:00+00:00",
+          "hours": 3.0,
+          "to": "2021-12-15T16:30:00+00:00"
+        },
+        {
+          "from": "2021-12-15T18:30:00+00:00",
+          "hours": 3.0,
+          "to": "2021-12-15T21:30:00+00:00"
+        },
+        {
+          "from": "2021-12-15T23:30:00+00:00",
+          "hours": 5.0,
+          "to": "2021-12-16T04:30:00+00:00"
+        },
+        {
+          "from": "2021-12-16T08:30:00+00:00",
+          "hours": 3.0,
+          "to": "2021-12-16T11:30:00+00:00"
+        },
+        {
+          "from": "2021-12-16T14:30:00+00:00",
+          "hours": 9.0,
+          "to": "2021-12-16T23:30:00+00:00"
+        },
+        {
+          "from": "2021-12-17T01:30:00+00:00",
+          "hours": 2.0,
+          "to": "2021-12-17T03:30:00+00:00"
+        },
+        {
+          "from": "2021-12-17T05:30:00+00:00",
+          "hours": 4.0,
+          "to": "2021-12-17T09:30:00+00:00"
+        },
+        {
+          "from": "2021-12-17T11:30:00+00:00",
+          "hours": 15.0,
+          "to": "2021-12-18T02:30:00+00:00"
+        },
+        {
+          "from": "2021-12-18T09:30:00+00:00",
+          "hours": 5.0,
+          "to": "2021-12-18T14:30:00+00:00"
+        },
+        {
+          "from": "2021-12-19T01:30:00+00:00",
+          "hours": 3.0,
+          "to": "2021-12-19T04:30:00+00:00"
+        }
+      ],
+      "gaps_over_1_5_hours": 893,
+      "rows": 27634,
+      "time_end": "2026-09-28T04:30:00+00:00",
+      "time_start": "2021-12-15T11:30:00+00:00",
+      "value_max": 19.94,
+      "value_min": 0.001
+    }
+  }
+}
