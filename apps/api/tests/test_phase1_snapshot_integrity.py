@@ -6,6 +6,7 @@ from app.engines.e3_destination_capacity.service import DestinationCapacityEngin
 from app.engines.e4_route_relocation.service import RouteAndRelocationEngineE4
 from app.engines.e5_simulation.service import SimulationEngineE5
 from app.engines.e6_integration.integrity import SnapshotIntegrityError
+from app.engines.e1_hazard.observation.service import HazardObservationService
 from app.models.entities import (
     CapacityState,
     Destination,
@@ -97,5 +98,18 @@ def test_failed_scenario_rolls_back_partial_snapshot():
         with pytest.raises(Exception):
             SimulationEngineE5(db).execute_scenario("MONSOON_SURGE_01", "MISSING_BASELINE")
         assert db.query(StateSnapshot).count() == before
+    finally:
+        db.close()
+
+
+def test_observation_e1_cannot_write_to_immutable_baseline():
+    db = SessionLocal()
+    try:
+        with pytest.raises(SnapshotIntegrityError, match="SNAPSHOT_IMMUTABLE"):
+            HazardObservationService.evaluate_from_observation(
+                observation_id="missing-observation",
+                snapshot_id="SNAP_BASE_001",
+                db=db,
+            )
     finally:
         db.close()

@@ -36,6 +36,7 @@ from app.engines.e1_hazard.observation.station_registry import StationRegistry
 from app.engines.e1_hazard.observation.validation import ObservationValidator, ObservationSafetyException
 from app.engines.e1_hazard.service import HazardEngineE1
 from app.engines.e6_integration.service import IntegrationBackboneE6
+from app.engines.e6_integration.integrity import SnapshotIntegrity
 from app.gis.spatial import to_shapely
 
 
@@ -172,6 +173,11 @@ class HazardObservationService:
         """
         if db is None:
             raise ValueError("Database session is required.")
+
+        # Observation-driven E1 writes hazard outputs into the requested
+        # branch. The canonical baseline is a read-only source and an
+        # arbitrary/nonexistent branch must never receive operational state.
+        SnapshotIntegrity.require_mutable_snapshot(db, snapshot_id)
 
         obs = db.query(HazardObservation).filter(HazardObservation.id == observation_id).first()
         if not obs:
