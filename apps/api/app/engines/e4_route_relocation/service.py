@@ -21,6 +21,16 @@ class RouteAndRelocationEngineE4:
     def __init__(self, route_reference_time_min: float = 30.0):
         self.route_reference_time_min = route_reference_time_min
 
+    @staticmethod
+    def is_route_time_feasible(route: RoutePlan, departure_time_min: float) -> bool:
+        """Require both departure and estimated arrival within route validity."""
+        arrival = departure_time_min + max(0.0, route.total_time_min)
+        return (
+            route.is_viable
+            and departure_time_min >= route.valid_from_min
+            and arrival <= route.valid_until_min
+        )
+
     def build_network_graph(
         self,
         nodes: List[RoadNode],
@@ -131,6 +141,9 @@ class RouteAndRelocationEngineE4:
             snapshot_id=snapshot_id,
             total_distance_m=round(total_dist, 1),
             total_time_min=round(total_time, 1),
+            valid_from_min=0.0,
+            valid_until_min=1440.0,
+            planned_departure_min=0.0,
             route_cost=round(total_cost, 3),
             geom=to_geojson_str(route_line),
             path_nodes=[G.nodes[nid]["node_code"] for nid in path_node_ids],

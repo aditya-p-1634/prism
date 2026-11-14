@@ -23,6 +23,19 @@ def init_db():
             if cols2 and "lifecycle_state" not in cols2:
                 conn.execute(text("ALTER TABLE hazard_prediction_records ADD COLUMN lifecycle_state VARCHAR(50) DEFAULT 'VALIDATED'"))
                 conn.commit()
+
+            route_cols = [r[1] for r in conn.execute(text("PRAGMA table_info(route_plans)")).fetchall()]
+            if route_cols and "valid_from_min" not in route_cols:
+                conn.execute(text("ALTER TABLE route_plans ADD COLUMN valid_from_min FLOAT DEFAULT 0 NOT NULL"))
+                conn.commit()
+            route_cols = [r[1] for r in conn.execute(text("PRAGMA table_info(route_plans)")).fetchall()]
+            if route_cols and "valid_until_min" not in route_cols:
+                conn.execute(text("ALTER TABLE route_plans ADD COLUMN valid_until_min FLOAT DEFAULT 1440 NOT NULL"))
+                conn.commit()
+            route_cols = [r[1] for r in conn.execute(text("PRAGMA table_info(route_plans)")).fetchall()]
+            if route_cols and "planned_departure_min" not in route_cols:
+                conn.execute(text("ALTER TABLE route_plans ADD COLUMN planned_departure_min FLOAT DEFAULT 0 NOT NULL"))
+                conn.commit()
         except Exception:
             pass
 

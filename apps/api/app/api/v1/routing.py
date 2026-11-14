@@ -21,6 +21,52 @@ from app.gis.spatial import to_shapely, intersects
 
 router = APIRouter(prefix="", tags=["Safe Routes & Relocation Optimization (E4)"])
 
+
+@router.get("/assistance/queue", response_model=ResponseEnvelope[dict])
+def get_assistance_queue(
+    snapshot_id: str = Query("SNAP_BASE_001"),
+    db: Session = Depends(get_db)
+):
+    """Expose an explicit assisted-evacuation work queue without dispatching."""
+    allocations = db.query(RelocationAllocation).filter(
+        RelocationAllocation.snapshot_id == snapshot_id,
+        RelocationAllocation.evacuation_state.in_([
+            EvacuationStateEnum.REQUIRES_ASSISTANCE,
+            EvacuationStateEnum.STUCK,
+            EvacuationStateEnum.ROUTE_BLOCKED,
+        ])
+    ).all()
+    groups = {g.id: g for g in db.query(RelocationGroup).all()}
+    households = {h.id: h for h in db.query(Habitation).all()}
+    queue = []
+    for allocation in allocations:
+        group = groups.get(allocation.group_id)
+        queue.append({
+            "allocation_id": allocation.id,
+            "group_id": allocation.group_id,
+            "habitation_id": group.habitation_id if group else None,
+            "habitation_name": households.get(group.habitation_id).name if group and households.get(group.habitation_id) else None,
+            "destination_id": allocation.destination_id,
+            "route_plan_id": allocation.route_plan_id,
+            "evacuation_state": allocation.evacuation_state.value,
+            "assigned_capacity_count": allocation.assigned_capacity_count,
+            "priority_score": group.priority_score if group else None,
+            "requires_special_transit": bool(group.requires_special_transit) if group else True,
+            "dispatch_status": "NOT_DISPATCHED",
+            "reason_code": allocation.reason_code,
+        })
+    return ResponseEnvelope[dict](
+        request_id=str(uuid.uuid4()),
+        correlation_id=str(uuid.uuid4()),
+        snapshot_id=snapshot_id,
+        data={
+            "snapshot_id": snapshot_id,
+            "dispatch_capability": "NOT_IMPLEMENTED",
+            "field_confirmation_available": False,
+            "queue": queue,
+        }
+    )
+
 @router.get("/road-segments", response_model=ResponseEnvelope[List[RoadSegmentDTO]])
 def get_road_segments(db: Session = Depends(get_db)):
     segments = db.query(RoadSegment).all()
@@ -66,6 +112,9 @@ def get_routes(
             destination_name=dest_map.get(r.destination_id),
             total_distance_m=r.total_distance_m,
             total_time_min=r.total_time_min,
+            valid_from_min=r.valid_from_min,
+            valid_until_min=r.valid_until_min,
+            planned_departure_min=r.planned_departure_min,
             route_cost=r.route_cost,
             geom_geojson=json.loads(r.geom),
             path_nodes=r.path_nodes,

@@ -431,7 +431,17 @@ class TemporalSimulationEngine:
                     )
                 else:
                     route_geom = to_shapely(route.geom)
+                    if not self.e4.is_route_time_feasible(route, next_time):
+                        route_compromised = True
+                        compromised_reason = (
+                            f"Route validity window [{route.valid_from_min:.1f}, "
+                            f"{route.valid_until_min:.1f}] cannot support departure at "
+                            f"t={next_time:.1f}min and arrival at "
+                            f"t={next_time + route.total_time_min:.1f}min"
+                        )
                     for seg in eval_segments:
+                        if route_compromised:
+                            break
                         if seg.operational_status == OperationalStatusEnum.CLOSED:
                             if seg.segment_code in route.path_nodes or intersects(to_shapely(seg.geom), route_geom):
                                 route_compromised = True

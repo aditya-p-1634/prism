@@ -337,6 +337,9 @@ class RoutePlan(Base):
     snapshot_id = Column(String(36), ForeignKey("state_snapshots.id", ondelete="RESTRICT"), nullable=False)
     total_distance_m = Column(Float, nullable=False)
     total_time_min = Column(Float, nullable=False)
+    valid_from_min = Column(Float, default=0.0, nullable=False)
+    valid_until_min = Column(Float, default=1440.0, nullable=False)
+    planned_departure_min = Column(Float, default=0.0, nullable=False)
     route_cost = Column(Float, nullable=False)
     geom = Column(Text, nullable=False) # GeoJSON LineString
     path_nodes = Column(JSON, default=list, nullable=False) # list of node codes

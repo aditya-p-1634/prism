@@ -25,6 +25,9 @@ class RoutePlanDTO(BaseModel):
     total_distance_m: float
     total_time_min: float
     route_cost: float
+    valid_from_min: float = 0.0
+    valid_until_min: float = 1440.0
+    planned_departure_min: float = 0.0
     geom_geojson: Dict[str, Any]
     path_nodes: List[str]
     is_viable: bool
