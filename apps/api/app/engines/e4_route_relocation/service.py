@@ -10,7 +10,7 @@ from app.models.entities import (
     Habitation, Destination, PriorityRecord, CapacityState
 )
 from app.models.enums import OperationalStatusEnum, AllocationStatusEnum, PriorityClassEnum, EvacuationStateEnum
-from app.engines.e6_integration.integrity import SnapshotIntegrity
+from app.engines.e6_integration.integrity import SnapshotIntegrity, SnapshotIntegrityError
 
 def clamp(val: float, min_val: float, max_val: float) -> float:
     return max(min_val, min(val, max_val))
@@ -159,6 +159,11 @@ class RouteAndRelocationEngineE4:
             SnapshotIntegrity.require_same_snapshot(snapshot_id, capacity_state.snapshot_id, "CapacityState")
         for route in candidate_routes.values():
             SnapshotIntegrity.require_same_snapshot(snapshot_id, route.snapshot_id, "RoutePlan")
+        for (origin_id, destination_id), route in candidate_routes.items():
+            if route.origin_habitation_id != origin_id or route.destination_id != destination_id:
+                raise SnapshotIntegrityError(
+                    "ROUTE_KEY_MISMATCH: Candidate route identity does not match its optimizer key"
+                )
 
         model = cp_model.CpModel()
 
@@ -240,5 +245,32 @@ class RouteAndRelocationEngineE4:
                     assigned_capacity_count=0,
                     reason_code="NO_VIABLE_ROUTE_OR_EXHAUSTED_CAPACITY"
                 ))
+
+        assigned_by_destination: Dict[str, int] = {}
+        for allocation in allocations:
+            if allocation.destination_id is None:
+                continue
+            capacity = capacity_states.get(allocation.destination_id)
+            route = next(
+                (candidate_routes.get((group.habitation_id, allocation.destination_id))
+                 for group in groups if group.id == allocation.group_id),
+                None,
+            )
+            if capacity is None or route is None:
+                raise SnapshotIntegrityError(
+                    f"ALLOCATION_FEASIBILITY_ERROR: Allocation '{allocation.group_id}' has no matching capacity or route"
+                )
+            SnapshotIntegrity.require_same_snapshot(snapshot_id, route.snapshot_id, "RelocationAllocation.RoutePlan")
+            assigned_by_destination[allocation.destination_id] = (
+                assigned_by_destination.get(allocation.destination_id, 0)
+                + allocation.assigned_capacity_count
+            )
+
+        for destination_id, assigned_count in assigned_by_destination.items():
+            if assigned_count > capacity_states[destination_id].remaining_capacity:
+                raise SnapshotIntegrityError(
+                    f"CAPACITY_OVERALLOCATION: Destination '{destination_id}' receives "
+                    f"{assigned_count} people but only {capacity_states[destination_id].remaining_capacity} remain"
+                )
 
         return allocations

@@ -107,7 +107,7 @@ class TemporalSimulationEngine:
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail=f"SNAPSHOT_NOT_FOUND: Scenario snapshot '{scenario_snapshot_id}' not found."
                 )
-            if snap.is_immutable or snap.id == "SNAP_BASE_001":
+            if snap.is_immutable or snap.snapshot_type == "BASELINE" or snap.id == "SNAP_BASE_001":
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=f"BASELINE_IMMUTABLE: Cannot run temporal simulation directly against canonical baseline snapshot '{snap.id}'. Create a scenario snapshot branch first."
@@ -400,6 +400,11 @@ class TemporalSimulationEngine:
                 if not route:
                     route_compromised = True
                     compromised_reason = "No active route plan assigned"
+                elif route.snapshot_id != run.scenario_snapshot_id:
+                    raise ValueError(
+                        f"ROUTE_SNAPSHOT_MISMATCH: Route '{route.id}' belongs to '{route.snapshot_id}', "
+                        f"expected simulation snapshot '{run.scenario_snapshot_id}'"
+                    )
                 else:
                     route_geom = to_shapely(route.geom)
                     for seg in eval_segments:
