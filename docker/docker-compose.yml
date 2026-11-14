@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: prism
       POSTGRES_USER: prism
-      POSTGRES_PASSWORD: prism_dev_password
+      POSTGRES_PASSWORD: ${PRISM_DB_PASSWORD:-prism_dev_password}
     ports:
       - "5432:5432"
     volumes:
@@ -25,10 +25,11 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql+psycopg://prism:prism_dev_password@db:5432/prism
+      DATABASE_URL: postgresql+psycopg://prism:${PRISM_DB_PASSWORD:-prism_dev_password}@db:5432/prism
       PRISM_ENV: demo
-      JWT_SECRET: dev_secret_for_sih_prototype_only_change_in_production
-      CORS_ORIGINS: http://localhost:3000
+      JWT_SECRET: ${JWT_SECRET:-dev_secret_for_sih_prototype_only_change_in_production}
+      PRISM_SEED_DEMO: "true"
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
     ports:
       - "8000:8000"
     healthcheck:

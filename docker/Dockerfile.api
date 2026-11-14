@@ -7,9 +7,13 @@ COPY apps/api/pyproject.toml /app/pyproject.toml
 COPY apps/api/app /app/app
 COPY alembic.ini /app/alembic.ini
 COPY migrations /app/migrations
+COPY docker/entrypoint.api.sh /app/entrypoint.api.sh
 
 RUN pip install --no-cache-dir .
 
+ENV PYTHONPATH=/app
+RUN chmod +x /app/entrypoint.api.sh
+
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["/app/entrypoint.api.sh"]
