@@ -37,26 +37,40 @@ from app.research.a8_5.constants import (
     VALIDATION_NOT_READY,
     VALIDATION_READY,
 )
-from app.research.a8_5.decision import evaluate_validation_readiness
-from app.research.a8_5.gcc_analysis import run_gcc_point_validation
-from app.research.a8_5.manifest import build_data_manifest, compute_sha256
-from app.research.a8_5.nandambakkam_analysis import run_nandambakkam_analysis
-from app.research.a8_5.nrsc_analysis import (
-    analyze_nrsc_mask,
-    load_and_split_nrsc_masks,
-    run_nrsc_class_sensitivity_analysis,
-)
-from app.research.a8_5.report import export_artifacts
-from app.research.a8_5.road_analysis import run_road_cross_check
-from app.research.a8_5.run import run_a8_5_harness
-from app.research.a8_5.spatial_qa import prepare_metric_gdf, validate_gdf_spatial_qa
-from app.research.a8_5.stagnation_analysis import run_stagnation_cross_check
-from app.research.a8_5.terrain_analysis import (
-    calculate_distribution_stats,
-    run_gcc_terrain_characterization,
-    run_nrsc_mask_terrain_distributions,
-    sample_fabdem_at_points,
-)
+from importlib import import_module
+
+
+_LAZY_EXPORTS = {
+    "evaluate_validation_readiness": ("decision", "evaluate_validation_readiness"),
+    "run_gcc_point_validation": ("gcc_analysis", "run_gcc_point_validation"),
+    "build_data_manifest": ("manifest", "build_data_manifest"),
+    "compute_sha256": ("manifest", "compute_sha256"),
+    "run_nandambakkam_analysis": ("nandambakkam_analysis", "run_nandambakkam_analysis"),
+    "analyze_nrsc_mask": ("nrsc_analysis", "analyze_nrsc_mask"),
+    "load_and_split_nrsc_masks": ("nrsc_analysis", "load_and_split_nrsc_masks"),
+    "run_nrsc_class_sensitivity_analysis": ("nrsc_analysis", "run_nrsc_class_sensitivity_analysis"),
+    "export_artifacts": ("report", "export_artifacts"),
+    "run_road_cross_check": ("road_analysis", "run_road_cross_check"),
+    "run_a8_5_harness": ("run", "run_a8_5_harness"),
+    "prepare_metric_gdf": ("spatial_qa", "prepare_metric_gdf"),
+    "validate_gdf_spatial_qa": ("spatial_qa", "validate_gdf_spatial_qa"),
+    "run_stagnation_cross_check": ("stagnation_analysis", "run_stagnation_cross_check"),
+    "calculate_distribution_stats": ("terrain_analysis", "calculate_distribution_stats"),
+    "run_gcc_terrain_characterization": ("terrain_analysis", "run_gcc_terrain_characterization"),
+    "run_nrsc_mask_terrain_distributions": ("terrain_analysis", "run_nrsc_mask_terrain_distributions"),
+    "sample_fabdem_at_points": ("terrain_analysis", "sample_fabdem_at_points"),
+}
+
+
+def __getattr__(name: str):
+    """Load optional geospatial dependencies only when a feature is used."""
+    target = _LAZY_EXPORTS.get(name)
+    if target is None:
+        raise AttributeError(name)
+    module_name, attribute_name = target
+    value = getattr(import_module(f"app.research.a8_5.{module_name}"), attribute_name)
+    globals()[name] = value
+    return value
 
 __all__ = [
     "MASK_A",
