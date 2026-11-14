@@ -1,7 +1,7 @@
 import json
 import uuid
 from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.entities import (
@@ -189,4 +189,117 @@ def get_dashboard_overview(
         correlation_id=str(uuid.uuid4()),
         snapshot_id=snapshot_id,
         data=overview_data
+    )
+
+
+@router.get("/operator-briefing", response_model=ResponseEnvelope[Dict[str, Any]])
+def get_operator_briefing(
+    snapshot_id: str = Query("SNAP_BASE_001", description="Target decision snapshot ID"),
+    db: Session = Depends(get_db)
+):
+    """Return a read-only, operator-oriented decision brief for one snapshot.
+
+    This read model intentionally does not approve, allocate, or mutate any
+    operational state. It translates E1-E4 outputs into a small set of
+    reviewable facts and next actions for the incident commander.
+    """
+    snapshot = db.query(StateSnapshot).filter(StateSnapshot.id == snapshot_id).first()
+    if not snapshot:
+        raise HTTPException(status_code=404, detail=f"SNAPSHOT_NOT_FOUND: {snapshot_id}")
+
+    hazard = db.query(HazardState).filter(HazardState.snapshot_id == snapshot_id).first()
+    red_zones = db.query(RedZone).filter(RedZone.snapshot_id == snapshot_id).all()
+    priorities = db.query(PriorityRecord).filter(
+        PriorityRecord.snapshot_id == snapshot_id
+    ).order_by(PriorityRecord.priority_score.desc()).all()
+    households = {h.id: h for h in db.query(Household).all()}
+    habitations = {h.id: h for h in db.query(Habitation).all()}
+    capacities = db.query(CapacityState).filter(CapacityState.snapshot_id == snapshot_id).all()
+    routes = db.query(RoutePlan).filter(RoutePlan.snapshot_id == snapshot_id).all()
+    allocations = db.query(RelocationAllocation).filter(
+        RelocationAllocation.snapshot_id == snapshot_id
+    ).all()
+
+    immediate = [p for p in priorities if p.priority_class == PriorityClassEnum.IMMEDIATE]
+    short_term = [p for p in priorities if p.priority_class == PriorityClassEnum.SHORT_TERM]
+    unmet = [a for a in allocations if a.allocation_status == AllocationStatusEnum.UNMET]
+    unsafe_destinations = [c for c in capacities if not c.is_safe]
+    invalid_routes = [r for r in routes if not r.is_viable]
+    partial_data = sum(1 for h in households.values() if h.has_partial_data)
+
+    warnings: List[Dict[str, Any]] = []
+    next_actions: List[Dict[str, Any]] = []
+    if hazard and (hazard.confidence is None or hazard.confidence < 0.7):
+        warnings.append({"code": "LOW_HAZARD_CONFIDENCE", "severity": "HIGH", "message": "Hazard evidence confidence is below the review threshold."})
+    if partial_data:
+        warnings.append({"code": "PARTIAL_HOUSEHOLD_DATA", "severity": "MEDIUM", "message": f"{partial_data} household records contain partial data."})
+    if unmet:
+        warnings.append({"code": "UNMET_DEMAND", "severity": "HIGH", "message": f"{len(unmet)} relocation groups have no feasible allocation."})
+        next_actions.append({"code": "RESOLVE_UNMET_DEMAND", "priority": "IMMEDIATE", "label": "Resolve unmet relocation demand", "reason": "Capacity or route constraints prevent a complete plan."})
+    if unsafe_destinations:
+        next_actions.append({"code": "REVIEW_DESTINATIONS", "priority": "IMMEDIATE", "label": "Review unsafe destinations", "reason": f"{len(unsafe_destinations)} destination capacity states are unsafe."})
+    if invalid_routes:
+        next_actions.append({"code": "REVIEW_ROUTES", "priority": "IMMEDIATE", "label": "Review invalid routes", "reason": f"{len(invalid_routes)} route plans are not currently viable."})
+    if immediate:
+        next_actions.append({"code": "REVIEW_IMMEDIATE_GROUPS", "priority": "IMMEDIATE", "label": "Review immediate-priority groups", "reason": f"{len(immediate)} groups require immediate attention."})
+    if not next_actions:
+        next_actions.append({"code": "AUTHORIZE_PLAN_REVIEW", "priority": "NORMAL", "label": "Review plan for authorization", "reason": "No blocking constraint was detected in this snapshot."})
+
+    top_groups = []
+    for p in priorities[:8]:
+        household = households.get(p.household_id)
+        habitation = habitations.get(p.habitation_id)
+        top_groups.append({
+            "household_id": p.household_id,
+            "household_code": household.anonymized_code if household else p.household_id,
+            "habitation": habitation.name if habitation else p.habitation_id,
+            "priority_class": p.priority_class.value,
+            "priority_score": p.priority_score,
+            "member_count": household.member_count if household else None,
+            "assistance_required": bool(household.assistance_required) if household else False,
+            "reason_codes": p.reason_codes or [],
+            "has_partial_data": bool(household.has_partial_data) if household else True,
+        })
+
+    briefing = {
+        "snapshot": {
+            "id": snapshot.id,
+            "label": snapshot.label,
+            "snapshot_type": snapshot.snapshot_type,
+            "is_immutable": bool(snapshot.is_immutable),
+            "requires_human_review": True,
+        },
+        "situation": {
+            "hazard_present": hazard is not None,
+            "hazard_type": hazard.hazard_type if hazard else None,
+            "hazard_severity": hazard.severity if hazard else None,
+            "hazard_confidence": hazard.confidence if hazard else None,
+            "red_zone_count": len(red_zones),
+            "status": "REVIEW_REQUIRED" if (red_zones or immediate or warnings) else "NO_ACTIVE_ALERT",
+        },
+        "decision_summary": {
+            "total_priority_groups": len(priorities),
+            "immediate_groups": len(immediate),
+            "short_term_groups": len(short_term),
+            "assigned_groups": len(allocations) - len(unmet),
+            "unmet_groups": len(unmet),
+            "unsafe_destinations": len(unsafe_destinations),
+            "invalid_routes": len(invalid_routes),
+            "partial_household_records": partial_data,
+        },
+        "top_priority_groups": top_groups,
+        "warnings": warnings,
+        "next_actions": next_actions,
+        "integrity": {
+            "allocation_is_not_evacuation": True,
+            "field_confirmation_available": False,
+            "approval_required": True,
+        },
+    }
+
+    return ResponseEnvelope[Dict[str, Any]](
+        request_id=str(uuid.uuid4()),
+        correlation_id=str(uuid.uuid4()),
+        snapshot_id=snapshot_id,
+        data=briefing
     )

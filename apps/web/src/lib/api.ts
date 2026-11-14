@@ -35,6 +35,10 @@ export async function getDashboardOverview(snapshotId: string = "SNAP_BASE_001")
   return fetchAPI(`/dashboard/overview?snapshot_id=${snapshotId}`);
 }
 
+export async function getOperatorBriefing(snapshotId: string = "SNAP_BASE_001") {
+  return fetchAPI(`/dashboard/operator-briefing?snapshot_id=${encodeURIComponent(snapshotId)}`);
+}
+
 // 2. Snapshots & Lineage
 export async function getSnapshots() {
   return fetchAPI(`/snapshots`);

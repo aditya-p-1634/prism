@@ -22,6 +22,7 @@ import {
   ChevronDown,
   Info,
   CheckCircle2,
+  ClipboardCheck,
   AlertCircle,
   X
 } from "lucide-react";
@@ -34,6 +35,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
+  { label: "Operator Briefing", href: "/operator", icon: ClipboardCheck, tag: "START" },
   { label: "Command Center", href: "/", icon: LayoutDashboard },
   { label: "GIS Workspace", href: "/map", icon: MapIcon },
   { label: "Hazard Intel (E1)", href: "/hazards", icon: AlertTriangle, tag: "E1" },
