@@ -8,7 +8,7 @@ from app.models.entities import (
     User, StateSnapshot, Scenario, DataSource, Observation,
     StudyArea, HazardState, HazardPrediction, RedZone, HazardEvidence,
     Habitation, Household, ExposureAssessment, VulnerabilityProfile, PriorityRecord,
-    Destination, DestinationResource, CapacityState,
+    Destination, DestinationSnapshotState, DestinationResource, CapacityState,
     RoadNode, RoadSegment, RoutePlan, RelocationGroup, RelocationAllocation,
     Job, Event, EventDelivery, AuditEvent,
     SimulationRun, SimulationEvent, SimulationAllocationProgress, SimulationResourceState,

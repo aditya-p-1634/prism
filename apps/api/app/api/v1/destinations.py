@@ -4,7 +4,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
-from app.models.entities import Destination, DestinationResource, CapacityState
+from app.models.entities import Destination, DestinationSnapshotState, DestinationResource, CapacityState
 from app.schemas.destination import DestinationDTO, DestinationResourceDTO, CapacityStateDTO
 from app.schemas.envelope import ResponseEnvelope
 
@@ -38,6 +38,11 @@ def get_destinations(
                 rejection_reason=cap.rejection_reason
             )
 
+        snapshot_state = db.query(DestinationSnapshotState).filter(
+            DestinationSnapshotState.destination_id == d.id,
+            DestinationSnapshotState.snapshot_id == snapshot_id
+        ).first()
+
         resources = db.query(DestinationResource).filter(
             DestinationResource.destination_id == d.id,
             DestinationResource.snapshot_id == snapshot_id
@@ -63,8 +68,8 @@ def get_destinations(
             name=d.name,
             facility_type=d.facility_type,
             location_geojson=json.loads(d.location_geom),
-            operational_status=d.operational_status,
-            suitability_score=d.suitability_score,
+            operational_status=snapshot_state.operational_status if snapshot_state else d.operational_status,
+            suitability_score=snapshot_state.suitability_score if snapshot_state else d.suitability_score,
             capacity_state=cap_dto,
             resources=res_dtos
         ))

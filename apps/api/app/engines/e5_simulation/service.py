@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.entities import (
     Scenario, StateSnapshot, HazardState, HazardPrediction, RedZone,
     Habitation, Household, ExposureAssessment, VulnerabilityProfile, PriorityRecord,
-    Destination, DestinationResource, CapacityState,
+    Destination, DestinationSnapshotState, DestinationResource, CapacityState,
     RoadNode, RoadSegment, RoutePlan, RelocationGroup, RelocationAllocation
 )
 from app.models.enums import OperationalStatusEnum, PriorityClassEnum, AllocationStatusEnum
@@ -12,6 +12,7 @@ from app.engines.e2_people_priority.service import PeoplePriorityEngineE2
 from app.engines.e3_destination_capacity.service import DestinationCapacityEngineE3
 from app.engines.e4_route_relocation.service import RouteAndRelocationEngineE4
 from app.engines.e6_integration.service import IntegrationBackboneE6
+from app.engines.e6_integration.integrity import SnapshotIntegrity
 from app.gis.spatial import to_shapely
 
 class SimulationEngineE5:
@@ -38,6 +39,7 @@ class SimulationEngineE5:
         scenario = self.db.query(Scenario).filter(Scenario.code == scenario_code).first()
         if not scenario:
             raise ValueError(f"Scenario '{scenario_code}' not found in registry.")
+        SnapshotIntegrity.require_snapshot(self.db, baseline_snapshot_id)
 
         params = scenario.parameters.copy()
         if overrides:
@@ -48,7 +50,8 @@ class SimulationEngineE5:
             label=f"{scenario.name} Execution",
             snapshot_type="SCENARIO",
             scenario_id=scenario.id,
-            is_immutable=False
+            is_immutable=False,
+            parent_snapshot_id=baseline_snapshot_id
         )
 
         # Ingest baseline entities
@@ -115,6 +118,7 @@ class SimulationEngineE5:
         # STEP 3: E3 Destination & Dynamic Capacity Recomputation
         # -------------------------------------------------------------
         scen_capacities = {}
+        scenario_destinations = []
         for d in destinations:
             base_resources = self.db.query(DestinationResource).filter(
                 DestinationResource.destination_id == d.id,
@@ -147,7 +151,14 @@ class SimulationEngineE5:
                 predicted_hazard_geom=scen_pred_geom,
                 snapshot_id=scenario_snapshot.id
             )
+            self.db.add(DestinationSnapshotState(
+                destination_id=d.id,
+                snapshot_id=scenario_snapshot.id,
+                operational_status=d_updated.operational_status,
+                suitability_score=d_updated.suitability_score
+            ))
             self.db.add(cap_state)
+            scenario_destinations.append(d_updated)
             scen_capacities[d.id] = cap_state
         self.db.flush()
 
@@ -208,7 +219,7 @@ class SimulationEngineE5:
         # Execute CP-SAT Optimization Solver
         scen_allocations = self.e4.optimize_relocation(
             groups=reloc_groups,
-            destinations=destinations,
+            destinations=scenario_destinations,
             capacity_states=scen_capacities,
             candidate_routes=candidate_routes,
             snapshot_id=scenario_snapshot.id
@@ -217,7 +228,7 @@ class SimulationEngineE5:
             self.db.add(alloc)
 
         # Update CapacityState occupied and remaining capacity based on computed allocations
-        for d in destinations:
+        for d in scenario_destinations:
             cap_st = scen_capacities.get(d.id)
             if cap_st:
                 assigned_count = sum(a.assigned_capacity_count for a in scen_allocations if a.destination_id == d.id)

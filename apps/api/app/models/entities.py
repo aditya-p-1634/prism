@@ -1,7 +1,8 @@
 import uuid
 from datetime import datetime, timezone
 from sqlalchemy import (
-    Column, String, Integer, Float, Boolean, Text, ForeignKey, DateTime, Enum as SAEnum, JSON
+    Column, String, Integer, Float, Boolean, Text, ForeignKey, DateTime, Enum as SAEnum, JSON,
+    UniqueConstraint
 )
 from sqlalchemy.orm import relationship
 from app.db.session import Base
@@ -38,12 +39,14 @@ class StateSnapshot(Base):
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
     scenario_id = Column(String(36), ForeignKey("scenarios.id", ondelete="RESTRICT"), nullable=True)
+    parent_snapshot_id = Column(String(36), ForeignKey("state_snapshots.id", ondelete="RESTRICT"), nullable=True)
     snapshot_type = Column(String(50), default="BASELINE", nullable=False) # BASELINE or SCENARIO
     label = Column(String(255), nullable=False)
     is_immutable = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=utc_now, nullable=False)
 
     scenario = relationship("Scenario", back_populates="snapshots")
+    parent_snapshot = relationship("StateSnapshot", remote_side=[id], foreign_keys=[parent_snapshot_id])
 
 class Scenario(Base):
     __tablename__ = "scenarios"
@@ -243,6 +246,25 @@ class Destination(Base):
     created_at = Column(DateTime, default=utc_now, nullable=False)
 
     resources = relationship("DestinationResource", back_populates="destination", cascade="all, delete-orphan")
+
+class DestinationSnapshotState(Base):
+    """Snapshot-scoped operational view of a canonical destination.
+
+    Destination identity and geometry remain canonical. Operational status and
+    suitability are scenario outputs and must never be written back to that
+    canonical row.
+    """
+    __tablename__ = "destination_snapshot_states"
+    __table_args__ = (
+        UniqueConstraint("destination_id", "snapshot_id", name="uq_destination_snapshot_state"),
+    )
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    destination_id = Column(String(36), ForeignKey("destinations.id", ondelete="RESTRICT"), nullable=False, index=True)
+    snapshot_id = Column(String(36), ForeignKey("state_snapshots.id", ondelete="RESTRICT"), nullable=False, index=True)
+    operational_status = Column(SAEnum(OperationalStatusEnum), default=OperationalStatusEnum.OPEN, nullable=False)
+    suitability_score = Column(Float, default=100.0, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
 
 class DestinationResource(Base):
     __tablename__ = "destination_resources"

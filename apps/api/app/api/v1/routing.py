@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.entities import (
     RoutePlan, RelocationAllocation, RelocationGroup, Habitation, Destination, User, AuditEvent, RoadSegment,
-    StateSnapshot, CapacityState, HazardState, RedZone, RoadNode, Scenario
+    StateSnapshot, DestinationSnapshotState, CapacityState, HazardState, RedZone, RoadNode, Scenario
 )
 from app.models.enums import RoleEnum, AllocationStatusEnum, OperationalStatusEnum, EvacuationStateEnum
 from app.schemas.routing import (
@@ -169,7 +169,12 @@ def override_allocation(
 
     # 4. Invariant 2: Destination Safety Validation
     # 4a. Check Operational Status
-    if new_dest.operational_status == OperationalStatusEnum.CLOSED:
+    dest_state = db.query(DestinationSnapshotState).filter(
+        DestinationSnapshotState.destination_id == new_dest.id,
+        DestinationSnapshotState.snapshot_id == alloc.snapshot_id
+    ).first()
+    operational_status = dest_state.operational_status if dest_state else new_dest.operational_status
+    if operational_status == OperationalStatusEnum.CLOSED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"DESTINATION_UNSAFE: Target destination '{new_dest.code}' ({new_dest.name}) is operationally CLOSED in snapshot '{alloc.snapshot_id}'."

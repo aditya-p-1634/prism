@@ -4,6 +4,7 @@ from typing import Dict, Any, List, Optional
 from sqlalchemy.orm import Session
 from app.models.entities import StateSnapshot, Event, EventDelivery, Job, AuditEvent, User
 from app.models.enums import JobStatusEnum
+from app.engines.e6_integration.integrity import SnapshotIntegrity
 
 class IntegrationBackboneE6:
     """Engine 6: Data/GIS/System Integration Backbone."""
@@ -16,10 +17,14 @@ class IntegrationBackboneE6:
         label: str,
         snapshot_type: str = "BASELINE",
         scenario_id: Optional[str] = None,
-        is_immutable: bool = False
+        is_immutable: bool = False,
+        parent_snapshot_id: Optional[str] = None
     ) -> StateSnapshot:
+        if parent_snapshot_id:
+            SnapshotIntegrity.require_snapshot(self.db, parent_snapshot_id)
         snapshot = StateSnapshot(
             scenario_id=scenario_id,
+            parent_snapshot_id=parent_snapshot_id,
             snapshot_type=snapshot_type,
             label=label,
             is_immutable=is_immutable

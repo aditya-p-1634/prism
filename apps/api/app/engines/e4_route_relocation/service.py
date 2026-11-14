@@ -10,6 +10,7 @@ from app.models.entities import (
     Habitation, Destination, PriorityRecord, CapacityState
 )
 from app.models.enums import OperationalStatusEnum, AllocationStatusEnum, PriorityClassEnum, EvacuationStateEnum
+from app.engines.e6_integration.integrity import SnapshotIntegrity
 
 def clamp(val: float, min_val: float, max_val: float) -> float:
     return max(min_val, min(val, max_val))
@@ -149,6 +150,16 @@ class RouteAndRelocationEngineE4:
         Solve multi-destination, multi-resource integer assignment using Google OR-Tools CP-SAT.
         Enforces indivisibility, capacity constraints, and explicit unmet demand.
         """
+        # Never allow optimizer inputs from different scenario branches to be
+        # combined. This is a hard boundary because CP-SAT otherwise produces
+        # a syntactically valid but operationally meaningless plan.
+        for group in groups:
+            SnapshotIntegrity.require_same_snapshot(snapshot_id, group.snapshot_id, "RelocationGroup")
+        for capacity_state in capacity_states.values():
+            SnapshotIntegrity.require_same_snapshot(snapshot_id, capacity_state.snapshot_id, "CapacityState")
+        for route in candidate_routes.values():
+            SnapshotIntegrity.require_same_snapshot(snapshot_id, route.snapshot_id, "RoutePlan")
+
         model = cp_model.CpModel()
 
         valid_dests = [d for d in destinations if capacity_states.get(d.id, CapacityState()).is_safe and capacity_states.get(d.id, CapacityState()).remaining_capacity > 0]

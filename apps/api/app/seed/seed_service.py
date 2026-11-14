@@ -2,7 +2,7 @@ from shapely.geometry import LineString
 from app.db.session import SessionLocal, engine, Base
 from app.core.security import hash_password
 from app.models.entities import (
-    User, StudyArea, Habitation, Household, Destination, DestinationResource,
+    User, StudyArea, Habitation, Household, Destination, DestinationSnapshotState, DestinationResource,
     RoadNode, RoadSegment, Scenario, StateSnapshot, RelocationGroup, RelocationAllocation
 )
 from app.models.enums import RoleEnum, OperationalStatusEnum, ResourceCategoryEnum
@@ -231,6 +231,12 @@ def seed_demo_database():
             d_up, cap_state = e3.evaluate_destination_safety_and_capacity(
                 d, res, e1_res["current_geom"], e1_res["predicted_geom"], baseline_snapshot.id
             )
+            db.add(DestinationSnapshotState(
+                destination_id=d.id,
+                snapshot_id=baseline_snapshot.id,
+                operational_status=d_up.operational_status,
+                suitability_score=d_up.suitability_score
+            ))
             db.add(cap_state)
             base_caps[d.id] = cap_state
         db.flush()

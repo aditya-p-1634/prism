@@ -13,6 +13,11 @@ def init_db():
                 conn.execute(text("ALTER TABLE relocation_allocations ADD COLUMN evacuation_state VARCHAR(50) DEFAULT 'PLANNED' NOT NULL"))
                 conn.commit()
 
+            snapshot_cols = [r[1] for r in conn.execute(text("PRAGMA table_info(state_snapshots)")).fetchall()]
+            if snapshot_cols and "parent_snapshot_id" not in snapshot_cols:
+                conn.execute(text("ALTER TABLE state_snapshots ADD COLUMN parent_snapshot_id VARCHAR(36)"))
+                conn.commit()
+
             res2 = conn.execute(text("PRAGMA table_info(hazard_prediction_records)"))
             cols2 = [r[1] for r in res2.fetchall()]
             if cols2 and "lifecycle_state" not in cols2:

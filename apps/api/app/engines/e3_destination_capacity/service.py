@@ -1,4 +1,5 @@
 from typing import List, Dict, Any, Optional, Tuple
+from copy import copy
 import shapely
 from app.gis.spatial import to_shapely, intersects
 from app.models.entities import Destination, DestinationResource, CapacityState
@@ -25,14 +26,18 @@ class DestinationCapacityEngineE3:
         2. Dynamic multi-resource bottleneck calculation.
         3. Suitability scoring.
         """
-        dest_point = to_shapely(destination.location_geom)
+        # Destination is canonical identity/geometry.  Scenario evaluation
+        # returns a detached operational view so a failed or repeated scenario
+        # cannot contaminate the immutable baseline ORM instance.
+        destination_view = copy(destination)
+        dest_point = to_shapely(destination_view.location_geom)
 
         # 1. Hard safety check: cannot be in flood extent
         is_flooded = intersects(dest_point, current_hazard_geom) or intersects(dest_point, predicted_hazard_geom)
 
         if is_flooded:
-            destination.operational_status = OperationalStatusEnum.CLOSED
-            destination.suitability_score = 0.0
+            destination_view.operational_status = OperationalStatusEnum.CLOSED
+            destination_view.suitability_score = 0.0
 
             capacity_state = CapacityState(
                 destination_id=destination.id,
@@ -44,7 +49,7 @@ class DestinationCapacityEngineE3:
                 is_safe=False,
                 rejection_reason="DESTINATION_INUNDATED_BY_HAZARD"
             )
-            return destination, capacity_state
+            return destination_view, capacity_state
 
         # 2. Dynamic Resource Bottleneck Calculation
         # Capacity is the minimum supportable population among active critical resources
@@ -64,7 +69,7 @@ class DestinationCapacityEngineE3:
         # 3. Suitability Scoring (0 to 100)
         safe_score = 100.0
         cap_score = clamp((effective_cap / 150.0) * 100.0, 10.0, 100.0)
-        access_score = 85.0 if destination.operational_status == OperationalStatusEnum.OPEN else 40.0
+        access_score = 85.0 if destination_view.operational_status == OperationalStatusEnum.OPEN else 40.0
         service_score = 90.0 if len(resources) >= 4 else 60.0
         travel_score = 80.0
         risk_score = 95.0
@@ -77,7 +82,7 @@ class DestinationCapacityEngineE3:
             0.10 * travel_score +
             0.05 * risk_score
         )
-        destination.suitability_score = round(suitability, 1)
+        destination_view.suitability_score = round(suitability, 1)
 
         capacity_state = CapacityState(
             destination_id=destination.id,
@@ -90,4 +95,4 @@ class DestinationCapacityEngineE3:
             rejection_reason=None
         )
 
-        return destination, capacity_state
+        return destination_view, capacity_state
