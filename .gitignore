@@ -10,12 +10,14 @@ __pycache__/
 prism.db
 *.sqlite
 *.sqlite3
+alembic.db
 
 # Node / Next.js
 apps/web/node_modules/
 apps/web/.next/
 apps/web/out/
 apps/web/build/
+*.tsbuildinfo
 
 # IDE / OS
 .DS_Store
@@ -28,6 +30,9 @@ Thumbs.db
 
 # Research datasets
 data/
+
+# Local test/runtime state
+.prism-test-*/
 
 # Presentation
 PRISM_SIH_2026_Team_Master_Study_Presentation_Guide.docx
