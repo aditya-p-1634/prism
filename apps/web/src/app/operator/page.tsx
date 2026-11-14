@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { AlertTriangle, ArrowRight, CheckCircle2, ClipboardCheck, ShieldAlert, Users } from "lucide-react";
-import { getOperatorBriefing } from "@/lib/api";
+import { getOperatorBriefing, getSpatialEventEvidence } from "@/lib/api";
 import { useSnapshot } from "@/lib/snapshot-context";
 
 type Briefing = {
@@ -16,16 +16,25 @@ type Briefing = {
   integrity: { allocation_is_not_evacuation: boolean; field_confirmation_available: boolean; approval_required: boolean };
 };
 
+type SpatialEvidence = {
+  telemetry: { rows: number; observed_start: string; observed_end: string };
+  historical_event: { event_start: string; event_end: string; temporal_join_status: string; reason: string };
+  station: { gcc_points_within_2km: number; nrsc_features_intersecting_station: number };
+  interpretation: { operational_claim_allowed: boolean; can_train_supervised_flood_label: boolean; safe_use: string };
+};
+
 export default function OperatorBriefingPage() {
   const { snapshotId, showToast } = useSnapshot();
   const [briefing, setBriefing] = useState<Briefing | null>(null);
+  const [evidence, setEvidence] = useState<SpatialEvidence | null>(null);
   const [loading, setLoading] = useState(true);
 
   const loadBriefing = async () => {
     try {
       setLoading(true);
-      const response = await getOperatorBriefing(snapshotId);
+      const [response, evidenceResponse] = await Promise.all([getOperatorBriefing(snapshotId), getSpatialEventEvidence()]);
       setBriefing(response.data);
+      setEvidence(evidenceResponse.data);
     } catch (error: any) {
       showToast(error.message || "Unable to load operator briefing", "error");
     } finally {
@@ -152,6 +161,23 @@ export default function OperatorBriefingPage() {
       <section className="rounded-xl border border-cyan-900/60 bg-cyan-950/20 p-4 text-xs leading-relaxed text-cyan-100">
         <strong>Safety boundary:</strong> relocation allocations are recommendations, not proof of evacuation. Field confirmation is unavailable in this prototype, and approval remains with the human authority.
       </section>
+
+      {evidence && <section className="rounded-2xl border border-violet-900/60 bg-violet-950/20 p-5">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-wider text-violet-200">Research evidence · read-only</div>
+            <p className="mt-1 text-xs text-violet-100/70">Historical spatial context is displayed separately from live E1–E6 decision state.</p>
+          </div>
+          <span className="rounded-full border border-amber-700/70 px-2 py-1 text-[10px] font-mono text-amber-200">NON-OPERATIONAL</span>
+        </div>
+        <div className="grid grid-cols-2 gap-3 text-xs md:grid-cols-4">
+          <div><div className="text-violet-100/60">Telemetry rows</div><div className="mt-1 font-mono text-white">{evidence.telemetry.rows.toLocaleString()}</div></div>
+          <div><div className="text-violet-100/60">GCC points &lt;2 km</div><div className="mt-1 font-mono text-white">{evidence.station.gcc_points_within_2km}</div></div>
+          <div><div className="text-violet-100/60">NRSC station intersections</div><div className="mt-1 font-mono text-white">{evidence.station.nrsc_features_intersecting_station}</div></div>
+          <div><div className="text-violet-100/60">Temporal join</div><div className="mt-1 font-mono text-amber-200">{evidence.historical_event.temporal_join_status}</div></div>
+        </div>
+        <p className="mt-4 text-xs leading-relaxed text-violet-100/80">{evidence.historical_event.reason} This evidence supports {evidence.interpretation.safe_use}; it is not a flood label or an operational forecast.</p>
+      </section>}
     </div>
   );
 }

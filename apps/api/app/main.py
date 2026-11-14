@@ -20,6 +20,7 @@ from app.api.v1.simulation import router as simulation_router
 from app.api.v1.hazard_prediction import router as hazard_prediction_router
 from app.api.v1.hazard_observation import router as hazard_observation_router
 from app.api.v1.field_observations import router as field_observations_router
+from app.api.v1.research_evidence import router as research_evidence_router
 
 app = FastAPI(
     title="PRISM — Predictive Relocation & Infrastructure Safety Matrix",
@@ -67,6 +68,7 @@ app.include_router(health_router, prefix=api_v1_prefix)
 app.include_router(hazard_prediction_router, prefix=api_v1_prefix)
 app.include_router(hazard_observation_router, prefix=api_v1_prefix)
 app.include_router(field_observations_router, prefix=api_v1_prefix)
+app.include_router(research_evidence_router, prefix=api_v1_prefix)
 
 @app.get("/health", tags=["System"])
 @app.get("/api/v1/health", tags=["System"])
