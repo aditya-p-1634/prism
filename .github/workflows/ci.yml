@@ -42,3 +42,22 @@ jobs:
         run: npx tsc --noEmit
       - name: Build frontend
         run: npm run build
+
+  migrations:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: apps/api/pyproject.toml
+      - name: Install backend
+        run: python -m pip install -e ".[dev]"
+      - name: Apply migrations to disposable SQLite database
+        env:
+          DATABASE_URL: sqlite:///./ci-migration.db
+        run: python -m alembic -c ../../alembic.ini upgrade head

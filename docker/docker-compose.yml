@@ -28,8 +28,14 @@ services:
       DATABASE_URL: postgresql+psycopg://prism:prism_dev_password@db:5432/prism
       PRISM_ENV: demo
       JWT_SECRET: dev_secret_for_sih_prototype_only_change_in_production
+      CORS_ORIGINS: http://localhost:3000
     ports:
       - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   web:
     build:
@@ -37,7 +43,8 @@ services:
       dockerfile: docker/Dockerfile.web
     container_name: prism-web
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
     ports:
