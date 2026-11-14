@@ -14,6 +14,7 @@ CORE INVARIANTS:
 """
 
 import uuid
+from copy import copy
 from typing import Dict, Any, List, Optional, Tuple
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
@@ -21,7 +22,7 @@ import shapely
 
 from app.models.entities import (
     Scenario, StateSnapshot, HazardState, HazardPrediction, RedZone,
-    Habitation, Household, RelocationGroup, RelocationAllocation, Destination,
+    Habitation, Household, RelocationGroup, RelocationAllocation, Destination, DestinationSnapshotState,
     CapacityState, RoadNode, RoadSegment, RoutePlan,
     SimulationRun, SimulationEvent, SimulationAllocationProgress, SimulationResourceState
 )
@@ -323,6 +324,17 @@ class TemporalSimulationEngine:
             # ---------------------------------------------------------
             habitations = self.db.query(Habitation).all()
             destinations = self.db.query(Destination).all()
+            destination_views = []
+            for destination in destinations:
+                view = copy(destination)
+                snapshot_state = self.db.query(DestinationSnapshotState).filter(
+                    DestinationSnapshotState.destination_id == destination.id,
+                    DestinationSnapshotState.snapshot_id == run.scenario_snapshot_id,
+                ).first()
+                if snapshot_state:
+                    view.operational_status = snapshot_state.operational_status
+                    view.suitability_score = snapshot_state.suitability_score
+                destination_views.append(view)
             road_nodes = self.db.query(RoadNode).all()
             road_segments = self.db.query(RoadSegment).filter(
                 RoadSegment.study_area_id == baseline_hazard.study_area_id
@@ -634,7 +646,7 @@ class TemporalSimulationEngine:
 
                 new_allocs = self.e4.optimize_relocation(
                     groups=realloc_groups,
-                    destinations=destinations,
+                    destinations=destination_views,
                     capacity_states=scen_capacities,
                     candidate_routes=candidate_routes,
                     snapshot_id=run.scenario_snapshot_id
