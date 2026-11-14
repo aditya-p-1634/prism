@@ -1,0 +1,49 @@
+{
+  "best_model_by_test_rmse": "AUTOREGRESSIVE_RIDGE",
+  "dataset_id": "phase15-nandambakkam",
+  "discarded_long_or_invalid_gaps": 893,
+  "discarded_split_boundaries": 2,
+  "feature_policy": "stage-only; rainfall intentionally absent from source",
+  "limitations": [
+    "Rainfall is not present in the evaluated source and is not inferred.",
+    "Next-observation forecasting is not equivalent to a fixed operational lead time.",
+    "The source is historical and station-specific; generalization is unverified.",
+    "No flood threshold or discharge conversion is applied."
+  ],
+  "measurement_target": "NEXT_OBSERVED_RIVER_STAGE_M",
+  "metrics": {
+    "AUTOREGRESSIVE_RIDGE": {
+      "mae": 0.4362,
+      "r2": 0.888,
+      "rmse": 2.0925,
+      "sample_count": 5475
+    },
+    "LINEAR_TREND_BASELINE": {
+      "mae": 0.6702,
+      "r2": 0.7006,
+      "rmse": 3.4208,
+      "sample_count": 5475
+    },
+    "PERSISTENCE_BASELINE": {
+      "mae": 0.3425,
+      "r2": 0.8812,
+      "rmse": 2.1547,
+      "sample_count": 5475
+    }
+  },
+  "operational_claim_allowed": false,
+  "report_version": "phase16-v1",
+  "source_rows": 27634,
+  "split_policy": "chronological 60/20/20 with cross-boundary samples discarded",
+  "station_code": "NANDAMBAKKAM_CHECKDAM",
+  "test_samples": 5475,
+  "train_samples": 15914,
+  "uncertainty": {
+    "interval_half_width_m": 0.03789802683829002,
+    "method": "VALIDATION_ABSOLUTE_RESIDUAL_95TH_PERCENTILE",
+    "operationally_calibrated": false,
+    "test_coverage": 0.6595433789954338
+  },
+  "usable_samples": 26738,
+  "validation_samples": 5349
+}
