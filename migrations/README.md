@@ -2,9 +2,10 @@
 
 This directory is the authoritative home for schema migrations.
 
-The existing `Base.metadata.create_all()` path remains available for the demo
-bootstrap while the initial schema is being captured in a reviewed baseline
-migration. New schema changes must be generated and reviewed through Alembic;
+Revision `0001_initial_schema` is a transitional baseline for the current
+prototype schema. It creates the tables from the authoritative SQLAlchemy
+metadata on a clean database and intentionally has a non-destructive
+downgrade. New schema changes must be generated and reviewed through Alembic;
 do not add ad-hoc `ALTER TABLE` statements to application startup code.
 
 Migration commands are run from the repository root:
