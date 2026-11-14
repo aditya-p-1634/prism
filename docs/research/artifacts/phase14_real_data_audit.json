@@ -1,0 +1,143 @@
+{
+  "assets": [
+    {
+      "asset_type": "HISTORICAL_TELEMETRY",
+      "duplicate_station_timestamp_rows": 0,
+      "invalid_values_or_timestamps": 0,
+      "limitations": [
+        "Historical file presence does not prove licensing or live-feed availability.",
+        "River-level values are not discharge and do not establish flood thresholds.",
+        "Zero-gauge and vertical-datum metadata require independent verification."
+      ],
+      "missing_values": 0,
+      "operational_claim_allowed": false,
+      "path": "data\\telemetry\\rwl_tel_hr_tamil_nadu_sw_gw_27_2021_2025.csv",
+      "rows": 72875,
+      "sha256": "be3eb76ff9110d2fc14bf1c3f1d7136aa52247f9417dcd91ea515d72597f4631",
+      "source_measurement_unit": "meter",
+      "stations": {
+        "Kamuthi Bridge": 22903,
+        "Nandambakkam CheckDam": 22279,
+        "Parthibanur Regulator": 9410,
+        "Virudhachalam Anicut": 18283
+      },
+      "status": "PRESENT_SCHEMA_VALIDATED",
+      "time_end": "2025-12-31T23:00:00",
+      "time_start": "2021-12-15T17:00:00",
+      "value_max": 93.2,
+      "value_min": 0.001
+    },
+    {
+      "asset_type": "HISTORICAL_TELEMETRY",
+      "duplicate_station_timestamp_rows": 0,
+      "invalid_values_or_timestamps": 0,
+      "limitations": [
+        "Historical file presence does not prove licensing or live-feed availability.",
+        "River-level values are not discharge and do not establish flood thresholds.",
+        "Zero-gauge and vertical-datum metadata require independent verification."
+      ],
+      "missing_values": 0,
+      "operational_claim_allowed": false,
+      "path": "data\\telemetry\\rwl_tel_hr_tamil_nadu_sw_gw_27_2026_2030.csv",
+      "rows": 20359,
+      "sha256": "164204d781f7a2673c24f95ea61907cfa1010b8bbbdd8ab4a24aa5167bed50d0",
+      "source_measurement_unit": "meter",
+      "stations": {
+        "Kamuthi Bridge": 3632,
+        "Nandambakkam CheckDam": 5355,
+        "Parthibanur Regulator": 5231,
+        "Virudhachalam Anicut": 6141
+      },
+      "status": "PRESENT_SCHEMA_VALIDATED",
+      "time_end": "2026-10-01T23:00:00",
+      "time_start": "2026-01-01T00:00:00",
+      "value_max": 74.757,
+      "value_min": 0.932
+    },
+    {
+      "asset_type": "KML",
+      "limitations": [
+        "Geometry presence does not establish survey-grade ground truth.",
+        "Source license and semantic meaning of every attribute require provenance review."
+      ],
+      "operational_claim_allowed": false,
+      "path": "data\\research\\31523c86-0ad1-42f5-b4d1-297daa4bbcd6.kml",
+      "placemark_count": 327,
+      "sha256": "19d579591cd74785ba9a40b1e36464a89dfabf129057c87589784bc25a86d2d0",
+      "status": "PRESENT_XML_VALIDATED"
+    },
+    {
+      "asset_type": "KML",
+      "limitations": [
+        "Geometry presence does not establish survey-grade ground truth.",
+        "Source license and semantic meaning of every attribute require provenance review."
+      ],
+      "operational_claim_allowed": false,
+      "path": "data\\research\\3746a11e-620f-40e4-94a1-21ea8fe2a35e.kml",
+      "placemark_count": 139,
+      "sha256": "97b31cef79a339f778dd0eb5e84fb770ea5fbfce5483cc31be5034ebdb351359",
+      "status": "PRESENT_XML_VALIDATED"
+    },
+    {
+      "asset_type": "KML",
+      "limitations": [
+        "Geometry presence does not establish survey-grade ground truth.",
+        "Source license and semantic meaning of every attribute require provenance review."
+      ],
+      "operational_claim_allowed": false,
+      "path": "data\\research\\46d6c279-ae09-43a8-8691-7a5386f69e3a.kml",
+      "placemark_count": 7894,
+      "sha256": "eb396c38f243ae4f54fd8dde40c6c5daabface91fb3e17b0975aa3964c9f167f",
+      "status": "PRESENT_XML_VALIDATED"
+    },
+    {
+      "asset_type": "KML",
+      "limitations": [
+        "Geometry presence does not establish survey-grade ground truth.",
+        "Source license and semantic meaning of every attribute require provenance review."
+      ],
+      "operational_claim_allowed": false,
+      "path": "data\\research\\7cb3cecf-a95a-4786-8032-9c7417655d24.kml",
+      "placemark_count": 4001,
+      "sha256": "fa6943b2916d625dbc4de3b43cbe4d768a956b2f584fa3c73244fae32cee7a2a",
+      "status": "PRESENT_XML_VALIDATED"
+    },
+    {
+      "asset_type": "KML",
+      "limitations": [
+        "Geometry presence does not establish survey-grade ground truth.",
+        "Source license and semantic meaning of every attribute require provenance review."
+      ],
+      "operational_claim_allowed": false,
+      "path": "data\\research\\d8d3ac1d-b486-4446-bc76-3dff0af8cbdb.kml",
+      "placemark_count": 200,
+      "sha256": "f89a2e53bfc43cdefe1f9a0d606e7fdd323669e973104fada61215f1bc10a3ec",
+      "status": "PRESENT_XML_VALIDATED"
+    },
+    {
+      "asset_type": "KML",
+      "limitations": [
+        "Geometry presence does not establish survey-grade ground truth.",
+        "Source license and semantic meaning of every attribute require provenance review."
+      ],
+      "operational_claim_allowed": false,
+      "path": "data\\research\\db3840ff-9f33-43a3-b826-2f9dae1bcb78.kml",
+      "placemark_count": 753,
+      "sha256": "5b7d79bc3ba0b59ef5b14b79d8eba65caa905eaf0f5f468b33a6177ffb16704e",
+      "status": "PRESENT_XML_VALIDATED"
+    },
+    {
+      "asset_type": "DEM",
+      "limitations": [
+        "Only the available tile is covered; vertical datum and spatial adequacy require study-area verification."
+      ],
+      "operational_claim_allowed": false,
+      "path": "data/research/N13E080_FABDEM_V1-2.tif",
+      "sha256": "720c8ce4b994126ef1f369fb602aa5760ca2ef7128f363b55d016681bed3c7f9",
+      "status": "PRESENT_MANIFESTED"
+    }
+  ],
+  "generated_by": "scripts/audit_research_assets.py",
+  "report_version": "phase14-v1",
+  "source_policy": "Presence, schema, integrity, and temporal coverage are audited; authenticity, licensing, datum, and operational validity are not inferred."
+}
