@@ -1,0 +1,46 @@
+{
+  "report_version": "phase17-v1",
+  "evidence_type": "historical_spatial_context_audit",
+  "telemetry": {
+    "path": "D:\\Projects\\PRISM\\data\\derived\\nandambakkam_telemetry_canonical.csv",
+    "rows": 27634,
+    "observed_start": "2021-12-15T11:30:00+00:00",
+    "observed_end": "2026-09-28T04:30:00+00:00",
+    "source_timezone_assumption": "Asia/Kolkata converted to UTC by Phase 15 adapter"
+  },
+  "historical_event": {
+    "event_start": "2015-11-29",
+    "event_end": "2015-12-07",
+    "temporal_join_status": "NOT_JOINED",
+    "reason": "Telemetry observations begin in 2021; spatial reference layers describe the 2015 event."
+  },
+  "station": {
+    "station_code": "NANDAMBAKKAM_CHECKDAM",
+    "longitude": 80.18277778,
+    "latitude": 13.01611111,
+    "metric_crs": "EPSG:32644",
+    "gcc_points_within_2km": 10,
+    "nearest_gcc_point_m": 340.15,
+    "nrsc_features_intersecting_station": 0
+  },
+  "source_layers": {
+    "gcc_point_count": 327,
+    "nrsc_feature_count": 4001,
+    "roads_feature_count": 7894,
+    "road_status_distribution": {
+      "1": 7884,
+      "0": 10
+    }
+  },
+  "interpretation": {
+    "operational_claim_allowed": false,
+    "can_train_supervised_flood_label": false,
+    "safe_use": "contextual spatial consistency and provenance-aware research analysis",
+    "not_established": [
+      "telemetry-to-event temporal correspondence",
+      "gauge threshold or absolute water-surface elevation",
+      "polygon accuracy or survey-grade inundation truth",
+      "road closure causality from stage observations"
+    ]
+  }
+}
