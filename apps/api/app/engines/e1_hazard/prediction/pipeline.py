@@ -437,13 +437,6 @@ class HazardPredictionPipeline:
         Rejected, degraded, or out-of-domain predictions are strictly prohibited from driving
         downstream evacuation calculations unless explicit allow_unsafe_audit=True is passed for auditing.
         """
-        SnapshotIntegrity.require_mutable_snapshot(db, snapshot_id)
-        if prediction.snapshot_id and prediction.snapshot_id != snapshot_id:
-            raise PredictionSafetyException(
-                f"E1_SNAPSHOT_GATE_REJECTED: Prediction '{prediction.id}' belongs to snapshot "
-                f"'{prediction.snapshot_id}', not target snapshot '{snapshot_id}'."
-            )
-
         lifecycle = getattr(prediction, "lifecycle_state", prediction.validation_status)
 
         if prediction.validation_status in ["REJECTED", "DEGRADED"] or lifecycle in ["REJECTED", "OUT_OF_DOMAIN"]:
@@ -453,6 +446,13 @@ class HazardPredictionPipeline:
                     f"and lifecycle_state='{lifecycle}' (Reason: {prediction.validation_reason}). "
                     "Unvalidated, out-of-domain, or degraded predictions are strictly prohibited from driving downstream red zones."
                 )
+
+        SnapshotIntegrity.require_mutable_snapshot(db, snapshot_id)
+        if prediction.snapshot_id and prediction.snapshot_id != snapshot_id:
+            raise PredictionSafetyException(
+                f"E1_SNAPSHOT_GATE_REJECTED: Prediction '{prediction.id}' belongs to snapshot "
+                f"'{prediction.snapshot_id}', not target snapshot '{snapshot_id}'."
+            )
 
         baseline_hazard = db.query(HazardState).filter(HazardState.snapshot_id == "SNAP_BASE_001").first()
         if not baseline_hazard:
