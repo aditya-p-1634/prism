@@ -1,369 +1,210 @@
 "use client";
 
-import React, { useState } from "react";
-import { Shield, AlertTriangle, Home, Building2, Navigation, Layers, Info } from "lucide-react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+import { Compass, Layers, Map as MapIcon, Satellite, ShieldAlert } from "lucide-react";
+
+type FeatureCollection = { type: "FeatureCollection"; features: Array<Record<string, any>> };
+type Basemap = "satellite" | "hybrid" | "streets";
+type OverlayKey = "study" | "flood" | "predicted" | "risk" | "roads" | "routes" | "habitations" | "destinations";
 
 interface MapViewerProps {
-  layers: any;
+  layers: Record<string, FeatureCollection | undefined>;
   selectedEntity: any;
   onSelectEntity: (entity: any) => void;
+  hideControls?: boolean;
 }
 
-export default function MapViewer({ layers, selectedEntity, onSelectEntity }: MapViewerProps) {
-  const [showFlood, setShowFlood] = useState(true);
-  const [showRedZones, setShowRedZones] = useState(true);
-  const [showHabitations, setShowHabitations] = useState(true);
-  const [showDestinations, setShowDestinations] = useState(true);
-  const [showRoads, setShowRoads] = useState(true);
-  const [showRoutes, setShowRoutes] = useState(true);
+const EMPTY_COLLECTION: FeatureCollection = { type: "FeatureCollection", features: [] };
+const EMPTY_GEOJSON = EMPTY_COLLECTION as any;
+const TILE_URLS = {
+  satellite: process.env.NEXT_PUBLIC_MAP_SATELLITE_TILES || "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  streets: process.env.NEXT_PUBLIC_MAP_STREETS_TILES || "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  labels: process.env.NEXT_PUBLIC_MAP_LABEL_TILES || "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+};
+const BASEMAP_ATTRIBUTION = "Imagery: Esri, Maxar, Earthstar Geographics, and the GIS User Community · Streets: © OpenStreetMap contributors";
+const LAYER_DEFINITIONS: Array<{ key: OverlayKey; label: string; color: string }> = [
+  { key: "study", label: "Study boundary", color: "#67e8f9" },
+  { key: "flood", label: "Current flood", color: "#38bdf8" },
+  { key: "predicted", label: "Predicted flood", color: "#22d3ee" },
+  { key: "risk", label: "High-risk zones", color: "#ef4444" },
+  { key: "roads", label: "Roads & blocked bridges", color: "#f59e0b" },
+  { key: "routes", label: "Evacuation routes", color: "#a78bfa" },
+  { key: "habitations", label: "Habitations", color: "#fbbf24" },
+  { key: "destinations", label: "Shelters", color: "#34d399" },
+];
+const CLICKABLE_LAYERS = [
+  ["risk-fill", "RED_ZONE"], ["flood-fill", "FLOOD_EXTENT"], ["predicted-fill", "PREDICTED_FLOOD_EXTENT"],
+  ["roads-line", "ROAD_SEGMENT"], ["routes-line", "ROUTE"], ["habitations-fill", "HABITATION"],
+  ["habitation-points", "HABITATION"], ["destinations-point", "DESTINATION"],
+] as const;
 
-  // Coordinate normalizer for Vayu River Basin (77.10 - 77.30 lon, 28.50 - 28.70 lat)
-  // Mapping into SVG viewport (viewBox 0 0 1000 800)
-  const minLon = 77.12;
-  const maxLon = 77.28;
-  const minLat = 28.53;
-  const maxLat = 28.69;
+function collection(value: FeatureCollection | undefined): FeatureCollection {
+  return value && value.type === "FeatureCollection" ? value : EMPTY_COLLECTION;
+}
 
-  const toSvgX = (lon: number) => {
-    return ((lon - minLon) / (maxLon - minLon)) * 900 + 50;
+function geometryCoordinates(geometry: any, output: Array<[number, number]>) {
+  if (!geometry?.coordinates) return;
+  const walk = (coords: any): void => {
+    if (Array.isArray(coords) && typeof coords[0] === "number" && typeof coords[1] === "number") {
+      output.push([coords[0], coords[1]]);
+    } else if (Array.isArray(coords)) coords.forEach(walk);
   };
+  walk(geometry.coordinates);
+}
 
-  const toSvgY = (lat: number) => {
-    // Invert Y for latitude
-    return 750 - ((lat - minLat) / (maxLat - minLat)) * 700;
-  };
+function boundsForCollections(collections: FeatureCollection[]): maplibregl.LngLatBounds | null {
+  const coordinates: Array<[number, number]> = [];
+  collections.forEach((fc) => fc.features.forEach((feature) => geometryCoordinates(feature.geometry, coordinates)));
+  if (!coordinates.length) return null;
+  const bounds = new maplibregl.LngLatBounds(coordinates[0], coordinates[0]);
+  coordinates.slice(1).forEach((coordinate) => bounds.extend(coordinate));
+  return bounds;
+}
 
-  const polyToSvgPoints = (coords: number[][]) => {
-    return coords.map(([lon, lat]) => `${toSvgX(lon)},${toSvgY(lat)}`).join(" ");
+function escapeHtml(value: unknown): string {
+  return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+}
+
+function popupMarkup(type: string, properties: Record<string, any>) {
+  const title = properties.name || properties.code || properties.segment_code || properties.id || type;
+  const rows = Object.entries(properties).filter(([key]) => !["geom", "geometry"].includes(key)).slice(0, 7)
+    .map(([key, value]) => `<div class="prism-popup-row"><span>${escapeHtml(key.replaceAll("_", " "))}</span><strong>${escapeHtml(typeof value === "object" ? JSON.stringify(value) : value)}</strong></div>`).join("");
+  return `<div class="prism-popup"><div class="prism-popup-type">${escapeHtml(type.replaceAll("_", " "))}</div><div class="prism-popup-title">${escapeHtml(title)}</div>${rows}</div>`;
+}
+
+function mapStyle(): maplibregl.StyleSpecification {
+  return {
+    version: 8,
+    name: "PRISM disaster intelligence",
+    sources: {
+      "basemap-satellite": { type: "raster", tiles: [TILE_URLS.satellite], tileSize: 256, maxzoom: 19 },
+      "basemap-streets": { type: "raster", tiles: [TILE_URLS.streets], tileSize: 256, maxzoom: 19 },
+      "basemap-labels": { type: "raster", tiles: [TILE_URLS.labels], tileSize: 256, maxzoom: 19 },
+      "study-area": { type: "geojson", data: EMPTY_GEOJSON }, flood: { type: "geojson", data: EMPTY_GEOJSON },
+      predicted: { type: "geojson", data: EMPTY_GEOJSON }, risk: { type: "geojson", data: EMPTY_GEOJSON },
+      roads: { type: "geojson", data: EMPTY_GEOJSON }, routes: { type: "geojson", data: EMPTY_GEOJSON },
+      habitations: { type: "geojson", data: EMPTY_GEOJSON }, "habitation-points": { type: "geojson", data: EMPTY_GEOJSON },
+      destinations: { type: "geojson", data: EMPTY_GEOJSON },
+    },
+    layers: [
+      { id: "basemap-satellite", type: "raster", source: "basemap-satellite", layout: { visibility: "visible" } },
+      { id: "basemap-streets", type: "raster", source: "basemap-streets", layout: { visibility: "none" } },
+      { id: "basemap-labels", type: "raster", source: "basemap-labels", layout: { visibility: "none" }, paint: { "raster-opacity": 0.9 } },
+      { id: "study-boundary", type: "line", source: "study-area", paint: { "line-color": "#67e8f9", "line-width": 2, "line-dasharray": [2, 2], "line-opacity": 0.9 } },
+      { id: "flood-fill", type: "fill", source: "flood", paint: { "fill-color": "#0284c7", "fill-opacity": 0.28 } },
+      { id: "flood-outline", type: "line", source: "flood", paint: { "line-color": "#38bdf8", "line-width": 1.5, "line-opacity": 0.95 } },
+      { id: "predicted-fill", type: "fill", source: "predicted", paint: { "fill-color": "#22d3ee", "fill-opacity": 0.16 } },
+      { id: "predicted-outline", type: "line", source: "predicted", paint: { "line-color": "#22d3ee", "line-width": 2, "line-dasharray": [2, 2], "line-opacity": 0.95 } },
+      { id: "risk-fill", type: "fill", source: "risk", paint: { "fill-color": "#ef4444", "fill-opacity": 0.2 } },
+      { id: "risk-outline", type: "line", source: "risk", paint: { "line-color": "#ef4444", "line-width": 2, "line-dasharray": [1.5, 1.5], "line-opacity": 0.95 } },
+      { id: "roads-line", type: "line", source: "roads", filter: ["!=", ["get", "operational_status"], "CLOSED"], paint: { "line-color": ["case", ["==", ["get", "is_bridge"], true], "#f59e0b", "#e5e7eb"], "line-width": ["case", ["==", ["get", "is_bridge"], true], 3.5, 1.8], "line-opacity": 0.86 } },
+      { id: "roads-closed-line", type: "line", source: "roads", filter: ["==", ["get", "operational_status"], "CLOSED"], paint: { "line-color": "#ef4444", "line-width": 4, "line-opacity": 0.95, "line-dasharray": [1, 1] } },
+      { id: "routes-line", type: "line", source: "routes", paint: { "line-color": ["case", ["==", ["get", "is_viable"], false], "#f97316", "#a78bfa"], "line-width": 3, "line-opacity": 0.9, "line-dasharray": [2, 1.2] } },
+      { id: "habitations-fill", type: "fill", source: "habitations", paint: { "fill-color": ["case", ["==", ["get", "highest_priority"], "IMMEDIATE"], "#f97316", "#fbbf24"], "fill-opacity": 0.24 } },
+      { id: "habitations-outline", type: "line", source: "habitations", paint: { "line-color": ["case", ["==", ["get", "highest_priority"], "IMMEDIATE"], "#ef4444", "#fbbf24"], "line-width": 1.5 } },
+      { id: "habitation-points", type: "circle", source: "habitation-points", paint: { "circle-color": ["case", ["==", ["get", "highest_priority"], "IMMEDIATE"], "#ef4444", "#f59e0b"], "circle-radius": 7, "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5 } },
+      { id: "habitation-labels", type: "symbol", source: "habitation-points", layout: { "text-field": ["get", "name"], "text-size": 11, "text-offset": [0.8, 0], "text-anchor": "left", "text-allow-overlap": false }, paint: { "text-color": "#ffffff", "text-halo-color": "#111827", "text-halo-width": 1.5 } },
+      { id: "destinations-point", type: "circle", source: "destinations", paint: { "circle-color": ["case", ["==", ["get", "is_safe"], true], "#10b981", "#64748b"], "circle-radius": 9, "circle-stroke-color": "#ffffff", "circle-stroke-width": 2 } },
+      { id: "destination-labels", type: "symbol", source: "destinations", layout: { "text-field": ["get", "code"], "text-size": 11, "text-offset": [0, 1.5], "text-anchor": "top", "text-allow-overlap": false }, paint: { "text-color": "#d1fae5", "text-halo-color": "#064e3b", "text-halo-width": 1.5 } },
+    ],
   };
+}
+
+export default function MapViewer({ layers, selectedEntity, onSelectEntity, hideControls = false }: MapViewerProps) {
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const popupRef = useRef<maplibregl.Popup | null>(null);
+  const onSelectEntityRef = useRef(onSelectEntity);
+  const [mapReady, setMapReady] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
+  const [basemap, setBasemap] = useState<Basemap>("satellite");
+  const [visible, setVisible] = useState<Record<OverlayKey, boolean>>({ study: true, flood: true, predicted: true, risk: true, roads: true, routes: true, habitations: true, destinations: true });
+
+  const sourceData = useMemo(() => ({
+    "study-area": collection(layers.study_area_boundary), flood: collection(layers.flood_polygons), predicted: collection(layers.predicted_flood_polygons),
+    risk: collection(layers.red_zones), roads: collection(layers.road_segments), routes: collection(layers.active_routes), habitations: collection(layers.habitations),
+    "habitation-points": collection(layers.habitation_points), destinations: collection(layers.destinations),
+  }), [layers]);
+
+  useEffect(() => {
+    onSelectEntityRef.current = onSelectEntity;
+  }, [onSelectEntity]);
+
+  useEffect(() => {
+    if (!mapContainer.current || mapRef.current) return;
+    const map = new maplibregl.Map({ container: mapContainer.current, style: mapStyle(), center: [0, 0], zoom: 2, attributionControl: false, dragRotate: false, touchPitch: false });
+    mapRef.current = map;
+    map.addControl(new maplibregl.NavigationControl({ showCompass: true }), "top-right");
+    map.addControl(new maplibregl.FullscreenControl(), "top-right");
+    map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: "metric" }), "bottom-right");
+    map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: BASEMAP_ATTRIBUTION }), "bottom-right");
+    map.on("error", (event) => { const message = event.error?.message || "Map tiles or style could not be loaded."; if (!message.toLowerCase().includes("tile")) setMapError(message); });
+    map.on("load", () => setMapReady(true));
+    const clickHandlers = CLICKABLE_LAYERS.map(([layerId, type]) => {
+      const handler = (event: maplibregl.MapLayerMouseEvent) => {
+        const feature = event.features?.[0];
+        if (!feature) return;
+        const properties = (feature.properties || {}) as Record<string, any>;
+        onSelectEntityRef.current({ type, id: properties.id || feature.id, properties, data: properties });
+        popupRef.current?.remove();
+        popupRef.current = new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: "300px", className: "prism-map-popup" }).setLngLat(event.lngLat).setHTML(popupMarkup(type, properties)).addTo(map);
+      };
+      map.on("click", layerId, handler);
+      return [layerId, handler] as const;
+    });
+    const cursorHandlers = CLICKABLE_LAYERS.map(([layerId]) => {
+      const enter = () => { map.getCanvas().style.cursor = "pointer"; };
+      const leave = () => { map.getCanvas().style.cursor = ""; };
+      map.on("mouseenter", layerId, enter); map.on("mouseleave", layerId, leave);
+      return [layerId, enter, leave] as const;
+    });
+    return () => {
+      clickHandlers.forEach(([layerId, handler]) => map.off("click", layerId, handler));
+      cursorHandlers.forEach(([layerId, enter, leave]) => { map.off("mouseenter", layerId, enter); map.off("mouseleave", layerId, leave); });
+      popupRef.current?.remove(); popupRef.current = null; map.remove(); mapRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    Object.entries(sourceData).forEach(([sourceId, data]) => (map.getSource(sourceId) as maplibregl.GeoJSONSource | undefined)?.setData(data as any));
+    const bounds = boundsForCollections(Object.values(sourceData));
+    if (bounds) map.fitBounds(bounds, { padding: { top: 90, right: 70, bottom: 70, left: 70 }, maxZoom: 14, duration: 0 });
+  }, [sourceData, mapReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    const visibleBaseLayers: Record<Basemap, string[]> = { satellite: ["basemap-satellite"], hybrid: ["basemap-satellite", "basemap-labels"], streets: ["basemap-streets"] };
+    ["basemap-satellite", "basemap-streets", "basemap-labels"].forEach((layerId) => map.setLayoutProperty(layerId, "visibility", visibleBaseLayers[basemap].includes(layerId) ? "visible" : "none"));
+  }, [basemap, mapReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    const layerMap: Record<OverlayKey, string[]> = {
+      study: ["study-boundary"], flood: ["flood-fill", "flood-outline"], predicted: ["predicted-fill", "predicted-outline"], risk: ["risk-fill", "risk-outline"], roads: ["roads-line", "roads-closed-line"], routes: ["routes-line"],
+      habitations: ["habitations-fill", "habitations-outline", "habitation-points", "habitation-labels"], destinations: ["destinations-point", "destination-labels"],
+    };
+    Object.entries(layerMap).forEach(([key, layerIds]) => layerIds.forEach((layerId) => map.setLayoutProperty(layerId, "visibility", visible[key as OverlayKey] ? "visible" : "none")));
+  }, [visible, mapReady]);
+
+  const toggle = (key: OverlayKey) => setVisible((current) => ({ ...current, [key]: !current[key] }));
 
   return (
-    <div className="relative w-full h-[580px] lg:h-[720px] rounded-xl overflow-hidden border border-slate-800 bg-[#060910] shadow-2xl flex flex-col">
-      {/* Top Map Toolbar */}
-      <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-2">
-        <div className="flex items-center space-x-1 p-1 bg-slate-900/90 backdrop-blur-md rounded-lg border border-slate-700/60 shadow-lg text-xs">
-          <button
-            onClick={() => setShowFlood(!showFlood)}
-            className={`px-2.5 py-1 rounded transition-all font-mono flex items-center space-x-1.5 ${
-              showFlood ? "bg-blue-600/30 text-blue-300 border border-blue-500/40" : "text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-            <span>Flood Extent</span>
-          </button>
-
-          <button
-            onClick={() => setShowRedZones(!showRedZones)}
-            className={`px-2.5 py-1 rounded transition-all font-mono flex items-center space-x-1.5 ${
-              showRedZones ? "bg-red-600/30 text-red-300 border border-red-500/40" : "text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-            <span>Red Zones</span>
-          </button>
-
-          <button
-            onClick={() => setShowHabitations(!showHabitations)}
-            className={`px-2.5 py-1 rounded transition-all font-mono flex items-center space-x-1.5 ${
-              showHabitations ? "bg-amber-600/30 text-amber-300 border border-amber-500/40" : "text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <Home className="w-3 h-3 text-amber-400" />
-            <span>Habitations</span>
-          </button>
-
-          <button
-            onClick={() => setShowDestinations(!showDestinations)}
-            className={`px-2.5 py-1 rounded transition-all font-mono flex items-center space-x-1.5 ${
-              showDestinations ? "bg-emerald-600/30 text-emerald-300 border border-emerald-500/40" : "text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <Building2 className="w-3 h-3 text-emerald-400" />
-            <span>Destinations</span>
-          </button>
-
-          <button
-            onClick={() => setShowRoutes(!showRoutes)}
-            className={`px-2.5 py-1 rounded transition-all font-mono flex items-center space-x-1.5 ${
-              showRoutes ? "bg-indigo-600/30 text-indigo-300 border border-indigo-500/40" : "text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <Navigation className="w-3 h-3 text-indigo-400" />
-            <span>Evacuation Routes</span>
-          </button>
-        </div>
+    <div className="relative h-[580px] w-full overflow-hidden rounded-xl border border-slate-700 bg-slate-950 shadow-2xl lg:h-[720px]">
+      <div ref={mapContainer} className="h-full w-full" aria-label="Interactive PRISM geographic disaster map" />
+      <div className="absolute left-4 top-4 z-10 w-[min(440px,calc(100%-2rem))] rounded-xl border border-slate-200/30 bg-slate-950/85 p-3 text-xs text-white shadow-xl backdrop-blur-md">
+        <div className="flex items-center justify-between gap-3 border-b border-white/15 pb-2"><div className="flex items-center gap-2 font-semibold"><MapIcon className="h-4 w-4 text-cyan-300" /> PRISM geographic intelligence</div><span className="font-mono text-[10px] text-cyan-200">WGS84 / EPSG:4326</span></div>
+        <div className="mt-2 flex flex-wrap gap-1.5" aria-label="Basemap selection">{(["satellite", "hybrid", "streets"] as Basemap[]).map((option) => <button key={option} type="button" aria-pressed={basemap === option} onClick={() => setBasemap(option)} className={`rounded-md px-2.5 py-1 font-mono text-[10px] capitalize transition ${basemap === option ? "bg-cyan-500/80 text-slate-950" : "bg-white/10 text-slate-200 hover:bg-white/20"}`}>{option === "satellite" ? <Satellite className="mr-1 inline h-3 w-3" /> : null}{option}</button>)}</div>
+        {!hideControls && <div className="mt-2 grid grid-cols-2 gap-1.5" aria-label="Disaster intelligence layers">{LAYER_DEFINITIONS.map((layer) => <button key={layer.key} type="button" aria-pressed={visible[layer.key]} onClick={() => toggle(layer.key)} className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-left font-mono text-[10px] transition ${visible[layer.key] ? "bg-white/10 text-white" : "text-slate-500 line-through"}`}><span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: layer.color, opacity: visible[layer.key] ? 1 : 0.35 }} />{layer.label}</button>)}</div>}
       </div>
-
-      {/* Map Legend / Scale */}
-      <div className="absolute bottom-4 left-4 z-20 p-2.5 bg-slate-900/90 backdrop-blur-md rounded-lg border border-slate-700/60 shadow-lg text-[11px] font-mono space-y-1.5 hidden md:block">
-        <div className="text-slate-400 font-semibold mb-1 flex items-center space-x-1">
-          <Layers className="w-3 h-3 text-cyan-400" />
-          <span>VAYU BASIN OPERATIONAL MAP</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 rounded bg-blue-600/40 border border-blue-400"></span>
-          <span className="text-slate-300">River Inundation Corridor</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 rounded bg-red-600/30 border-2 border-dashed border-red-500"></span>
-          <span className="text-slate-300">Active Red Zone (Immediate Hazard)</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 rounded bg-amber-600/30 border border-amber-400"></span>
-          <span className="text-slate-300">Habitation (Settlement Footprint)</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <span className="w-3 h-0.5 bg-emerald-500"></span>
-          <span className="text-slate-300">Open Safe Road Corridor</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <span className="w-3 h-0.5 bg-red-500 border-dashed"></span>
-          <span className="text-slate-300">Closed / Submerged Bridge (BRIDGE_01)</span>
-        </div>
-        <div className="text-slate-500 pt-1 border-t border-slate-800 text-[10px]">
-          CRS: WGS84 (4326) / Metric: UTM 43N
-        </div>
-      </div>
-
-      {/* Interactive Vector GIS Canvas */}
-      <div className="flex-1 w-full h-full relative cursor-crosshair">
-        <svg viewBox="0 0 1000 800" className="w-full h-full select-none">
-          <defs>
-            {/* Grid Pattern for Command Center feel */}
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(30, 41, 59, 0.4)" strokeWidth="0.8" />
-            </pattern>
-            {/* Red Zone Hatching */}
-            <pattern id="redHatch" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-              <line x1="0" y1="0" x2="0" y2="8" stroke="#ef4444" strokeWidth="2.5" strokeOpacity="0.4" />
-            </pattern>
-          </defs>
-
-          {/* Background Grid */}
-          <rect width="1000" height="800" fill="#070b12" />
-          <rect width="1000" height="800" fill="url(#grid)" />
-
-          {/* 1. Flood Extents (River Inundation Corridor - Clean Blue Water Layer) */}
-          {showFlood && layers?.flood_polygons?.features?.map((f: any, idx: number) => {
-            const coords = f.geometry.coordinates[0];
-            return (
-              <g key={`flood-${idx}`}>
-                <polygon
-                  points={polyToSvgPoints(coords)}
-                  fill="rgba(30, 64, 175, 0.35)"
-                  stroke="#3b82f6"
-                  strokeWidth="2"
-                  className="transition-all duration-700"
-                />
-              </g>
-            );
-          })}
-
-          {/* 2. Red Zones (E1 Active Hazard Zone - Crimson/Red Dashed Warning Perimeter) */}
-          {showRedZones && layers?.red_zones?.features?.map((f: any, idx: number) => {
-            const coords = f.geometry.coordinates[0];
-            return (
-              <g key={`rz-${idx}`}>
-                <polygon
-                  points={polyToSvgPoints(coords)}
-                  fill="rgba(220, 38, 38, 0.22)"
-                  stroke="#ef4444"
-                  strokeWidth="2.5"
-                  strokeDasharray="8 4"
-                  className="animate-pulse"
-                />
-                <polygon
-                  points={polyToSvgPoints(coords)}
-                  fill="url(#redHatch)"
-                  stroke="none"
-                  opacity="0.25"
-                  className="pointer-events-none"
-                />
-              </g>
-            );
-          })}
-
-          {/* 3. Road Network Segments */}
-          {showRoads && layers?.road_segments?.features?.map((s: any, idx: number) => {
-            const coords = s.geometry.coordinates;
-            const x1 = toSvgX(coords[0][0]);
-            const y1 = toSvgY(coords[0][1]);
-            const x2 = toSvgX(coords[1][0]);
-            const y2 = toSvgY(coords[1][1]);
-            const isClosed = s.properties.operational_status === "CLOSED";
-            const isBridge = s.properties.is_bridge;
-
-            return (
-              <g key={`road-${idx}`}>
-                <line
-                  x1={x1}
-                  y1={y1}
-                  x2={x2}
-                  y2={y2}
-                  stroke={isClosed ? "#ef4444" : (isBridge ? "#f59e0b" : "#10b981")}
-                  strokeWidth={isBridge ? "4" : "2.5"}
-                  strokeDasharray={isClosed ? "6,4" : "none"}
-                  strokeOpacity="0.85"
-                />
-                {isBridge && (
-                  <circle cx={(x1+x2)/2} cy={(y1+y2)/2} r="4" fill={isClosed ? "#ef4444" : "#f59e0b"} />
-                )}
-              </g>
-            );
-          })}
-
-          {/* 4. Active Convoy Routes */}
-          {showRoutes && layers?.active_routes?.features?.map((r: any, idx: number) => {
-            const coords = r.geometry.coordinates;
-            const pts = coords.map(([lon, lat]: [number, number]) => `${toSvgX(lon)},${toSvgY(lat)}`).join(" ");
-            return (
-              <g key={`route-${idx}`}>
-                <polyline
-                  points={pts}
-                  fill="none"
-                  stroke="#60a5fa"
-                  strokeWidth="3.5"
-                  strokeOpacity="0.75"
-                  strokeDasharray="8,6"
-                  className="animate-pulse"
-                />
-              </g>
-            );
-          })}
-
-          {/* 5. Habitations (Settlement Footprints - Preserved Orange/Amber Family) */}
-          {showHabitations && layers?.habitations?.features?.map((h: any, idx: number) => {
-            const coords = h.geometry.coordinates[0];
-            const centroidX = coords.reduce((acc: number, c: number[]) => acc + toSvgX(c[0]), 0) / coords.length;
-            const centroidY = coords.reduce((acc: number, c: number[]) => acc + toSvgY(c[1]), 0) / coords.length;
-            const isImmediate = h.properties.immediate_priority_count > 0;
-            const isSelected = selectedEntity?.id === h.properties.id;
-
-            return (
-              <g
-                key={`hab-${idx}`}
-                onClick={() => onSelectEntity({ type: "HABITATION", id: h.properties.id, properties: h.properties, data: h.properties })}
-                className="cursor-pointer group"
-              >
-                {/* Settlement Boundary - Stays Orange/Amber */}
-                <polygon
-                  points={polyToSvgPoints(coords)}
-                  fill={isSelected ? "rgba(245, 158, 11, 0.45)" : "rgba(245, 158, 11, 0.22)"}
-                  stroke={isSelected ? "#fbbf24" : "#f59e0b"}
-                  strokeWidth={isSelected ? "2.5" : "1.5"}
-                  className="transition-all group-hover:fill-opacity-50"
-                />
-                {/* Habitation Pin Marker (Orange with high-priority warning ring when in Red Zone) */}
-                <circle
-                  cx={centroidX}
-                  cy={centroidY}
-                  r={isSelected ? "9" : "7"}
-                  fill="#f59e0b"
-                  stroke={isImmediate ? "#ef4444" : "#ffffff"}
-                  strokeWidth={isImmediate ? "2.5" : "2"}
-                  className="shadow-md"
-                />
-                <text
-                  x={centroidX + 12}
-                  y={centroidY + 4}
-                  fill="#f1f5f9"
-                  fontSize="12"
-                  fontWeight="bold"
-                  fontFamily="monospace"
-                  className="pointer-events-none drop-shadow-md"
-                >
-                  {h.properties.name}
-                </text>
-                <text
-                  x={centroidX + 12}
-                  y={centroidY + 18}
-                  fill={isImmediate ? "#fca5a5" : "#94a3b8"}
-                  fontSize="10"
-                  fontFamily="monospace"
-                  className="pointer-events-none"
-                >
-                  Pop: {h.properties.population} | {isImmediate ? "Prio: IMMEDIATE (In Red Zone)" : `Imm: ${h.properties.immediate_priority_count}`}
-                </text>
-              </g>
-            );
-          })}
-
-          {/* 6. Candidate Destinations */}
-          {showDestinations && layers?.destinations?.features?.map((d: any, idx: number) => {
-            const [lon, lat] = d.geometry.coordinates;
-            const cx = toSvgX(lon);
-            const cy = toSvgY(lat);
-            const isSelected = selectedEntity?.id === d.properties.id;
-            const isSafe = d.properties.is_safe;
-
-            return (
-              <g
-                key={`dest-${idx}`}
-                onClick={() => onSelectEntity({ type: "DESTINATION", id: d.properties.id, properties: d.properties, data: d.properties })}
-                className="cursor-pointer group"
-              >
-                <circle
-                  cx={cx}
-                  cy={cy}
-                  r={isSelected ? "14" : "11"}
-                  fill={isSafe ? "#10b981" : "#64748b"}
-                  stroke="#ffffff"
-                  strokeWidth="2.5"
-                  className="shadow-lg transition-transform group-hover:scale-110"
-                />
-                <text
-                  x={cx}
-                  y={cy + 4}
-                  textAnchor="middle"
-                  fill="#ffffff"
-                  fontSize="10"
-                  fontWeight="bold"
-                  fontFamily="monospace"
-                  className="pointer-events-none"
-                >
-                  {d.properties.code.replace("DEST_", "D")}
-                </text>
-                <text
-                  x={cx}
-                  y={cy - 16}
-                  textAnchor="middle"
-                  fill="#34d399"
-                  fontSize="11"
-                  fontWeight="bold"
-                  fontFamily="monospace"
-                  className="pointer-events-none drop-shadow-md"
-                >
-                  {d.properties.name}
-                </text>
-                <text
-                  x={cx}
-                  y={cy + 24}
-                  textAnchor="middle"
-                  fill="#94a3b8"
-                  fontSize="9.5"
-                  fontFamily="monospace"
-                  className="pointer-events-none"
-                >
-                  Cap: {d.properties.effective_capacity} | Rem: {d.properties.remaining_capacity}
-                </text>
-                {d.properties.bottleneck_resource === "WATER" && (
-                  <text
-                    x={cx}
-                    y={cy + 36}
-                    textAnchor="middle"
-                    fill="#38bdf8"
-                    fontSize="9"
-                    fontWeight="bold"
-                    fontFamily="monospace"
-                  >
-                    ⚠️ Limit: WATER
-                  </text>
-                )}
-              </g>
-            );
-          })}
-        </svg>
-      </div>
+      <div className="pointer-events-none absolute right-4 top-4 z-10 flex items-center gap-2 rounded-lg border border-slate-200/30 bg-slate-950/75 px-2.5 py-2 text-[10px] font-mono text-slate-100 backdrop-blur-md"><Compass className="h-4 w-4 text-cyan-300" /> N</div>
+      <div className="pointer-events-none absolute bottom-4 left-4 z-10 max-w-[270px] rounded-xl border border-slate-200/25 bg-slate-950/85 p-3 text-[10px] text-slate-100 shadow-xl backdrop-blur-md"><div className="mb-2 flex items-center gap-2 font-semibold uppercase tracking-wider text-slate-200"><Layers className="h-3.5 w-3.5 text-cyan-300" /> Map legend</div><div className="grid grid-cols-2 gap-x-3 gap-y-1.5"><span><i className="mr-1 inline-block h-2.5 w-2.5 rounded bg-sky-500/70" />Current flood</span><span><i className="mr-1 inline-block h-2.5 w-2.5 rounded bg-cyan-300/60" />Prediction</span><span><i className="mr-1 inline-block h-2.5 w-2.5 rounded bg-red-500/70" />High risk</span><span><i className="mr-1 inline-block h-2.5 w-2.5 rounded-full bg-amber-400" />Habitation</span><span><i className="mr-1 inline-block h-2.5 w-2.5 rounded-full bg-emerald-400" />Shelter</span><span><i className="mr-1 inline-block h-0.5 w-3 bg-red-500" />Blocked road</span></div><div className="mt-2 border-t border-white/15 pt-2 text-slate-400">Click a feature for details · {basemap === "streets" ? "© OpenStreetMap contributors" : "Imagery © Esri and partners"}</div></div>
+      {mapError && <div className="absolute bottom-4 right-4 z-10 flex max-w-xs items-center gap-2 rounded-lg border border-amber-500/50 bg-slate-950/90 px-3 py-2 text-[10px] text-amber-100 shadow-xl"><ShieldAlert className="h-4 w-4 shrink-0 text-amber-300" /> Basemap unavailable. Use Streets fallback.</div>}
     </div>
   );
 }

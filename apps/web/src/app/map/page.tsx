@@ -27,6 +27,7 @@ export default function GISWorkspacePage() {
   // Layer Visibility
   const [visibleLayers, setVisibleLayers] = useState({
     flood: true,
+    predicted: true,
     redZones: true,
     habitations: true,
     destinations: true,
@@ -79,8 +80,11 @@ export default function GISWorkspacePage() {
   // Filter layers by visibility toggles
   const activeLayers = {
     flood_polygons: visibleLayers.flood ? rawLayers.flood_polygons : { type: "FeatureCollection", features: [] },
+    predicted_flood_polygons: visibleLayers.predicted ? rawLayers.predicted_flood_polygons : { type: "FeatureCollection", features: [] },
+    study_area_boundary: rawLayers.study_area_boundary,
     red_zones: visibleLayers.redZones ? rawLayers.red_zones : { type: "FeatureCollection", features: [] },
     habitations: visibleLayers.habitations ? rawLayers.habitations : { type: "FeatureCollection", features: [] },
+    habitation_points: visibleLayers.habitations ? rawLayers.habitation_points : { type: "FeatureCollection", features: [] },
     destinations: visibleLayers.destinations ? rawLayers.destinations : { type: "FeatureCollection", features: [] },
     road_segments: visibleLayers.roads ? rawLayers.road_segments : { type: "FeatureCollection", features: [] },
     active_routes: visibleLayers.routes ? rawLayers.active_routes : { type: "FeatureCollection", features: [] }
@@ -129,6 +133,18 @@ export default function GISWorkspacePage() {
           >
             {visibleLayers.redZones ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
             <span>Red Zones</span>
+          </button>
+
+          <button
+            onClick={() => toggleLayer("predicted")}
+            className={`px-2.5 py-1 rounded-lg border transition-all flex items-center space-x-1.5 ${
+              visibleLayers.predicted
+                ? "bg-cyan-950/70 border-cyan-600 text-cyan-300 font-semibold"
+                : "bg-slate-900 border-slate-800 text-slate-500 opacity-60"
+            }`}
+          >
+            {visibleLayers.predicted ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+            <span>Predicted Flood</span>
           </button>
 
           <button
@@ -189,6 +205,7 @@ export default function GISWorkspacePage() {
             layers={activeLayers}
             selectedEntity={selectedEntity}
             onSelectEntity={(entity) => setSelectedEntity(entity)}
+            hideControls
           />
 
           {/* Map Symbology Floating Overlay */}

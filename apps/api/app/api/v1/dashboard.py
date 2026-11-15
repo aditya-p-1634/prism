@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.entities import (
-    StateSnapshot, StudyArea, HazardState, RedZone, Habitation, Household,
+    StateSnapshot, StudyArea, HazardState, HazardPrediction, RedZone, Habitation, Household,
     PriorityRecord, Destination, CapacityState, RoadSegment, RoutePlan, RelocationAllocation
 )
 from app.models.enums import PriorityClassEnum, AllocationStatusEnum
@@ -23,6 +23,7 @@ def get_dashboard_overview(
 
     # 1. Hazard Layers
     hazard = db.query(HazardState).filter(HazardState.snapshot_id == snapshot_id).first()
+    prediction = db.query(HazardPrediction).filter(HazardPrediction.snapshot_id == snapshot_id).first()
     red_zones = db.query(RedZone).filter(RedZone.snapshot_id == snapshot_id).all()
 
     flood_features = []
@@ -52,9 +53,37 @@ def get_dashboard_overview(
             }
         })
 
+    study_area_feature = None
+    if study_area and study_area.boundary_geom:
+        study_area_feature = {
+            "type": "Feature",
+            "geometry": json.loads(study_area.boundary_geom),
+            "properties": {
+                "id": study_area.id,
+                "code": study_area.code,
+                "name": study_area.name,
+                "source_crs": study_area.crs_code,
+            },
+        }
+
+    predicted_flood_features = []
+    if prediction and prediction.predicted_extent_geom:
+        predicted_flood_features.append({
+            "type": "Feature",
+            "geometry": json.loads(prediction.predicted_extent_geom),
+            "properties": {
+                "id": prediction.id,
+                "type": "PREDICTED_FLOOD_EXTENT",
+                "horizon_hours": prediction.horizon_hours,
+                "confidence": prediction.confidence,
+                "method_identifier": prediction.method_identifier,
+            },
+        })
+
     # 2. Habitations Layer
     habs = db.query(Habitation).all()
     hab_features = []
+    hab_point_features = []
     for h in habs:
         prios = db.query(PriorityRecord).filter(
             PriorityRecord.habitation_id == h.id,
@@ -64,20 +93,26 @@ def get_dashboard_overview(
         short_count = sum(1 for p in prios if p.priority_class == PriorityClassEnum.SHORT_TERM)
         med_count = sum(1 for p in prios if p.priority_class == PriorityClassEnum.MEDIUM_TERM)
 
+        properties = {
+            "id": h.id,
+            "code": h.code,
+            "name": h.name,
+            "population": h.population_estimate,
+            "elevation_m": h.elevation_m,
+            "immediate_priority_count": imm_count,
+            "short_term_priority_count": short_count,
+            "medium_term_priority_count": med_count,
+            "highest_priority": "IMMEDIATE" if imm_count > 0 else ("SHORT_TERM" if short_count > 0 else "MEDIUM_TERM")
+        }
         hab_features.append({
             "type": "Feature",
             "geometry": json.loads(h.geom),
-            "properties": {
-                "id": h.id,
-                "code": h.code,
-                "name": h.name,
-                "population": h.population_estimate,
-                "elevation_m": h.elevation_m,
-                "immediate_priority_count": imm_count,
-                "short_term_priority_count": short_count,
-                "medium_term_priority_count": med_count,
-                "highest_priority": "IMMEDIATE" if imm_count > 0 else ("SHORT_TERM" if short_count > 0 else "MEDIUM_TERM")
-            }
+            "properties": properties
+        })
+        hab_point_features.append({
+            "type": "Feature",
+            "geometry": json.loads(h.centroid_geom),
+            "properties": properties,
         })
 
     # 3. Destinations Layer
@@ -175,9 +210,15 @@ def get_dashboard_overview(
     overview_data = {
         "kpis": kpis,
         "layers": {
+            "study_area_boundary": {
+                "type": "FeatureCollection",
+                "features": [study_area_feature] if study_area_feature else [],
+            },
             "flood_polygons": {"type": "FeatureCollection", "features": flood_features},
+            "predicted_flood_polygons": {"type": "FeatureCollection", "features": predicted_flood_features},
             "red_zones": {"type": "FeatureCollection", "features": red_zone_features},
             "habitations": {"type": "FeatureCollection", "features": hab_features},
+            "habitation_points": {"type": "FeatureCollection", "features": hab_point_features},
             "destinations": {"type": "FeatureCollection", "features": dest_features},
             "road_segments": {"type": "FeatureCollection", "features": road_features},
             "active_routes": {"type": "FeatureCollection", "features": route_features}
