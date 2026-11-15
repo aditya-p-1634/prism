@@ -7,6 +7,7 @@ from app.db.session import get_db
 from app.models.entities import HazardState, HazardPrediction, RedZone, HazardEvidence
 from app.schemas.hazard import HazardStateDTO, HazardPredictionDTO, RedZoneDTO, HazardEvidenceDTO
 from app.schemas.envelope import ResponseEnvelope
+from app.api.deps import require_existing_snapshot
 
 router = APIRouter(prefix="/hazards", tags=["Hazard Intelligence (E1)"])
 
@@ -15,6 +16,7 @@ def get_current_hazards(
     snapshot_id: str = Query("SNAP_BASE_001", description="Target state snapshot"),
     db: Session = Depends(get_db)
 ):
+    require_existing_snapshot(db, snapshot_id)
     states = db.query(HazardState).filter(HazardState.snapshot_id == snapshot_id).all()
     dtos = [
         HazardStateDTO(
@@ -42,6 +44,7 @@ def get_red_zones(
     snapshot_id: str = Query("SNAP_BASE_001"),
     db: Session = Depends(get_db)
 ):
+    require_existing_snapshot(db, snapshot_id)
     rzs = db.query(RedZone).filter(RedZone.snapshot_id == snapshot_id).all()
     dtos = []
     for rz in rzs:

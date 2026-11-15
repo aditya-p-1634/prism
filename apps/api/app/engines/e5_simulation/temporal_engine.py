@@ -14,6 +14,7 @@ CORE INVARIANTS:
 """
 
 import uuid
+import math
 from copy import copy
 from typing import Dict, Any, List, Optional, Tuple
 from sqlalchemy.orm import Session
@@ -60,12 +61,22 @@ class TemporalSimulationEngine:
         Validates simulation bounds. Returns expected tick count.
         Rejects invalid timesteps, negative durations, and excessive tick bounds.
         """
-        if timestep_minutes is None or timestep_minutes <= 0.0:
+        if (
+            isinstance(timestep_minutes, bool)
+            or not isinstance(timestep_minutes, (int, float))
+            or not math.isfinite(float(timestep_minutes))
+            or timestep_minutes <= 0.0
+        ):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"INVALID_TIMESTEP: Timestep must be greater than 0. Received: {timestep_minutes}."
             )
-        if duration_minutes is None or duration_minutes < 0.0:
+        if (
+            isinstance(duration_minutes, bool)
+            or not isinstance(duration_minutes, (int, float))
+            or not math.isfinite(float(duration_minutes))
+            or duration_minutes < 0.0
+        ):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"INVALID_DURATION: Duration must be greater than or equal to 0. Received: {duration_minutes}."
@@ -99,6 +110,11 @@ class TemporalSimulationEngine:
         Enforces baseline immutability.
         """
         total_ticks = self.validate_simulation_inputs(timestep_minutes, duration_minutes)
+        if parameter_overrides is not None and not isinstance(parameter_overrides, dict):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="INVALID_PARAMETER_SET: parameter_overrides must be an object"
+            )
         overrides = parameter_overrides or {}
 
         # 1. Determine scenario snapshot context

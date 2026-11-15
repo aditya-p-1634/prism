@@ -16,7 +16,6 @@ import os
 from typing import Any
 
 import geopandas as gpd
-import rasterio
 
 from app.research.a8_5.constants import DEFAULT_DATA_DIR, DEFAULT_FILES
 
@@ -52,6 +51,14 @@ def inspect_vector_dataset(filepath: str) -> dict[str, Any]:
 
 def inspect_raster_dataset(filepath: str) -> dict[str, Any]:
     """Inspect raster dataset properties without mutating the file."""
+    try:
+        import rasterio
+    except ImportError as exc:
+        raise RuntimeError(
+            "A8.5 raster inspection requires the optional 'rasterio' dependency. "
+            "Install the research extra before inspecting GeoTIFF datasets."
+        ) from exc
+
     with rasterio.open(filepath) as src:
         bounds = src.bounds
         return {

@@ -4,10 +4,21 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.core.security import decode_access_token
-from app.models.entities import User
+from app.models.entities import StateSnapshot, User
 from app.models.enums import RoleEnum
 
 security_scheme = HTTPBearer(auto_error=False)
+
+
+def require_existing_snapshot(db: Session, snapshot_id: str) -> StateSnapshot:
+    """Return a snapshot or fail explicitly instead of producing empty read-models."""
+    snapshot = db.query(StateSnapshot).filter(StateSnapshot.id == snapshot_id).first()
+    if not snapshot:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"SNAPSHOT_NOT_FOUND: {snapshot_id}",
+        )
+    return snapshot
 
 def get_current_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),

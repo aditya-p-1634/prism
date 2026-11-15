@@ -15,6 +15,7 @@ from app.schemas.routing import (
 )
 from app.schemas.envelope import ResponseEnvelope
 from app.api.deps import require_role, get_current_user
+from app.api.deps import require_existing_snapshot
 from app.engines.e4_route_relocation.service import RouteAndRelocationEngineE4
 from app.engines.e5_simulation.state_machine import EvacuationStateMachine
 from app.gis.spatial import to_shapely, intersects
@@ -28,6 +29,7 @@ def get_assistance_queue(
     db: Session = Depends(get_db)
 ):
     """Expose an explicit assisted-evacuation work queue without dispatching."""
+    require_existing_snapshot(db, snapshot_id)
     allocations = db.query(RelocationAllocation).filter(
         RelocationAllocation.snapshot_id == snapshot_id,
         RelocationAllocation.evacuation_state.in_([
@@ -98,6 +100,7 @@ def get_routes(
     snapshot_id: str = Query("SNAP_BASE_001"),
     db: Session = Depends(get_db)
 ):
+    require_existing_snapshot(db, snapshot_id)
     routes = db.query(RoutePlan).filter(RoutePlan.snapshot_id == snapshot_id).all()
     hab_map = {h.id: h.name for h in db.query(Habitation).all()}
     dest_map = {d.id: d.name for d in db.query(Destination).all()}
@@ -135,6 +138,7 @@ def get_allocations(
     snapshot_id: str = Query("SNAP_BASE_001"),
     db: Session = Depends(get_db)
 ):
+    require_existing_snapshot(db, snapshot_id)
     allocs = db.query(RelocationAllocation).filter(RelocationAllocation.snapshot_id == snapshot_id).all()
     hab_map = {h.id: h.name for h in db.query(Habitation).all()}
     dest_map = {d.id: d.name for d in db.query(Destination).all()}

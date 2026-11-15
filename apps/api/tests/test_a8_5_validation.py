@@ -31,6 +31,8 @@ import pytest
 import geopandas as gpd
 from shapely.geometry import Point, Polygon
 
+pytest.importorskip("rasterio", reason="A8.5 raster validation requires the optional research dependency")
+
 from app.research.a8_5.constants import (
     GCC_CATEGORY_2_TO_3FT,
     GCC_CATEGORY_3_TO_5FT,

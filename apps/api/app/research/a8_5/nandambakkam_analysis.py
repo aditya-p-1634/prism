@@ -19,7 +19,6 @@ from __future__ import annotations
 from typing import Any
 
 import geopandas as gpd
-import rasterio
 from shapely.geometry import Point
 
 from app.research.a8_5.constants import (
@@ -43,6 +42,14 @@ def run_nandambakkam_analysis(
     gcc_kml_path: str,
 ) -> dict[str, Any]:
     """Execute complete spatial and terrain analysis for the Nandambakkam CheckDam station."""
+    try:
+        import rasterio
+    except ImportError as exc:
+        raise RuntimeError(
+            "A8.5 Nandambakkam terrain analysis requires the optional 'rasterio' dependency. "
+            "Install the research extra before running raster sampling."
+        ) from exc
+
     station_geom_4326 = Point(NANDAMBAKKAM_LON, NANDAMBAKKAM_LAT)
     station_gdf_4326 = gpd.GeoDataFrame(
         [{"station_code": NANDAMBAKKAM_STATION_CODE, "river": NANDAMBAKKAM_RIVER}],

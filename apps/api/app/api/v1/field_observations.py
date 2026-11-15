@@ -5,7 +5,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
-from app.api.deps import require_role
+from app.api.deps import require_role, require_existing_snapshot
 from app.db.session import get_db
 from app.models.entities import (
     AuditEvent, DestinationSnapshotState, FieldObservation, RelocationAllocation,
@@ -79,6 +79,7 @@ def list_field_observations(
     limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
 ):
+    require_existing_snapshot(db, snapshot_id)
     query = db.query(FieldObservation).filter(FieldObservation.snapshot_id == snapshot_id)
     if reconciliation_status:
         query = query.filter(FieldObservation.reconciliation_status == reconciliation_status.upper())

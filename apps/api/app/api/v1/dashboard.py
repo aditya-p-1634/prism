@@ -10,6 +10,7 @@ from app.models.entities import (
 )
 from app.models.enums import PriorityClassEnum, AllocationStatusEnum
 from app.schemas.envelope import ResponseEnvelope
+from app.api.deps import require_existing_snapshot
 
 router = APIRouter(prefix="/dashboard", tags=["Command Dashboard & Read Models (B10)"])
 
@@ -18,7 +19,7 @@ def get_dashboard_overview(
     snapshot_id: str = Query("SNAP_BASE_001", description="Target state snapshot ID"),
     db: Session = Depends(get_db)
 ):
-    snapshot = db.query(StateSnapshot).filter(StateSnapshot.id == snapshot_id).first()
+    snapshot = require_existing_snapshot(db, snapshot_id)
     study_area = db.query(StudyArea).first()
 
     # 1. Hazard Layers
@@ -244,9 +245,7 @@ def get_operator_briefing(
     operational state. It translates E1-E4 outputs into a small set of
     reviewable facts and next actions for the incident commander.
     """
-    snapshot = db.query(StateSnapshot).filter(StateSnapshot.id == snapshot_id).first()
-    if not snapshot:
-        raise HTTPException(status_code=404, detail=f"SNAPSHOT_NOT_FOUND: {snapshot_id}")
+    snapshot = require_existing_snapshot(db, snapshot_id)
 
     hazard = db.query(HazardState).filter(HazardState.snapshot_id == snapshot_id).first()
     red_zones = db.query(RedZone).filter(RedZone.snapshot_id == snapshot_id).all()

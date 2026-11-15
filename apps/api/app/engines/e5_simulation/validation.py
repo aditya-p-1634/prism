@@ -14,6 +14,18 @@ class ScenarioParameterValidator:
     MAX_RAINFALL_MULTIPLIER_DELTA = 5.0
     MAX_RIVER_LEVEL_DELTA_M = 20.0
     MAX_RESOURCE_RATE = 10000.0
+    SUPPORTED_KEYS = {
+        "rainfall_multiplier_delta",
+        "river_level_delta_m",
+        "water_consumption_per_person_per_tick",
+        "water_consumption_per_person_per_min",
+        "water_requirement_per_person",
+        "medical_demand_per_person",
+        "medical_demand_special_transit",
+        "resource_warning_threshold_ratio",
+        "closed_road_segments",
+        "resource_capacity_reductions",
+    }
 
     @staticmethod
     def _finite_non_negative(params: Dict[str, Any], key: str, maximum: float) -> None:
@@ -29,6 +41,13 @@ class ScenarioParameterValidator:
     def validate(cls, params: Dict[str, Any]) -> Dict[str, Any]:
         if not isinstance(params, dict):
             raise ScenarioParameterError("INVALID_PARAMETER_SET: scenario parameters must be an object")
+
+        unknown_keys = sorted(set(params) - cls.SUPPORTED_KEYS)
+        if unknown_keys:
+            raise ScenarioParameterError(
+                "UNSUPPORTED_PARAMETER: unknown scenario parameter(s): "
+                + ", ".join(unknown_keys)
+            )
 
         cls._finite_non_negative(params, "rainfall_multiplier_delta", cls.MAX_RAINFALL_MULTIPLIER_DELTA)
         cls._finite_non_negative(params, "river_level_delta_m", cls.MAX_RIVER_LEVEL_DELTA_M)

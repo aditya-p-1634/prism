@@ -17,9 +17,6 @@ from typing import Any
 
 import geopandas as gpd
 import numpy as np
-import rasterio
-import rasterio.features
-import rasterio.mask
 from shapely.geometry import box
 
 from app.research.a8_5.constants import (
@@ -76,6 +73,14 @@ def sample_fabdem_at_points(
     
     Points outside raster extent or on NoData will have dem_elevation set to None.
     """
+    try:
+        import rasterio
+    except ImportError as exc:
+        raise RuntimeError(
+            "A8.5 FABDEM sampling requires the optional 'rasterio' dependency. "
+            "Install the research extra before running terrain sampling."
+        ) from exc
+
     sampled_records: list[dict[str, Any]] = []
 
     with rasterio.open(fabdem_path) as src:
@@ -171,6 +176,16 @@ def run_nrsc_mask_terrain_distributions(
     Reports: valid sample count, min, max, mean, median, p05, p95 for inside and outside.
     Demonstrates empirically why a simple elevation threshold is scientifically inadequate.
     """
+    try:
+        import rasterio
+        import rasterio.features
+        import rasterio.mask
+    except ImportError as exc:
+        raise RuntimeError(
+            "A8.5 raster terrain distributions require the optional 'rasterio' dependency. "
+            "Install the research extra before running raster-mask analysis."
+        ) from exc
+
     study_poly = box(*study_envelope)
 
     with rasterio.open(fabdem_path) as src:

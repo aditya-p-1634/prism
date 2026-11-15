@@ -7,6 +7,7 @@ from app.db.session import get_db
 from app.models.entities import Destination, DestinationSnapshotState, DestinationResource, CapacityState
 from app.schemas.destination import DestinationDTO, DestinationResourceDTO, CapacityStateDTO
 from app.schemas.envelope import ResponseEnvelope
+from app.api.deps import require_existing_snapshot
 
 router = APIRouter(prefix="/destinations", tags=["Destinations & Carrying Capacity (E3)"])
 
@@ -15,6 +16,7 @@ def get_destinations(
     snapshot_id: str = Query("SNAP_BASE_001"),
     db: Session = Depends(get_db)
 ):
+    require_existing_snapshot(db, snapshot_id)
     dests = db.query(Destination).all()
     dtos = []
 

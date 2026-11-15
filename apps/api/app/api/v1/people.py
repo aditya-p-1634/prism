@@ -7,6 +7,7 @@ from app.db.session import get_db
 from app.models.entities import Habitation, Household, PriorityRecord
 from app.schemas.people import HabitationDTO, HouseholdDTO, PriorityRecordDTO
 from app.schemas.envelope import ResponseEnvelope
+from app.api.deps import require_existing_snapshot
 
 router = APIRouter(prefix="/people", tags=["People & Vulnerability Priority (E2)"])
 
@@ -15,6 +16,7 @@ def get_habitations(
     snapshot_id: str = Query("SNAP_BASE_001"),
     db: Session = Depends(get_db)
 ):
+    require_existing_snapshot(db, snapshot_id)
     habs = db.query(Habitation).all()
     dtos = []
     for h in habs:
@@ -83,6 +85,7 @@ def get_priorities(
     snapshot_id: str = Query("SNAP_BASE_001"),
     db: Session = Depends(get_db)
 ):
+    require_existing_snapshot(db, snapshot_id)
     prios = db.query(PriorityRecord).filter(PriorityRecord.snapshot_id == snapshot_id).order_by(PriorityRecord.priority_score.desc()).all()
     hab_map = {h.id: h.name for h in db.query(Habitation).all()}
     hh_map = {hh.id: hh for hh in db.query(Household).all()}

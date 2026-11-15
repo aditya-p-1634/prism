@@ -25,6 +25,7 @@ from app.schemas.hazard_prediction import (
 )
 from app.schemas.envelope import ResponseEnvelope
 from app.api.deps import require_role
+from app.api.deps import require_existing_snapshot
 from app.engines.e1_hazard.prediction.pipeline import HazardPredictionPipeline
 
 
@@ -179,6 +180,7 @@ def list_hazard_predictions(
     if simulation_run_id:
         query = query.filter(HazardPredictionRecord.simulation_run_id == simulation_run_id)
     if snapshot_id:
+        require_existing_snapshot(db, snapshot_id)
         query = query.filter(HazardPredictionRecord.snapshot_id == snapshot_id)
 
     records = query.order_by(HazardPredictionRecord.created_at.desc()).limit(limit).all()

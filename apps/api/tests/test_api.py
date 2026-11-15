@@ -36,6 +36,21 @@ def test_dashboard_overview():
     assert "flood_polygons" in data["layers"]
     assert "destinations" in data["layers"]
 
+
+def test_snapshot_scoped_read_models_reject_unknown_snapshot():
+    endpoints = [
+        "/api/v1/dashboard/overview?snapshot_id=UNKNOWN",
+        "/api/v1/hazards/current?snapshot_id=UNKNOWN",
+        "/api/v1/people/priorities?snapshot_id=UNKNOWN",
+        "/api/v1/destinations?snapshot_id=UNKNOWN",
+        "/api/v1/routes?snapshot_id=UNKNOWN",
+        "/api/v1/relocation/allocations?snapshot_id=UNKNOWN",
+    ]
+    for endpoint in endpoints:
+        response = client.get(endpoint)
+        assert response.status_code == 404, endpoint
+        assert "SNAPSHOT_NOT_FOUND" in response.json()["detail"]
+
 def test_destinations_api():
     response = client.get("/api/v1/destinations?snapshot_id=SNAP_BASE_001")
     assert response.status_code == 200
